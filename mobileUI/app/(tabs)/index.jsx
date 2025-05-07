@@ -9,6 +9,7 @@ const App = () => {
       <Link href="/(auth)">Tab</Link>
       <Link href="/(auth)/login">Login</Link>
       <Link href="/(auth)/create-account">Create An Account</Link>
+      <Link href="/(auth)/verifyEmail">Verify Email</Link>
     </View>
   );
 };
