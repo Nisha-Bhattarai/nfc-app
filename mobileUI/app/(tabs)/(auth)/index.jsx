@@ -35,64 +35,72 @@ export default function AuthTabView() {
     const { navigationState, position, jumpTo } = props;
 
     return (
-        <View style={{ backgroundColor: 'white', paddingTop: 20 }}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign In to access your account</Text>
-        <View style={styles.tabBarContainer}>
-          {navigationState.routes.map((route, i) => {
-            const isActive = index === i;
-            const inputRange = navigationState.routes.map((_, idx) => idx);
-            const opacity = position.interpolate({
-              inputRange,
-              outputRange: inputRange.map((inputIndex) => (inputIndex === i ? 1 : 0.6)),
-            });
+      <View style={styles.tabBarContainer}>
+        {navigationState.routes.map((route, i) => {
+          const isActive = index === i;
+          const inputRange = navigationState.routes.map((_, idx) => idx);
+          const opacity = position.interpolate({
+            inputRange,
+            outputRange: inputRange.map((inputIndex) => (inputIndex === i ? 1 : 0.6)),
+          });
 
-            return (
-              <TouchableOpacity
-                key={route.key}
-                onPress={() => jumpTo(route.key)}
-                style={[styles.tabItem, isActive && styles.activeTabItem]}
-              >
-                <Animated.Text style={[styles.tabText, isActive && styles.activeTabText, { opacity }]}>
-                  {route.title}
-                </Animated.Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+          return (
+            <TouchableOpacity
+              key={route.key}
+              onPress={() => jumpTo(route.key)}
+              style={[styles.tabItem, isActive && styles.activeTabItem]}
+            >
+              <Animated.Text style={[styles.tabText, isActive && styles.activeTabText, { opacity }]}>
+                {route.title}
+              </Animated.Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
     );
   };
 
+  // Dynamic text based on selected tab
+  const titleText = index === 0 ? 'Welcome Back' : 'Get Started Now';
+  const subtitleText =
+    index === 0
+      ? 'Sign In to access your account'
+      : 'Create an account or Sign In to explore our app';
+
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-      renderTabBar={renderTabBar}
-    />
+    <View style={styles.container}>
+      <Text style={styles.title}>{titleText}</Text>
+      <Text style={styles.subtitle}>{subtitleText}</Text>
+
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={renderTabBar}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white', 
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginTop: 10,
-        marginBottom: 10,
-      },      
-      subtitle: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginTop: 10,
-        marginBottom: 10,
-      }, 
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
   tabBarContainer: {
     flexDirection: 'row',
     backgroundColor: '#f5f5f5',
