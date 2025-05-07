@@ -6,9 +6,9 @@ import CreateAccount from './create-account';
 
 const renderScene = ({ route }) => {
     switch (route.key) {
-      case 'first':
+      case 'login':
         return <Login />;
-      case 'second':
+      case 'create-account':
         return <CreateAccount />;
       default:
         return null;
@@ -17,11 +17,11 @@ const renderScene = ({ route }) => {
   
 
 const routes = [
-  { key: 'first', title: 'First' },
-  { key: 'second', title: 'Second' },
+  { key: 'login', title: 'Sign In' },
+  { key: 'create-account', title: 'Create an Account' },
 ];
 
-export default function TabViewExample() {
+export default function AuthTabView() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
 
