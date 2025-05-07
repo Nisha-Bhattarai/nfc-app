@@ -1,20 +1,26 @@
 import * as React from 'react';
-import { View, useWindowDimensions } from 'react-native';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import {
+  View,
+  Text,
+  useWindowDimensions,
+  TouchableOpacity,
+  Animated,
+  StyleSheet,
+} from 'react-native';
+import { TabView } from 'react-native-tab-view';
 import Login from './login';
 import CreateAccount from './create-account';
 
 const renderScene = ({ route }) => {
-    switch (route.key) {
-      case 'login':
-        return <Login />;
-      case 'create-account':
-        return <CreateAccount />;
-      default:
-        return null;
-    }
-  };
-  
+  switch (route.key) {
+    case 'login':
+      return <Login />;
+    case 'create-account':
+      return <CreateAccount />;
+    default:
+      return null;
+  }
+};
 
 const routes = [
   { key: 'login', title: 'Sign In' },
@@ -25,12 +31,83 @@ export default function AuthTabView() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
 
+  const renderTabBar = (props) => {
+    const { navigationState, position, jumpTo } = props;
+
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome to NFC App</Text> {/* 👈 Your custom text */}
+        <View style={styles.tabBarContainer}>
+          {navigationState.routes.map((route, i) => {
+            const isActive = index === i;
+            const inputRange = navigationState.routes.map((_, idx) => idx);
+            const opacity = position.interpolate({
+              inputRange,
+              outputRange: inputRange.map((inputIndex) => (inputIndex === i ? 1 : 0.6)),
+            });
+
+            return (
+              <TouchableOpacity
+                key={route.key}
+                onPress={() => jumpTo(route.key)}
+                style={[styles.tabItem, isActive && styles.activeTabItem]}
+              >
+                <Animated.Text style={[styles.tabText, isActive && styles.activeTabText, { opacity }]}>
+                  {route.title}
+                </Animated.Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
+
   return (
     <TabView
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{ width: layout.width }}
+      renderTabBar={renderTabBar}
     />
   );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white', 
+    },
+  tabBarContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#f5f5f5',
+    marginHorizontal: 16,
+    borderRadius: 30,
+    height: 53,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 4,
+  },
+  tabItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 45,
+    marginHorizontal: 4,
+    borderRadius: 30,
+  },
+  activeTabItem: {
+    backgroundColor: '#E7721A',
+  },
+  tabText: {
+    fontSize: 14,
+    color: 'gray',
+    fontWeight: '500',
+  },
+  activeTabText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+});
