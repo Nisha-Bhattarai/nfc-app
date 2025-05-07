@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
       paddingBottom: 32, // Space at the bottom of the form
     },
     input: {
-      height: 65,
+      height: 60,
       borderWidth: 1,
       borderColor: '#d3d3d3',
       borderRadius: 10,
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
       textAlign: 'right',
     },
     signInButton: {
-      height: 65,
+      height: 60,
       backgroundColor: '#E7721A',
       borderRadius: 10,
       alignItems: 'center',
