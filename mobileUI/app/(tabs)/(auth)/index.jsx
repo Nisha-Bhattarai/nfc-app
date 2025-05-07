@@ -35,8 +35,9 @@ export default function AuthTabView() {
     const { navigationState, position, jumpTo } = props;
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Welcome to NFC App</Text> {/* 👈 Your custom text */}
+        <View style={{ backgroundColor: 'white', paddingTop: 20 }}>
+        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.subtitle}>Sign In to access your account</Text>
         <View style={styles.tabBarContainer}>
           {navigationState.routes.map((route, i) => {
             const isActive = index === i;
@@ -79,13 +80,27 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white', 
     },
+    title: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+      },      
+      subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+      }, 
   tabBarContainer: {
     flexDirection: 'row',
     backgroundColor: '#f5f5f5',
     marginHorizontal: 16,
     borderRadius: 30,
-    height: 53,
+    height: 65,
     marginTop: 20,
+    marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 4,
@@ -94,7 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 45,
+    height: 55,
     marginHorizontal: 4,
     borderRadius: 30,
   },
