@@ -4,7 +4,7 @@ import { Link } from 'expo-router';
 const App = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>123</Text>
+      <Text style={styles.text}>Welcome to NFC App</Text>
 
       <Link href="/(auth)">Tab</Link>
       <Link href="/(auth)/login">Login</Link>
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: "white"
   },
   text: {
     fontSize: 42,

@@ -11,7 +11,6 @@ export default function AuthLayout() {
             <Stack.Screen name="index" />
         </Stack>
         </SafeScreen>
-        <StatusBar style="dark" />
     </SafeAreaProvider>
   );
 }
