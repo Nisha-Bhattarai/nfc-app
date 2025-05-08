@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import Colors from "../../../constants/Colors"
 
 const Login = () => {
   return (
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     input: {
       height: 60,
       borderWidth: 1,
-      borderColor: '#d3d3d3',
+      borderColor: Colors.border,
       borderRadius: 10,
       paddingHorizontal: 16,
       fontSize: 16,
@@ -56,13 +57,13 @@ const styles = StyleSheet.create({
       width: '100%', // Ensure inputs take full width
     },
     forgotText: {
-      color: '#E7721A',
+      color: Colors.accent,
       marginBottom: 32, // Space between Forgot Password? and the Sign In button
       textAlign: 'right',
     },
     signInButton: {
       height: 60,
-      backgroundColor: '#E7721A',
+      backgroundColor: Colors.accent,
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',

@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import Colors from "../../../constants/Colors"
 
 const CreateAccount = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     input: {
       height: 60,
       borderWidth: 1,
-      borderColor: '#d3d3d3',
+      borderColor: Colors.border,
       borderRadius: 10,
       paddingHorizontal: 16,
       fontSize: 16,
@@ -100,28 +101,28 @@ const styles = StyleSheet.create({
       height: 22,
       borderRadius: 4,
       borderWidth: 1,
-      borderColor: '#d3d3d3',
+      borderColor: Colors.border,
       marginRight: 10,
       justifyContent: 'center',
       alignItems: 'center',
     },
     checkedBox: {
-      backgroundColor: '#E7721A',
-      borderColor: '#E7721A',
+      backgroundColor: Colors.accent,
+      borderColor: Colors.accent,
     },
     termsText: {
       fontSize: 14,
-      color: '#4A5568',
+      color: Colors.textPrimary,
       flexShrink: 1,
       flexWrap: 'wrap',
     },
     link: {
-      color: '#E7721A',
+      color: Colors.accent,
       fontWeight: '500',
     },
     createAccountButton: {
       height: 60,
-      backgroundColor: '#E7721A',
+      backgroundColor: Colors.accent,
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',

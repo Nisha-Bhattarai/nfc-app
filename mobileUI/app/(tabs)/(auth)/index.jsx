@@ -10,6 +10,7 @@ import {
 import { TabView } from 'react-native-tab-view';
 import Login from './login';
 import CreateAccount from './create-account';
+import Colors from '../../../constants/Colors';
 
 const renderScene = ({ route }) => {
   switch (route.key) {
@@ -87,6 +88,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    paddingTop: 20,
   },
   title: {
     fontSize: 22,
@@ -103,7 +105,7 @@ const styles = StyleSheet.create({
   },
   tabBarContainer: {
     flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.secondary,
     marginHorizontal: 16,
     borderRadius: 30,
     height: 65,
@@ -122,11 +124,11 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   activeTabItem: {
-    backgroundColor: '#E7721A',
+    backgroundColor: Colors.accent,
   },
   tabText: {
     fontSize: 14,
-    color: 'gray',
+    color: Colors.textPrimary,
     fontWeight: '500',
   },
   activeTabText: {

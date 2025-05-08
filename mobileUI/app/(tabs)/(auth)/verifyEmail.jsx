@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     backgroundColor: '#E7721A',
-    height: 65,
+    height: 60,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
