@@ -55,11 +55,14 @@ const styles = StyleSheet.create({
       fontSize: 16,
       marginBottom: 20, // Space between input fields
       width: '100%', // Ensure inputs take full width
+      fontFamily: 'Lato_400Regular'
     },
     forgotText: {
       color: Colors.accent,
       marginBottom: 32, // Space between Forgot Password? and the Sign In button
       textAlign: 'right',
+      fontFamily: 'Lato_400Regular',
+      fontSize: 16,
     },
     signInButton: {
       height: 60,
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     signInButtonText: {
       color: 'white',
       fontSize: 18,
-      fontWeight: '600',
+      fontFamily: 'Poppins_400Regular'
     },
   });
   

@@ -72,7 +72,6 @@ export default function AuthTabView() {
     <View style={styles.container}>
       <Text style={styles.title}>{titleText}</Text>
       <Text style={styles.subtitle}>{subtitleText}</Text>
-
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -96,12 +95,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
     marginBottom: 10,
+    fontFamily: 'Poppins_700Bold'
   },
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
     marginTop: 10,
     marginBottom: 10,
+    fontFamily: 'Poppins_400Regular'
   },
   tabBarContainer: {
     flexDirection: 'row',
@@ -127,12 +128,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.accent,
   },
   tabText: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.textPrimary,
-    fontWeight: '500',
+    fontFamily: 'Lato_400Regular'
   },
   activeTabText: {
-    color: 'white',
+    color: Colors.white,
     fontWeight: '600',
   },
 });

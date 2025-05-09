@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 16,
       fontSize: 16,
       marginBottom: 20,
+      fontFamily: 'Lato_400Regular'
     },
     halfInput: {
       flex: 1,
@@ -111,10 +112,11 @@ const styles = StyleSheet.create({
       borderColor: Colors.accent,
     },
     termsText: {
-      fontSize: 14,
+      fontSize: 16,
       color: Colors.textPrimary,
       flexShrink: 1,
       flexWrap: 'wrap',
+      fontFamily: 'Lato_400Regular'
     },
     link: {
       color: Colors.accent,
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     createAccountButtonText: {
       color: 'white',
       fontSize: 18,
-      fontWeight: '600',
+      fontFamily: 'Poppins_400Regular'
     },
   });
   
