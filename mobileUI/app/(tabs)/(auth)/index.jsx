@@ -30,7 +30,7 @@ const routes = [
 
 export default function AuthTabView() {
   const layout = useWindowDimensions();
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = React.useState(1);
 
   const renderTabBar = (props) => {
     const { navigationState, position, jumpTo } = props;
