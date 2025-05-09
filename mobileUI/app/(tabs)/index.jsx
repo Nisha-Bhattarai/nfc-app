@@ -4,12 +4,12 @@ import { Link } from 'expo-router';
 const App = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome to NFC App</Text>
+      <Text style={styles.heading}>Welcome to NFC App</Text>
 
-      <Link href="/(auth)">Tab</Link>
-      <Link href="/(auth)/login">Login</Link>
-      <Link href="/(auth)/create-account">Create An Account</Link>
-      <Link href="/(auth)/verifyEmail">Verify Email</Link>
+      <Link style={styles.text} href="/(auth)">Tab</Link>
+      <Link style={styles.text} href="/(auth)/login">Login</Link>
+      <Link style={styles.text} href="/(auth)/create-account">Create An Account</Link>
+      <Link style={styles.text} href="/(auth)/verifyEmail">Verify Email</Link>
     </View>
   );
 };
@@ -22,9 +22,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white"
   },
-  text: {
+  heading: {
     fontSize: 42,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Poppins_400Regular'
+  },
+  text: {
+    fontSize: 24,
+    textAlign: 'center',
+    fontFamily: 'lato_400Regular'
   }
 });

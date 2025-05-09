@@ -1,36 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useFonts as usePoppins, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { useFonts as useLato, Lato_400Regular } from '@expo-google-fonts/lato';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import SafeScreen from "../components/SafeScreen";
+import SafeScreen from '../components/SafeScreen';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [poppinsLoaded] = usePoppins({ Poppins_400Regular });
+  const [latoLoaded] = useLato({ Lato_400Regular });
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
+  if (!poppinsLoaded || !latoLoaded) {
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <SafeAreaProvider>
+    <SafeAreaProvider>
       <SafeScreen>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Home" }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Home" }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
       </SafeScreen>
-      </SafeAreaProvider>
-      
-    </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

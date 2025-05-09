@@ -5,10 +5,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import React from 'react'
 import Colors from "../constants/Colors"
+import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 const TabBar = ({ state, descriptors, navigation }) => {
     const { buildHref } = useLinkBuilder();
     const insets = useSafeAreaInsets();
+    const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+  });
+
 
     const icons = {
         index: (props)=> <AntDesign name="home" size={24} color={Colors.textSecondary} {...props} />,
@@ -68,7 +73,8 @@ const TabBar = ({ state, descriptors, navigation }) => {
             }
             <Text style={{ 
                 color: isFocused ? Colors.accent : Colors.textSecondary,
-                fontSize: 11 
+                fontSize: 11,
+                fontFamily: 'Poppins_400Regular'
             }}>
               {label}
             </Text>
@@ -92,7 +98,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 4
+        gap: 4,
+        fontFamily: 'Poppins_400Regular',
       }
 })
 
