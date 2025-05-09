@@ -1,10 +1,10 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Stack } from 'expo-router';
 import React from 'react';
-import Colors from '@/constants/Colors';
 import TabBar from "../../components/TabBar"
 
 const TabLayout = () => {
   return (
+   
     <Tabs
   
     tabBar={props=> <TabBar {...props} />}
@@ -12,7 +12,8 @@ const TabLayout = () => {
       <Tabs.Screen 
       name="index"
       options={{
-        title: "Home"
+        title: "Home",
+        headerShown: false,
       }}
       />
       <Tabs.Screen 
@@ -32,6 +33,13 @@ const TabLayout = () => {
       options={{
         title: "More"
       }}
+      />
+      <Tabs.Screen
+        name="(auth)"
+        options={{
+          headerShown: false, // hides top bar for login, signup
+          tabBarButton: () => null, // removes auth from tab bar
+        }}
       />
     </Tabs>
   );
