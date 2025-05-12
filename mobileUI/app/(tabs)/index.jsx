@@ -3,6 +3,7 @@ import { Link } from 'expo-router';
 
 const App = () => {
   return (
+    <>
     <View style={styles.container}>
       <Text style={styles.heading}>Welcome to NFC App</Text>
 
@@ -11,6 +12,7 @@ const App = () => {
       <Link style={styles.text} href="/(auth)/create-account">Create An Account</Link>
       <Link style={styles.text} href="/(auth)/verifyEmail">Verify Email</Link>
     </View>
+    </>
   );
 };
 

@@ -6,7 +6,6 @@ const TabLayout = () => {
   return (
    
     <Tabs
-  
     tabBar={props=> <TabBar {...props} />}
     >
       <Tabs.Screen 
