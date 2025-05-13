@@ -18,19 +18,22 @@ const TabLayout = () => {
       <Tabs.Screen 
       name="profile"
       options={{
-        title: "Profile"
+        title: "Profile",
+        headerShown: false,
       }}
       />
       <Tabs.Screen 
       name="contacts"
       options={{
-        title: "Contacts"
+        title: "Contacts",
+        headerShown: false,
       }}
       />
       <Tabs.Screen 
       name="more"
       options={{
-        title: "More"
+        title: "More",
+        headerShown: false,
       }}
       />
       <Tabs.Screen

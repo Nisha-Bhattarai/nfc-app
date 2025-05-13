@@ -9,19 +9,17 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.subContainer}>
-        <Text style={styles.title}>Hello Mary! Welcome to your profile page.</Text>
-        <Text  style={styles.subtitle}>Manage your profiles below — choose what to share and when.</Text>
-        <View style={styles.primaryProfileContainer}>
-          <Text style={styles.text}>Primary Profile</Text>
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/profile/primaryProfile')}>
-            <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.eventProfileContainer}>
-          <Text style={styles.text}>Event Profile</Text>
+      <Text style={styles.title}>Hello Mary! Welcome to your profile page.</Text>
+      <Text  style={styles.subtitle}>Manage your profiles below — choose what to share and when.</Text>
+      <View style={styles.profileContainer}>
+        <Text style={styles.text}>Primary Profile</Text>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/profile/primaryProfile')}>
           <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
-        </View>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.profileContainer}>
+        <Text style={styles.text}>Event Profile</Text>
+        <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
       </View>
     </View>
   )
@@ -31,26 +29,25 @@ export default Profile
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,            
+    flex: 1,         
     backgroundColor: '#fff',
-  },
-  subContainer: {
-    margin: 16, 
-    justifyContent: 'center',   
-    alignItems: 'center', 
+    padding: 16,   
+    alignItems: 'center',
+    paddingTop: 40,
   },
   title: {
-    fontFamily: "Poppins_700Bold",
-    fontSize: 16,
+    fontFamily: "Lato_700Bold",
+    fontSize: 18,
     marginBottom: 16,
+    textAlign: 'center'
   },
   subtitle: {
-    fontFamily: "Poppins_400Regular",
-    fontSize: 16,
+    fontFamily: "Lato_400Regular",
+    fontSize: 18,
     marginBottom: 16,
     textAlign: "center"
   },
-  primaryProfileContainer: {
+  profileContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -67,16 +64,5 @@ const styles = StyleSheet.create({
   },
   rightIcon: {
     fontSize: 16,
-  },
-  eventProfileContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    height: 72,
-    backgroundColor: Colors.secondary,
-    width: '100%',
-    borderRadius: 15,
-    marginBottom: 16,
   },
 })
