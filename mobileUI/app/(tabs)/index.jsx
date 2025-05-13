@@ -11,6 +11,7 @@ const App = () => {
       <Link style={styles.text} href="/(auth)/login">Login</Link>
       <Link style={styles.text} href="/(auth)/create-account">Create An Account</Link>
       <Link style={styles.text} href="/(auth)/verifyEmail">Verify Email</Link>
+      <Link style={styles.text} href="/(tabs)/profile/primaryProfile">Primary Profile</Link>
     </View>
     </>
   );
