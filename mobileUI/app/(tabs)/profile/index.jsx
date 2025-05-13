@@ -19,7 +19,9 @@ const Profile = () => {
       </View>
       <View style={styles.profileContainer}>
         <Text style={styles.text}>Event Profile</Text>
-        <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/profile/eventProfile')}>
+          <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
+        </TouchableOpacity>
       </View>
     </View>
   )
