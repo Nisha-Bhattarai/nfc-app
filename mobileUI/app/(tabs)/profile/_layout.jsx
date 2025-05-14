@@ -8,7 +8,7 @@ const ProfileLayout = () => {
     <SafeAreaProvider>
       <Stack screenOptions={{
         headerShown: true,
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'center',
       }}>
         <Stack.Screen name='index' options={{title: 'Profile'}} />
         <Stack.Screen name='primaryProfile' options={{title: 'Primary Profile'}} />
