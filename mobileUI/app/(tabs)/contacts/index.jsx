@@ -1,12 +1,56 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, StyleSheet, ScrollView } from 'react-native';
+import React from 'react';
+import Colors from '../../../constants/Colors';
+import ContactListCard from '../../../components/contactListCard';
 
 const Contacts = () => {
   return (
-    <View>
-      <Text>Contacts</Text>
+    <View style={styles.container}>
+      <View style={styles.background}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+          <ContactListCard
+            image={require('../../../assets/images/avatar.png')}
+            name="John Doe"
+            date="April 3, 2025"
+            email="johndoe@gmail.com"
+            phone="5596634498"
+            note="Met on technical conference and talked about partnership!"
+          />
+          <ContactListCard
+            image={require('../../../assets/images/avatar.png')}
+            name="Jaz Miller"
+            date="April 3, 2025"
+            email="jazzmiller@gmail.com"
+            phone="5596634498"
+            note="Might be future employee"
+          />
+          <ContactListCard
+            image={require('../../../assets/images/avatar.png')}
+            name="John Doe"
+            date="April 3, 2025"
+            email="johndoe@gmail.com"
+            phone="5596634498"
+            note="Met on technical conference and talked about partnership!"
+          />
+        </ScrollView>
+      </View>
     </View>
-  )
-}
+  );
+};
 
-export default Contacts
+export default Contacts;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.white,
+  },
+  background: {
+    backgroundColor: Colors.secondary,
+    margin: 16,
+    flex: 1,
+    borderRadius: 18,
+    padding: 16,
+    alignItems: 'center',
+  },
+});

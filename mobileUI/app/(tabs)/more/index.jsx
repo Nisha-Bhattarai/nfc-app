@@ -1,6 +1,6 @@
 // screens/More.js
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Colors from '../../../constants/Colors';
 import LabeledInput from '../../../components/labeledInput'
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,6 +14,7 @@ const More = () => {
   return (
     <View style={styles.container}>
       <View style={styles.background}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>Personal Information</Text>
         <LabeledInput
           label="Name"
@@ -70,10 +71,12 @@ const More = () => {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
       />
+      
       <TouchableOpacity style={styles.logoutButton}>
         <MaterialIcons name="logout" size={22} color={Colors.accent} />
         <Text style={styles.logoutButtonText}>Logout</Text>
       </TouchableOpacity>
+      </ScrollView>
     </View>
   </View>
   );
@@ -93,6 +96,9 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 16,
     alignItems: 'center',
+  },
+  scrollContent: {
+    paddingBottom: 20,
   },
   title: {
     fontSize: 16,
