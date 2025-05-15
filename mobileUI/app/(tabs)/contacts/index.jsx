@@ -17,20 +17,28 @@ const Contacts = () => {
             note="Met on technical conference and talked about partnership!"
           />
           <ContactListCard
-            image={require('../../../assets/images/avatar.png')}
+            image={require('../../../assets/images/avatar-female.webp')}
             name="Jaz Miller"
             date="April 3, 2025"
             email="jazzmiller@gmail.com"
             phone="5596634498"
-            note="Might be future employee"
+            note="Might consider hiring"
           />
           <ContactListCard
             image={require('../../../assets/images/avatar.png')}
-            name="John Doe"
-            date="April 3, 2025"
-            email="johndoe@gmail.com"
-            phone="5596634498"
-            note="Met on technical conference and talked about partnership!"
+            name="Jack Cooper"
+            date="May 15, 2025"
+            email="jack.cooper@ultratech.com"
+            phone="9865745362"
+            note="Met in Toronto conference. Interesting person!"
+          />
+          <ContactListCard
+            image={require('../../../assets/images/avatar-female.webp')}
+            name="Sarah Lee"
+            date="May 1, 2025"
+            email="lee.sarah24@outlook.com"
+            phone="4374563425"
+            note="Tech conference. Said she's a graphic designer" 
           />
         </ScrollView>
       </View>
