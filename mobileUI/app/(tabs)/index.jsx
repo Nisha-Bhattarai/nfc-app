@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, Image,  } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView,  } from 'react-native';
 import { Link } from 'expo-router';
 import Colors from "../../constants/Colors"
+import ScanOverviewCard, { PeakScanTimeCard, TopLocationCard } from "../../components/scanOverviewCard";
 
 const App = () => {
   return (
@@ -13,7 +14,32 @@ const App = () => {
           source={require('../../assets/images/avatar.png')} />
       </View>
       <View style={styles.background}>
-        <Text>a</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.cardContainer}>
+          <ScanOverviewCard 
+            title='Total Scans'
+            number='1250'
+            text='Scans'
+          />
+          <ScanOverviewCard 
+            title='Unique Scanners'
+            number='70'
+            text='Scans'
+          />
+        </View>
+        <View style={styles.cardContainer}>
+          <TopLocationCard 
+            title='Top Location'
+            number
+            locationText='Toronto, ON'
+          />
+          <PeakScanTimeCard 
+            title='Peak Scan Time'
+            text='Between'
+            time='2PM - 4PM'
+          />
+        </View>
+        </ScrollView>
       </View>
     </View>
     </>
@@ -65,4 +91,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
+  cardContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+    width: '100%'
+  }
 });
