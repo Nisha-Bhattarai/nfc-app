@@ -14,7 +14,7 @@ const Contacts = () => {
             date="April 3, 2025"
             email="johndoe@gmail.com"
             phone="5596634498"
-            note="Met on technical conference and talked about partnership!"
+            note="Met at technical conference and talked about partnership!"
           />
           <ContactListCard
             image={require('../../../assets/images/avatar-female.webp')}
@@ -30,7 +30,7 @@ const Contacts = () => {
             date="May 15, 2025"
             email="jack.cooper@ultratech.com"
             phone="9865745362"
-            note="Met in Toronto conference. Interesting person!"
+            note="Met at Toronto conference. Interesting person!"
           />
           <ContactListCard
             image={require('../../../assets/images/avatar-female.webp')}
