@@ -1,7 +1,9 @@
 import { View, Text, StyleSheet, Image, ScrollView,  } from 'react-native';
 import { Link } from 'expo-router';
-import Colors from "../../constants/Colors"
+import Colors from "../../constants/Colors";
 import ScanOverviewCard, { PeakScanTimeCard, TopLocationCard } from "../../components/scanOverviewCard";
+import ScansOverTimeCard from "../../components/ScansOverTimeCard";
+import ScansByDayAndHourTab from "../../components/ScansByDayAndHourTab";
 
 const App = () => {
   return (
@@ -39,6 +41,8 @@ const App = () => {
             time='2PM - 4PM'
           />
         </View>
+        <ScansOverTimeCard />
+        <ScansByDayAndHourTab />
         </ScrollView>
       </View>
     </View>
