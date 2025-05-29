@@ -54,6 +54,7 @@ const styles = StyleSheet.create ({
     paddingLeft: 16,
     paddingTop: 24,
     paddingBottom: 24,
+    marginBottom: 16
    },
    firstRow: {
   flexDirection: 'row',

@@ -4,6 +4,8 @@ import Colors from "../../constants/Colors";
 import ScanOverviewCard, { PeakScanTimeCard, TopLocationCard } from "../../components/scanOverviewCard";
 import ScansOverTimeCard from "../../components/ScansOverTimeCard";
 import ScansByDayAndHourTab from "../../components/ScansByDayAndHourTab";
+import DetailedAnalyticsCard from "../../components/detailedAnalyticsCard"
+
 
 const App = () => {
   return (
@@ -43,6 +45,23 @@ const App = () => {
         </View>
         <ScansOverTimeCard />
         <ScansByDayAndHourTab />
+        <View style={styles.detailedAnalytics}>
+          <Text style={styles.detailedAnalyticsTitle}>Detailed Analytics</Text>
+          <DetailedAnalyticsCard
+        date = 'September 15, 2024' 
+        time = '10:30 AM'
+        deviceName = 'iPhone' 
+        location = 'North York' 
+        ipAddress = '45.67.189.23' />
+        <DetailedAnalyticsCard 
+        date= 'May 12, 2025'
+        time= '2:34 PM'
+        deviceName= 'Android'
+        location = 'Scarborough'
+        ipAddress = '36.59.198.25'
+        />
+        </View>
+        
         </ScrollView>
       </View>
     </View>
@@ -100,5 +119,12 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 16,
     width: '100%'
+  },
+  detailedAnalyticsTitle: {
+    fontSize: 16,
+    fontFamily: "Poppins_600SemiBold",
+    color: Colors.textPrimary,
+    marginTop: 8,
+    marginBottom: 8,
   }
 });
