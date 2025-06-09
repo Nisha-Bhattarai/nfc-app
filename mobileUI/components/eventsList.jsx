@@ -3,13 +3,8 @@ import React from 'react'
 import Colors from '../constants/Colors'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import TruncatedText from "../components/TruncatedText"
 
-
-const truncateWords = (text, wordLimit) => {
-  const words = text.split(' ');
-  if (words.length <= wordLimit) return text;
-  return words.slice(0, wordLimit).join(' ') + '...';
-};
 
 const EventsList = () => {
     const fullTitle = "Smart Money Moves: Strategies for Building Wealth in Any Economy";
@@ -30,14 +25,14 @@ const EventsList = () => {
                 </View>
             </View>
             <View style={styles.eventDetails}>
-                <Text style={styles.eventTitle}>{truncateWords(fullTitle, 3)}</Text>
+                <TruncatedText text={fullTitle} wordLimit={3} style={styles.eventTitle} />
                 <View style={styles.eventTime}>
                     <Ionicons name="time-outline" size={24} color={Colors.textSecondary} />
                     <Text style={styles.eventTimeText}>6:00 PM – 7:30 PM</Text>
                 </View> 
                 <View style={styles.eventLocation}>
                     <Ionicons name="location-outline" size={24} color={Colors.textSecondary} />
-                    <Text style={styles.eventLocationText}>{truncateWords(fullLocation, 3)}</Text>
+                    <TruncatedText text={fullLocation} wordLimit={3} style={styles.eventLocationText} />
                 </View> 
             </View>
             <View style={styles.viewMoreIcon}>
@@ -85,9 +80,9 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     calendar: {
-        padding: 8,
+        padding: 6,
         backgroundColor: Colors.white,
-        borderRadius: 25,
+        borderRadius: 18,
         alignItems: 'center',
         flexDirection: "column",
         gap: 6,
@@ -97,7 +92,7 @@ const styles = StyleSheet.create({
         paddingTop: 6,
         paddingBottom: 6,
         paddingLeft: 16,
-        padding: 16,
+        paddingRight: 16,
         borderTopLeftRadius: 18,
         borderTopRightRadius: 18,
         fontFamily: 'Lato_400Regular',
