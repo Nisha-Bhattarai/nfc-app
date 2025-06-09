@@ -5,6 +5,7 @@ import ScanOverviewCard, { PeakScanTimeCard, TopLocationCard } from "../../compo
 import ScansOverTimeCard from "../../components/ScansOverTimeCard";
 import ScansByDayAndHourTab from "../../components/ScansByDayAndHourTab";
 import DetailedAnalyticsCard from "../../components/detailedAnalyticsCard"
+import EventsList from "../../components/eventsList"
 
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
             time='2PM - 4PM'
           />
         </View>
+        <EventsList />
         <ScansOverTimeCard />
         <ScansByDayAndHourTab />
         <View style={styles.detailedAnalytics}>
