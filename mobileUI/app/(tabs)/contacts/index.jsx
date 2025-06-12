@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
 import React from 'react';
 import Colors from '../../../constants/Colors';
 import ContactListCard from '../../../components/contactListCard';
@@ -7,6 +7,11 @@ const Contacts = () => {
   return (
     <View style={styles.container}>
       <View style={styles.background}>
+        <View style={styles.addNewContactButton}>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>+ Add a New Contact</Text>
+          </TouchableOpacity>
+        </View>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <ContactListCard
             image={require('../../../assets/images/avatar.png')}
@@ -60,5 +65,23 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 16,
     alignItems: 'center',
+  },
+  addNewContactButton: {
+    marginBottom: 16,
+    alignSelf: 'flex-end',
+  },
+  button: {
+    backgroundColor: '#fff',
+    borderColor: Colors.accent,
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+  buttonText: {
+    color: Colors.accent,
+    fontSize: 14,
   },
 });
