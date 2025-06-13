@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Platform, TouchableOpacity, Text, ScrollView } from 'react-native';
 import { AntDesign, FontAwesome5, FontAwesome, Entypo } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import FormInput from './formInput';
 import Colors from "../constants/Colors"
 import SkillsSelector from './skillsSelector';
