@@ -5,16 +5,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import FormInput from './formInput';
 import Colors from "../constants/Colors"
 import SkillsSelector from './skillsSelector';
+import EventDateTimePicker from "./eventDateTimePicker"
 
 const createEventProfileComponent = () => {
-    const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [showStartPicker, setShowStartPicker] = useState(false);
-  const [showEndPicker, setShowEndPicker] = useState(false);
-
-    const formatDateTime = (date) => {
-    return date.toLocaleString();
-  };
 
   return (
     <ScrollView style={styles.container}>
@@ -25,43 +18,7 @@ const createEventProfileComponent = () => {
         <FormInput placeholder="Event Profile Name" />
       <FormInput placeholder="Event Name" />
 
-      {/* Row with 2 Date Pickers */}
-      <View style={styles.row}>
-        <TouchableOpacity style={styles.dateInput} onPress={() => setShowStartPicker(true)}>
-          <Text style={styles.dateText}>{formatDateTime(startDate)}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.dateInput} onPress={() => setShowEndPicker(true)}>
-          <Text style={styles.dateText}>{formatDateTime(endDate)}</Text>
-        </TouchableOpacity>
-      </View>
-
-      {showStartPicker && (
-  <DateTimePicker
-    value={startDate}
-    mode="datetime"
-    display="default"
-    onChange={(event, selectedDate) => {
-      if (event.type === 'set' && selectedDate) {
-        setStartDate(selectedDate);
-      }
-      setShowStartPicker(false);
-    }}
-  />
-)}
-
-      {showEndPicker && (
-        <DateTimePicker
-          value={endDate}
-          mode="datetime"
-          display="default"
-          onChange={(event, selectedDate) => {
-            Keyboard.dismiss();
-            setShowEndPicker(Platform.OS === 'ios');
-            if (selectedDate) setEndDate(selectedDate);
-          }}
-        />
-      )}
+      <EventDateTimePicker />
 
       <FormInput placeholder="Event Location" />
       <FormInput
@@ -137,7 +94,7 @@ const createEventProfileComponent = () => {
         </View>
 
         <View>
-          <Text style={styles.sectionTitle}>Photo Gallery</Text>
+          <Text style={styles.sectionTitle}>Event Gallery</Text>
         <TouchableOpacity style={styles.addMoreBtn}>
           <Text style={styles.addMoreText}>+ Add Photos</Text>
         </TouchableOpacity>
