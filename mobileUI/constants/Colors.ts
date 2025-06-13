@@ -13,7 +13,8 @@ const Colors = {
   white: '#FFFFFF',
   black: '#000000',
   transparent: 'transparent',
-  delete: '#D32F2F'
+  delete: '#D32F2F',
+  inputBorder: '#D9D9D9'
 };
 
 export default Colors;
