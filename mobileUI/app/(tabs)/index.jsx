@@ -4,8 +4,7 @@ import Colors from "../../constants/Colors";
 import EventAnalytics from "../../components/eventAnalytics"
 import ProfileAnalytics from "../../components/profileAnalytics"
 
-
-const App = () => {
+const Home = () => {
   return (
     <>
     <View style={styles.container}>
@@ -15,14 +14,16 @@ const App = () => {
           style={styles.image}
           source={require('../../assets/images/avatar.png')} />
       </View>
-      {/* <ProfileAnalytics /> */}
-      <EventAnalytics />
+      <ProfileAnalytics />
+      {/* <EventAnalytics /> */}
+      {/* <AuthTabView/> */}
     </View>
     </>
+
   );
 };
 
-export default App;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

@@ -1,8 +1,18 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import Colors from "../../../constants/Colors"
+import Colors from "../../constants/Colors"
+import { useRouter } from 'expo-router';
 
 const Login = () => {
+
+    const router = useRouter(); 
+
+  const handleSignIn = () => {
+    // TODO: add your login logic here (e.g. API call, validation)
+
+    // Navigate to (tabs) after login
+    router.replace('/(tabs)'); // ✅ This goes to app/(tabs)/index.js
+  };
   return (
     <View style={styles.container}>
       
@@ -25,7 +35,7 @@ const Login = () => {
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.signInButton}>
+          <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
             <Text style={styles.signInButtonText}>Sign In</Text>
           </TouchableOpacity>
         </View>

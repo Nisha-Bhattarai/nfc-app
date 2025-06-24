@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useFonts as usePoppins, Poppins_400Regular, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import { useFonts as useLato, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import 'react-native-reanimated';
+import { Slot } from 'expo-router';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import SafeScreen from '../components/SafeScreen';
@@ -18,10 +19,11 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <SafeScreen>
-        <Stack>
+        {/* <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Home" }} />
           <Stack.Screen name="+not-found" />
-        </Stack>
+        </Stack> */}
+          <Slot />
         <StatusBar style="auto" />
       </SafeScreen>
     </SafeAreaProvider>

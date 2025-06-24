@@ -10,7 +10,7 @@ import {
 import { TabView } from 'react-native-tab-view';
 import Login from './login';
 import CreateAccount from './create-account';
-import Colors from '../../../constants/Colors';
+import Colors from '../../constants/Colors';
 
 const renderScene = ({ route }) => {
   switch (route.key) {
