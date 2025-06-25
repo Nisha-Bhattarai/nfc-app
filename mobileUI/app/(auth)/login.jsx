@@ -1,17 +1,37 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView,ActivityIndicator} from 'react-native';
 import Colors from "../../constants/Colors"
 import { useRouter } from 'expo-router';
+import { useLoginState } from '../../states/useLoginState';
+import { loginUser } from '../../viewmodels/auth/LoginViewModel';
 
 const Login = () => {
+  const router = useRouter();
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    setLoading,
+    error,
+    setError,
+  } = useLoginState();
 
-    const router = useRouter(); 
+  const handleSignIn = async () => {
+    setLoading(true);
+    setError('');
 
-  const handleSignIn = () => {
-    // TODO: add your login logic here (e.g. API call, validation)
-
-    // Navigate to (tabs) after login
-    router.replace('/(tabs)'); // ✅ This goes to app/(tabs)/index.js
+    await loginUser(email, password,
+      (userData) => {
+        setLoading(false);
+        router.replace('/(tabs)');
+      },
+      (message) => {
+        setLoading(false);
+        setError(message);
+      }
+    );
   };
   return (
     <View style={styles.container}>
@@ -23,21 +43,40 @@ const Login = () => {
             style={styles.input}
             keyboardType="email-address"
             autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
           />
           <TextInput
             placeholder="Password"
             placeholderTextColor="#718096"
             style={styles.input}
             secureTextEntry
+            value={password}
+            onChangeText={setPassword}
           />
 
           <TouchableOpacity>
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+
+          {/* <TouchableOpacity style={styles.signInButton} onPress={handleSignIn} disabled={loading}>
             <Text style={styles.signInButtonText}>Sign In</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+           <TouchableOpacity
+          style={styles.signInButton}
+          onPress={handleSignIn}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.signInButtonText}>Sign In</Text>
+          )}
+        </TouchableOpacity>
         </View>
    
     </View>
