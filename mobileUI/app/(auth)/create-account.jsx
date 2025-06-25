@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import Colors from "../../../constants/Colors"
+import Colors from "../../constants/Colors"
 
 const CreateAccount = () => {
   const [isChecked, setIsChecked] = useState(false);
