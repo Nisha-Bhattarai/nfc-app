@@ -6,12 +6,53 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from "../../constants/Colors"
+import { useRouter } from 'expo-router';
+import { signupUser } from '../../viewmodels/auth/SignUpViewModel';
 
 const CreateAccount = () => {
+  const router = useRouter();
+
+  // Form state
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  
+  const handleCreateAccount = async () => {
+    if (!isChecked) {
+      setError('Please agree to the Terms & Conditions');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    const user = { firstName, lastName, email, password };
+
+    await signupUser(
+      user,
+      (message) => {
+        setLoading(false);
+        setSuccess(message);
+        router.push('/(auth)/verifyEmail');
+      },
+      (message) => {
+        setLoading(false);
+        setError(message);
+      }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -21,11 +62,15 @@ const CreateAccount = () => {
             placeholder="First Name"
             placeholderTextColor="#718096"
             style={[styles.input, styles.halfInput]}
+            value={firstName}
+            onChangeText={setFirstName}
           />
           <TextInput
             placeholder="Last Name"
             placeholderTextColor="#718096"
             style={[styles.input, styles.halfInput, { marginLeft: 10 }]}
+            value={lastName}
+            onChangeText={setLastName}
           />
         </View>
 
@@ -35,12 +80,16 @@ const CreateAccount = () => {
           style={styles.input}
           keyboardType="email-address"
           autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           placeholder="Password"
           placeholderTextColor="#718096"
           style={styles.input}
           secureTextEntry
+          value={password}
+          onChangeText={setPassword}
         />
 
         <TouchableOpacity
@@ -56,8 +105,19 @@ const CreateAccount = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.createAccountButton}>
-          <Text style={styles.createAccountButtonText}>Create Account</Text>
+        
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {success ? <Text style={styles.successText}>{success}</Text> : null}
+
+        <TouchableOpacity 
+           style={styles.createAccountButton}
+           onPress={handleCreateAccount}
+           disabled={loading}>
+         {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.createAccountButtonText}>Create Account</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </View>
