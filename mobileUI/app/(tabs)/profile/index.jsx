@@ -10,19 +10,20 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Hello Mary! Welcome to your profile page.</Text>
-      <Text  style={styles.subtitle}>Manage your profiles below — choose what to share and when.</Text>
-      <View style={styles.profileContainer}>
+      <Text style={styles.subtitle}>Manage your profiles below — choose what to share and when.</Text>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.profileContainer} onPress={() => router.push('/profile/primaryProfile')}>
         <Text style={styles.text}>Primary Profile</Text>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/profile/primaryProfile')}>
-          <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.profileContainer}>
+        <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
+      </TouchableOpacity>
+
+       <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.profileContainer} onPress={() => router.push('/profile/eventProfile')}>
         <Text style={styles.text}>Event Profile</Text>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/profile/eventProfile')}>
-          <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
+        <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -31,9 +32,9 @@ export default Profile
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,         
+    flex: 1,
     backgroundColor: '#fff',
-    padding: 16,   
+    padding: 16,
     alignItems: 'center',
     paddingTop: 40,
   },
