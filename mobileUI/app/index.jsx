@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, ScrollView,  } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { Link } from 'expo-router';
 import Colors from "../constants/Colors";
 import EventAnalytics from "../components/eventAnalytics"
@@ -7,27 +7,54 @@ import AuthTabView from "./(auth)/index"
 
 
 
-const App = () => {
+// const App = () => {
+//   return (
+//     // <>
+//     // <View style={styles.container}>
+//     //   <View style={styles.greetingHeader}>
+//     //     <Text style={styles.headerText}>Hello, Mary!</Text>
+//     //     <Image 
+//     //       style={styles.image}
+//     //       source={require('../../assets/images/avatar.png')} />
+//     //   </View>
+//     //   {/* <ProfileAnalytics /> */}
+//     //   {/* <EventAnalytics /> */}
+//     //   <AuthTabView/>
+//     // </View>
+//     // </>
+//           <AuthTabView/>
+
+//   );
+// };
+
+// export default App;
+
+
+
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
+import { useAuth } from '../contexts/AuthContext';
+
+export default function Index() {
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated === null) return;
+
+    if (isAuthenticated) {
+      router.replace('/(tabs)');
+    } else {
+      router.replace('/(auth)');
+    }
+  }, [isAuthenticated]);
+
   return (
-    // <>
-    // <View style={styles.container}>
-    //   <View style={styles.greetingHeader}>
-    //     <Text style={styles.headerText}>Hello, Mary!</Text>
-    //     <Image 
-    //       style={styles.image}
-    //       source={require('../../assets/images/avatar.png')} />
-    //   </View>
-    //   {/* <ProfileAnalytics /> */}
-    //   {/* <EventAnalytics /> */}
-    //   <AuthTabView/>
-    // </View>
-    // </>
-          <AuthTabView/>
-
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#E7721A" />
+    </View>
   );
-};
-
-export default App;
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -7,10 +7,26 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { verifyEmailOtp } from '../../viewmodels/auth/VerifyEmailViewModel';
+import { useVerifyEmailState } from '../../states/useVerifyEmailState';
+
 const VerifyEmail = () => {
+  const { email } = useLocalSearchParams(); 
+  const router = useRouter();
+
   const [code, setCode] = useState(['', '', '', '', '', '']);
+
+  const {
+    loading, setLoading,
+    error, setError,
+    success, setSuccess,
+  } = useVerifyEmailState();
+
+
   const inputs = useRef([]);
 
   const handleChange = (text, index) => {
@@ -26,6 +42,33 @@ const VerifyEmail = () => {
       }
     }
   };
+
+  const handleVerifyEmail = async () => {
+    const otp = code.join('');
+    if (otp.length !== 6) {
+      setError('Please enter the 6-digit code.');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    await verifyEmailOtp(
+      email,
+      otp,
+      (message) => {
+        setLoading(false);
+        setSuccess(message);
+
+        router.replace('/(auth)');
+      },
+      (message) => {
+        setLoading(false);
+        setError(message);
+      }
+    );
+  };
+
 
   return (
     <KeyboardAvoidingView
@@ -57,8 +100,16 @@ const VerifyEmail = () => {
         <Text style={styles.resendLink}>Resend it.</Text>
       </Text>
 
-      <TouchableOpacity style={styles.continueButton}>
-        <Text style={styles.continueButtonText}>Continue</Text>
+      <TouchableOpacity
+        style={styles.continueButton}
+        onPress={handleVerifyEmail}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.continueButtonText}>Continue</Text>
+        )}
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );

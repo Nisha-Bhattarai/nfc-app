@@ -1,6 +1,8 @@
 import { Tabs, Stack } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import TabBar from "../../components/TabBar"
+import { useAuth } from '../../contexts/AuthContext';
+import { ActivityIndicator, View } from 'react-native';
 
 const TabLayout = () => {
   return (

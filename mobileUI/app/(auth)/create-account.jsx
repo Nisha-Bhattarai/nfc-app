@@ -12,22 +12,39 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Colors from "../../constants/Colors"
 import { useRouter } from 'expo-router';
 import { signupUser } from '../../viewmodels/auth/SignUpViewModel';
+import { useSignupState } from '../../states/useSignUpState';
 
 const CreateAccount = () => {
   const router = useRouter();
 
   // Form state
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [firstName, setFirstName] = useState('');
+  // const [lastName, setLastName] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState('');
+  // const [success, setSuccess] = useState('');
 
-  
+  const {
+    firstName, 
+    setFirstName,
+    lastName, 
+    setLastName,
+    email, 
+    setEmail,
+    password, 
+    setPassword,
+    loading, 
+    setLoading,
+    error, 
+    setError,
+    success, 
+    setSuccess
+  } = useSignupState();
+
   const handleCreateAccount = async () => {
     if (!isChecked) {
       setError('Please agree to the Terms & Conditions');
@@ -45,7 +62,11 @@ const CreateAccount = () => {
       (message) => {
         setLoading(false);
         setSuccess(message);
-        router.push('/(auth)/verifyEmail');
+        router.push({
+          pathname: '/(auth)/verifyEmail',
+          params: { email },
+        });
+
       },
       (message) => {
         setLoading(false);
@@ -105,15 +126,15 @@ const CreateAccount = () => {
           </Text>
         </TouchableOpacity>
 
-        
+
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         {success ? <Text style={styles.successText}>{success}</Text> : null}
 
-        <TouchableOpacity 
-           style={styles.createAccountButton}
-           onPress={handleCreateAccount}
-           disabled={loading}>
-         {loading ? (
+        <TouchableOpacity
+          style={styles.createAccountButton}
+          onPress={handleCreateAccount}
+          disabled={loading}>
+          {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={styles.createAccountButtonText}>Create Account</Text>
@@ -127,73 +148,72 @@ const CreateAccount = () => {
 export default CreateAccount;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-    },
-    formContainer: {
-      paddingHorizontal: 16,
-      paddingBottom: 32,
-    },
-    nameRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    input: {
-      height: 60,
-      borderWidth: 1,
-      borderColor: Colors.border,
-      borderRadius: 10,
-      paddingHorizontal: 16,
-      fontSize: 16,
-      marginBottom: 20,
-      fontFamily: 'Lato_400Regular'
-    },
-    halfInput: {
-      flex: 1,
-    },
-    checkboxRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 32,
-    },
-    checkbox: {
-      width: 22,
-      height: 22,
-      borderRadius: 4,
-      borderWidth: 1,
-      borderColor: Colors.border,
-      marginRight: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    checkedBox: {
-      backgroundColor: Colors.accent,
-      borderColor: Colors.accent,
-    },
-    termsText: {
-      fontSize: 16,
-      color: Colors.textPrimary,
-      flexShrink: 1,
-      flexWrap: 'wrap',
-      fontFamily: 'Lato_400Regular'
-    },
-    link: {
-      color: Colors.accent,
-      fontWeight: '500',
-    },
-    createAccountButton: {
-      height: 60,
-      backgroundColor: Colors.accent,
-      borderRadius: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%',
-    },
-    createAccountButtonText: {
-      color: 'white',
-      fontSize: 18,
-      fontFamily: 'Poppins_400Regular'
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  formContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  input: {
+    height: 60,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    marginBottom: 20,
+    fontFamily: 'Lato_400Regular'
+  },
+  halfInput: {
+    flex: 1,
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkedBox: {
+    backgroundColor: Colors.accent,
+    borderColor: Colors.accent,
+  },
+  termsText: {
+    fontSize: 16,
+    color: Colors.textPrimary,
+    flexShrink: 1,
+    flexWrap: 'wrap',
+    fontFamily: 'Lato_400Regular'
+  },
+  link: {
+    color: Colors.accent,
+    fontWeight: '500',
+  },
+  createAccountButton: {
+    height: 60,
+    backgroundColor: Colors.accent,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  createAccountButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Poppins_400Regular'
+  },
+});

@@ -1,0 +1,16 @@
+import { useState, useEffect } from 'react';
+import { getSession } from '../utils/sessionStorage';
+
+export const useSession = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const check = async () => {
+      const session = await getSession();
+      setIsAuthenticated(!!session?.token);
+    };
+    check();
+  }, []);
+
+  return { isAuthenticated };
+};
