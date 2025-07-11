@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   labelIconContainer: {
      flexDirection: 'row',

@@ -71,6 +71,11 @@ const More = () => {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
       />
+
+      <TouchableOpacity style={styles.updateButton}>
+        <MaterialIcons name="update" size={22} color="white" />
+        <Text style={styles.updateButtonText}>Update</Text>
+      </TouchableOpacity>
       
       <TouchableOpacity style={styles.logoutButton}>
         <MaterialIcons name="logout" size={22} color={Colors.accent} />
@@ -105,6 +110,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_600SemiBold',
     marginBottom: 20,
     marginTop: 10,
+  },
+  updateButton: {
+    height: 50,
+    backgroundColor: Colors.accent,
+    borderColor: Colors.accent,
+    borderWidth: 2,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    flexDirection: 'row',
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  updateButtonText: {
+    color: Colors.white,
+      fontSize: 18,
+      fontFamily: 'Lato_400Regular',
   },
   logoutButton: {
       height: 50,
