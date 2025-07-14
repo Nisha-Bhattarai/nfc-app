@@ -1,16 +1,14 @@
-import React, { useRef, useEffect } from 'react';
-import { StyleSheet, Animated, Pressable, Dimensions } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { StyleSheet, Animated, Pressable, View } from 'react-native';
 import Colors from '../constants/Colors';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const BottomSheet = ({
   visible,
   onClose,
   children,
-  height = SCREEN_HEIGHT * 0.4,
 }) => {
-  const slideAnim = useRef(new Animated.Value(height)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current;
+  const [contentHeight, setContentHeight] = useState(0);
 
   const slideUp = () => {
     Animated.timing(slideAnim, {
@@ -22,7 +20,7 @@ const BottomSheet = ({
 
   const slideDown = (callback) => {
     Animated.timing(slideAnim, {
-      toValue: height,
+      toValue: contentHeight,
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
@@ -31,12 +29,15 @@ const BottomSheet = ({
   };
 
   useEffect(() => {
-    if (visible) {
+    if (visible && contentHeight > 0) {
+      // Start hidden below the screen
+      slideAnim.setValue(contentHeight);
       slideUp();
-    } else {
-      slideDown();
     }
-  }, [visible]);
+    if (!visible && contentHeight > 0) {
+      slideDown(onClose);
+    }
+  }, [visible, contentHeight]);
 
   if (!visible) return null;
 
@@ -46,18 +47,18 @@ const BottomSheet = ({
 
   return (
     <Pressable onPress={handleClose} style={styles.backdrop}>
-      <Pressable
-        style={{ width: '100%', height }}
-        onPress={(e) => e.stopPropagation()}
-      >
+      <Pressable onPress={(e) => e.stopPropagation()} style={{ width: '100%' }}>
         <Animated.View
           style={[
             styles.bottomSheet,
             {
               transform: [{ translateY: slideAnim }],
-              height,
             },
           ]}
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+            setContentHeight(height);
+          }}
         >
           {children}
         </Animated.View>
