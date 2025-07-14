@@ -1,23 +1,37 @@
-import { View, Text, StyleSheet, Image, ScrollView,  } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button  } from 'react-native';
+import React, { useState } from 'react';
 import { Link } from 'expo-router';
 import Colors from "../../constants/Colors";
 import EventAnalytics from "../../components/eventAnalytics"
 import ProfileAnalytics from "../../components/profileAnalytics"
+import BottomSheet from '../../components/BottomSheet';
 
 const Home = () => {
+  const [isSheetVisible, setIsSheetVisible] = useState(false);
   return (
     <>
     <View style={styles.container}>
       <View style={styles.greetingHeader}>
         <Text style={styles.headerText}>Hello, Mary!</Text>
-        <Image 
+        <TouchableOpacity
+        onPress={() => setIsSheetVisible(true)}>
+          <Image 
           style={styles.image}
           source={require('../../assets/images/avatar.png')} />
+        </TouchableOpacity>
+        
       </View>
       <ProfileAnalytics />
       {/* <EventAnalytics /> */}
       {/* <AuthTabView/> */}
     </View>
+
+    <BottomSheet visible={isSheetVisible} onClose={() => setIsSheetVisible(false)}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
+          Bottom Sheet Content
+        </Text>
+      </BottomSheet>
+    
     </>
 
   );
