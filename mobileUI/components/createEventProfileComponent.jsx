@@ -5,10 +5,18 @@ import FormInput from './formInput';
 import Colors from "../constants/Colors"
 import SkillsSelector from './skillsSelector';
 import EventDateTimePicker from "./eventDateTimePicker"
+import BottomSheet from './BottomSheet';
+import SocialMediaModal from './SocialMediaModal';
+import AddURLModal from './AddURLModal';
+import AddCertificationModal from './AddCertificationModal';
 
 const createEventProfileComponent = () => {
+    const [isAddMoreSheetVisible, setAddMoreSheetVisible] = useState(false);
+    const [isAddURLSheetVisible, setAddURLSheetVisible] = useState(false);
+    const [isAddCertificationSheetVisible, setAddCertificationSheetVisible] = useState(false);
 
   return (
+    <>
     <ScrollView style={styles.container}>
         <View style={styles.backgroundContainer}>
             
@@ -50,7 +58,9 @@ const createEventProfileComponent = () => {
               <AntDesign name="delete" size={20} color={Colors.delete} />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.addMoreBtn}>
+          <TouchableOpacity 
+          style={styles.addMoreBtn}
+          onPress={() => setAddMoreSheetVisible(true)}>
           <Text style={styles.addMoreText}>+ Add More</Text>
         </TouchableOpacity>
         </View>
@@ -71,7 +81,9 @@ const createEventProfileComponent = () => {
             <AntDesign name="delete" size={20} color={Colors.delete} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.addMoreBtn}>
+        <TouchableOpacity 
+        style={styles.addMoreBtn}
+        onPress={() => setAddURLSheetVisible(true)}>
           <Text style={styles.addMoreText}>+ Add More</Text>
         </TouchableOpacity>
         </View>
@@ -87,7 +99,9 @@ const createEventProfileComponent = () => {
             <AntDesign name="delete" size={20} color={Colors.delete} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.addMoreBtn}>
+        <TouchableOpacity 
+        style={styles.addMoreBtn}
+         onPress={() => setAddCertificationSheetVisible(true)}>
           <Text style={styles.addMoreText}>+ Add More</Text>
         </TouchableOpacity>
         </View>
@@ -107,6 +121,18 @@ const createEventProfileComponent = () => {
       </View>
         </View>
     </ScrollView>
+    <BottomSheet visible={isAddMoreSheetVisible} onClose={() => setAddMoreSheetVisible(false)}>
+        <SocialMediaModal />
+      </BottomSheet>
+
+      <BottomSheet visible={isAddURLSheetVisible} onClose={() => setAddURLSheetVisible(false)}>
+        <AddURLModal />
+      </BottomSheet>
+
+      <BottomSheet visible={isAddCertificationSheetVisible} onClose={() => setAddCertificationSheetVisible(false)}>
+        <AddCertificationModal />
+      </BottomSheet>
+    </>
   );
 };
 
