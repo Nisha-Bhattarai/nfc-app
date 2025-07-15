@@ -16,7 +16,7 @@ const FormInput = ({ placeholder, style, ...rest }) => {
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
+    height: 50,
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: Colors.inputBorder,
