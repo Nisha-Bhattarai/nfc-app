@@ -90,5 +90,6 @@ const styles = StyleSheet.create({
     color: Colors.accent,
     fontSize: 16,
     fontFamily: 'Lato_400Regular',
+    lineHeight: 30
   },
 })

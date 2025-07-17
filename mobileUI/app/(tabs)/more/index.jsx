@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
       fontSize: 18,
       fontFamily: 'Lato_400Regular',
+      lineHeight: 30,
   },
   logoutButton: {
       height: 50,
@@ -144,5 +145,6 @@ const styles = StyleSheet.create({
       color: Colors.accent,
       fontSize: 18,
       fontFamily: 'Lato_400Regular',
+      lineHeight: 30
     },
 });
