@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Colors from '../constants/Colors';
 
-const ContactListCard = ({ image, name, date, email, phone, note }) => {
+const ContactListCard = ({ image, name, date, email, phone, note, onMorePress }) => {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.header}>
@@ -17,7 +17,7 @@ const ContactListCard = ({ image, name, date, email, phone, note }) => {
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.date}>{date}</Text>
         </View>
-        <TouchableOpacity style={styles.moreBtn}>
+        <TouchableOpacity style={styles.moreBtn} onPress={onMorePress}>
           <Feather name="more-horizontal" size={24} color="black" />
         </TouchableOpacity>
       </View>

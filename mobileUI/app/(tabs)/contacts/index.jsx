@@ -36,6 +36,13 @@ const Contacts = () => {
             email="johndoe@gmail.com"
             phone="5596634498"
             note="Met at technical conference and talked about partnership!"
+            onMorePress={() =>
+              openBottomSheet(
+                <ContactsMoreModal
+                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                />
+              )
+            }
           />
           <ContactListCard
             image={require('../../../assets/images/avatar-female.webp')}
@@ -44,6 +51,13 @@ const Contacts = () => {
             email="jazzmiller@gmail.com"
             phone="5596634498"
             note="Might consider hiring"
+            onMorePress={() =>
+              openBottomSheet(
+                <ContactsMoreModal
+                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                />
+              )
+            }
           />
           <ContactListCard
             image={require('../../../assets/images/avatar.png')}
@@ -52,6 +66,13 @@ const Contacts = () => {
             email="jack.cooper@ultratech.com"
             phone="9865745362"
             note="Met at Toronto conference. Interesting person!"
+            onMorePress={() =>
+              openBottomSheet(
+                <ContactsMoreModal
+                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                />
+              )
+            }
           />
           <ContactListCard
             image={require('../../../assets/images/avatar-female.webp')}
@@ -60,9 +81,19 @@ const Contacts = () => {
             email="lee.sarah24@outlook.com"
             phone="4374563425"
             note="Tech conference. Said she's a graphic designer" 
+            onMorePress={() =>
+              openBottomSheet(
+                <ContactsMoreModal
+                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                />
+              )
+            }
           />
         </ScrollView>
       </View>
+      <BottomSheet visible={bottomSheetVisible} onClose={closeBottomSheet}>
+        {bottomSheetContent}
+      </BottomSheet>
     </View>
   );
 };
