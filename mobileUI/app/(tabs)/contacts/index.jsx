@@ -5,10 +5,12 @@ import ContactListCard from '../../../components/contactListCard';
 import BottomSheet from '../../../components/BottomSheet';
 import ContactsMoreModal from '../../../components/ContactsMoreModal';
 import EditContactFormModal from '../../../components/EditContactFormModal';
+import AddContactFormModal from '../../../components/AddContactFormModal';
 
 const Contacts = () => {
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
     const [bottomSheetContent, setBottomSheetContent] = useState(null);
+    const [isAddNewContactSheetVisible, setAddNewContactSheetVisible] = useState(false);
 
       const openBottomSheet = (content) => {
     setBottomSheetContent(content);
@@ -24,7 +26,7 @@ const Contacts = () => {
     <View style={styles.container}>
       <View style={styles.background}>
         <View style={styles.addNewContactButton}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => setAddNewContactSheetVisible(true)}>
             <Text style={styles.buttonText}>+ Add a New Contact</Text>
           </TouchableOpacity>
         </View>
@@ -93,6 +95,10 @@ const Contacts = () => {
       </View>
       <BottomSheet visible={bottomSheetVisible} onClose={closeBottomSheet}>
         {bottomSheetContent}
+      </BottomSheet>
+
+      <BottomSheet visible={isAddNewContactSheetVisible} onClose={() => setAddNewContactSheetVisible(false)}>
+        <AddContactFormModal />
       </BottomSheet>
     </View>
   );
