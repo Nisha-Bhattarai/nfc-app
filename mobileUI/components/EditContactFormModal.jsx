@@ -11,12 +11,12 @@ const EditContactFormModal = () => {
             <Image style={styles.avatarImage} source={require('../assets/images/avatar.png')}/>
             <Text style={styles.textName}>John Doe</Text>
             <View style={styles.emailInput}>
-                <Ionicons name="mail-outline" size={30} color="#555" />
+                <Ionicons name="mail-outline" size={28} color={Colors.primary} />
                 <FormInput 
                 placeholder="Email"/>
             </View>
             <View style={styles.phoneInput}>
-                <AntDesign name="phone" size={30} color="black" />
+                <AntDesign name="phone" size={28} color={Colors.primary} />
                 <FormInput 
                 placeholder="Phone"/>
             </View>

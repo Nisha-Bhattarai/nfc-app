@@ -37,7 +37,7 @@ const styles=StyleSheet.create({
         alignItems: 'center',
     },
     downloadText: {
-        fontSize: 18,
+        fontSize: 17,
         color: Colors.textPrimary
     },
     edit:{
@@ -46,7 +46,8 @@ const styles=StyleSheet.create({
       alignItems: 'center',
     },
     editText: {
-      fontSize: 18,
+      fontSize: 17,
+      color: Colors.textPrimary
     },
     delete: {
       flexDirection: 'row',
@@ -55,9 +56,6 @@ const styles=StyleSheet.create({
     },
     deleteText: {
       color: Colors.delete,
-      fontSize: 18,
+      fontSize: 17,
     },
-    icon: {
-      width: 30,
-    }
 })
