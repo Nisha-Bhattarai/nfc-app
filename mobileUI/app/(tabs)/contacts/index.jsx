@@ -1,9 +1,25 @@
 import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import Colors from '../../../constants/Colors';
 import ContactListCard from '../../../components/contactListCard';
+import BottomSheet from '../../../components/BottomSheet';
+import ContactsMoreModal from '../../../components/ContactsMoreModal';
+import EditContactFormModal from '../../../components/EditContactFormModal';
 
 const Contacts = () => {
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+    const [bottomSheetContent, setBottomSheetContent] = useState(null);
+
+      const openBottomSheet = (content) => {
+    setBottomSheetContent(content);
+    setBottomSheetVisible(true);
+  };
+
+  const closeBottomSheet = () => {
+    setBottomSheetVisible(false);
+    setBottomSheetContent(null);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.background}>
