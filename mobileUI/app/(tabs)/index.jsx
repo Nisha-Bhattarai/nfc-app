@@ -5,6 +5,7 @@ import Colors from "../../constants/Colors";
 import EventAnalytics from "../../components/eventAnalytics"
 import ProfileAnalytics from "../../components/profileAnalytics"
 import BottomSheet from '../../components/BottomSheet';
+import SwitchProfileModal from '../../components/SwitchProfileModal';
 
 const Home = () => {
   const [isSheetVisible, setIsSheetVisible] = useState(false);
@@ -28,7 +29,7 @@ const Home = () => {
 
     <BottomSheet visible={isSheetVisible} onClose={() => setIsSheetVisible(false)}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-          Bottom Sheet Content
+          <SwitchProfileModal />
         </Text>
       </BottomSheet>
     
