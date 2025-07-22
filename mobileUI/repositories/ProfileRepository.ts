@@ -1,5 +1,6 @@
 // repositories/ProfileRepository.ts
 import apiService from '../services/apiService';
+import {PrimaryProfile} from '../models/PrimaryProfileListResponse'
 
 export interface SocialMedia {
   platform: string;
@@ -32,4 +33,15 @@ export interface PrimaryProfileRequest {
 export const createPrimaryProfileApi = async (payload: PrimaryProfileRequest) => {
   const response = await apiService.post('/profile/primary', payload);
   return response.data;
+};
+
+
+export interface GetPrimaryProfilesResponse {
+  message: string;
+  profiles: PrimaryProfile[];
+}
+
+export const getPrimaryProfilesApi = async (): Promise<PrimaryProfile[]> => {
+  const response = await apiService.get<GetPrimaryProfilesResponse>('/profile/primary');
+  return response.data.profiles;
 };

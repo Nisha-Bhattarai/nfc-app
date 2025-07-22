@@ -14,8 +14,8 @@ export const usePrimaryProfileState = () => {
   const [personalPhone, setPersonalPhone] = useState('');
   const [workPhone, setWorkPhone] = useState('');
 
-const [socialMedia, setSocialMedia] = useState([{ platform: 'facebook', url: '' }]);
- const [relevantLinks, setRelevantLinks] = useState([{ title: '', url: '' }]);
+  const [socialMedia, setSocialMedia] = useState([{ platform: 'facebook', url: '' }]);
+  const [relevantLinks, setRelevantLinks] = useState([{ title: '', url: '' }]);
   const [photos, setPhotos] = useState([]);
 
   const [loading, setLoading] = useState(false);

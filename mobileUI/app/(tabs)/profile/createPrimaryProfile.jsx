@@ -1,13 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal,  ActivityIndicator,
- } from 'react-native';
-import { AntDesign, FontAwesome5, FontAwesome, Entypo } from '@expo/vector-icons';
+import {
+  View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, ActivityIndicator,
+} from 'react-native';
+import { AntDesign, FontAwesome5, FontAwesome, Entypo, FontAwesome6 } from '@expo/vector-icons';
 import FormInput from '../../../components/formInput';
 import Colors from '../../../constants/Colors';
 import { usePrimaryProfileState } from '../../../states/usePrimaryProfileState';
 import { useState } from 'react';
 import { createPrimaryProfile } from '../../../viewmodels/profiles/PrimaryProfileViewModel.ts';
 import { useRouter } from 'expo-router';
+import SocialMediaModal from '../../../components/SocialMediaModal';
+import { platforms } from '../../../components/SocialMediaModal';
 
 const CreatePrimaryProfile = () => {
   const router = useRouter();
@@ -89,26 +92,21 @@ const CreatePrimaryProfile = () => {
         visible={isPlatformModalVisible}
         transparent
         animationType="slide"
-        onRequestClose={() => setIsPlatformModalVisible(false)}
-      >
-        <TouchableOpacity style={styles.modalOverlay} onPress={() => setIsPlatformModalVisible(false)} />
+        onRequestClose={() => setIsPlatformModalVisible(false)}>
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          onPress={() => setIsPlatformModalVisible(false)}
+        />
         <View style={styles.modalSheet}>
           <Text style={styles.modalTitle}>Choose Platform</Text>
-          {['instagram', 'linkedin'].map((platform, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.platformOption}
-              onPress={() => {
-                if (!socialMedia.some(item => item.platform === platform)) {
-                  setSocialMedia([...socialMedia, { platform, url: '' }]);
-                }
-                setIsPlatformModalVisible(false);
-              }}
-            >
-              {getPlatformIcon(platform)}
-              <Text style={styles.platformText}>{platform.charAt(0).toUpperCase() + platform.slice(1)}</Text>
-            </TouchableOpacity>
-          ))}
+          <SocialMediaModal
+            onSelectPlatform={(platform) => {
+              if (!socialMedia.some(item => item.platform === platform)) {
+                setSocialMedia([...socialMedia, { platform, url: '' }]);
+              }
+              setIsPlatformModalVisible(false);
+            }}
+          />
         </View>
       </Modal>
 
@@ -228,16 +226,7 @@ const CreatePrimaryProfile = () => {
 };
 
 const getPlatformIcon = (platform) => {
-  switch (platform) {
-    case 'facebook':
-      return <FontAwesome name="facebook-square" size={28} color="#1877F2" />;
-    case 'instagram':
-      return <FontAwesome5 name="instagram" size={28} color="#e1306c" />;
-    case 'linkedin':
-      return <AntDesign name="linkedin-square" size={28} color="#0077B5" />;
-    default:
-      return <FontAwesome name="globe" size={28} color="#555" />;
-  }
+  return platforms[platform]?.icon ?? <FontAwesome6 name="globe" size={28} color="#555" />;
 };
 
 
