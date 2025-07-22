@@ -13,7 +13,7 @@ const Profile = () => {
       <Text style={styles.subtitle}>Manage your profiles below — choose what to share and when.</Text>
       <TouchableOpacity
         activeOpacity={0.7}
-        style={styles.profileContainer} onPress={() => router.push('/profile/primaryProfile')}>
+        style={styles.profileContainer} onPress={() => router.push('/profile/primaryProfileList')}>
         <Text style={styles.text}>Primary Profile</Text>
         <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
       </TouchableOpacity>
