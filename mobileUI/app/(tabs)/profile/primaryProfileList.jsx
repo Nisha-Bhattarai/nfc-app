@@ -1,11 +1,16 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
+import PrimaryProfileEmpty from '../../../components/primaryProfileEmpty'
+
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import React from 'react'
-import Colors from '../constants/Colors'
-import PrimaryProfileCard from './primaryProfileCard'
+import Colors from '../../../constants/Colors'
+import PrimaryProfileCard from '../../../components/primaryProfileCard'
 import { useRouter } from 'expo-router'
+import { usePrimaryProfileListState } from '../../../states/usePrimaryProfileListState';
 
 const PrimaryProfileList = () => {
     const router = useRouter();
+      const { profiles, loading, error } = usePrimaryProfileListState();
+
   return (
     <View style={styles.container}>
         <View style={styles.backgroundContainer}>
@@ -14,26 +19,23 @@ const PrimaryProfileList = () => {
                     <Text style={styles.buttonText}>+ Add a New Profile</Text>
                 </TouchableOpacity>
             </View>
-            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                <PrimaryProfileCard 
-            name='Mary Wilson'
-            position='Financial Advisor Profile'
-            createdDate='April 3, 2025'
-            modifiedDate='April 7, 2025'
-            />
-            <PrimaryProfileCard 
-            name='Mary Wilson'
-            position='Freelancer Profile'
-            createdDate='April 20, 2025'
-            modifiedDate='May 6, 2025'
-            />
-            <PrimaryProfileCard 
-            name='Mary Wilson'
-            position='Freelancer Profile'
-            createdDate='April 20, 2025'
-            modifiedDate='May 6, 2025'
-            />
-            </ScrollView>
+            {loading ? (
+          <ActivityIndicator size="large" color={Colors.accent} />
+        ) : error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : (
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            {profiles.map((profile) => (
+              <PrimaryProfileCard
+                key={profile._id}
+                name={`${profile.firstName} ${profile.lastName}`}
+                position={`${profile.jobTitle} - ${profile.company}`}
+                createdDate={new Date(profile.createdAt).toDateString()}
+                modifiedDate={new Date(profile.updatedAt).toDateString()}
+              />
+            ))}
+          </ScrollView>
+        )}
             
         </View>
     </View>
@@ -73,3 +75,4 @@ const styles = StyleSheet.create ({
     fontSize: 14,
   },
 })
+
