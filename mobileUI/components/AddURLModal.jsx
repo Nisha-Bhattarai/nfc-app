@@ -1,19 +1,33 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react';
 import Colors from '../constants/Colors'
 import FormInput from './formInput'
 
-const AddURLModal = () => {
+const AddURLModal = ({ onAdd }) => {
+  const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
+  
+  const handleAdd = () => {
+    // if (!title.trim() || !url.trim()) return;
+    onAdd(title.trim(), url.trim());
+    setTitle('');
+    setUrl('');
+  };
+
   return (
     <View style={styles.bottomSheetContainer}>
       <Text style={styles.title}>Add a New URL</Text>
-      <FormInput 
-      placeholder='URL Title'
+     <FormInput
+        placeholder="URL Title"
+        value={title}
+        onChangeText={setTitle}
       />
-      <FormInput 
-      placeholder='Add your URL here'
+      <FormInput
+        placeholder="Add your URL here"
+        value={url}
+        onChangeText={setUrl}
       />
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity style={styles.addButton} onPress={handleAdd}>
         <Text style={styles.addButtonText}>Add URL</Text>
       </TouchableOpacity>
     </View>
