@@ -1,16 +1,27 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react';
 import Colors from '../constants/Colors';
 import FormInput from './formInput';
 
-const AddCertificationModal = () => {
+const AddCertificationModal = ({ onAdd }) => {
+  const [title, setTitle] = useState('');
+    
+    const handleAdd = () => {
+      onAdd(title.trim());
+      setTitle('');
+    };
+
   return (
     <View style={styles.bottomSheetContainer}>
       <Text style={styles.title}>Add a New Certification</Text>
-      <FormInput 
-      placeholder='Certification/Achievement Title'
+     
+       <FormInput
+        placeholder='Certification/Achievement Title'
+        value={title}
+        onChangeText={setTitle}
       />
-      <TouchableOpacity style={styles.addButton}>
+     
+      <TouchableOpacity style={styles.addButton}  onPress={handleAdd}>
         <Text style={styles.addButtonText}>Add</Text>
       </TouchableOpacity>
     </View>

@@ -4,26 +4,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
 import Colors from '../constants/Colors';
 
-export default function EventDateTimePicker() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-
+export default function EventDateTimePicker({ label, date, onChange }) {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [pickerFor, setPickerFor] = useState(null); // 'start' or 'end'
-  const [mode, setMode] = useState('date'); // for Android step picker mode
+  const [mode, setMode] = useState('date');
+  const [tempDate, setTempDate] = useState(date || new Date());
 
-  // Temporary date state inside modal for iOS to delay commit
-  const [tempDate, setTempDate] = useState(new Date());
-
-  // Open picker modal and set mode according to platform
-  const openPicker = (forWhich) => {
-    setPickerFor(forWhich);
-    if (forWhich === 'start') {
-      setTempDate(startDate);
-    } else {
-      setTempDate(endDate);
-    }
-
+  const openPicker = () => {
+    setTempDate(date || new Date());
     if (Platform.OS === 'ios') {
       setMode('datetime');
       setModalVisible(true);
@@ -33,62 +20,39 @@ export default function EventDateTimePicker() {
     }
   };
 
-  const onChange = (event, selectedDate) => {
+  const handleChange = (event, selectedDate) => {
     if (Platform.OS === 'android') {
-      // Android: immediately apply changes and handle mode switch for time picker
       if (event.type === 'dismissed' || !selectedDate) {
         setModalVisible(false);
         setMode('date');
         return;
       }
 
-      if (pickerFor === 'start') {
-        if (mode === 'date') {
-          setStartDate(selectedDate);
-          setMode('time');
-        } else {
-          setStartDate(selectedDate);
-          setModalVisible(false);
-          setMode('date');
-        }
-      } else if (pickerFor === 'end') {
-        if (mode === 'date') {
-          setEndDate(selectedDate);
-          setMode('time');
-        } else {
-          setEndDate(selectedDate);
-          setModalVisible(false);
-          setMode('date');
-        }
+      if (mode === 'date') {
+        setTempDate(selectedDate);
+        setMode('time');
+      } else {
+        setModalVisible(false);
+        onChange(selectedDate);
+        setMode('date');
       }
     } else {
-      // iOS: update tempDate only, don't close modal
       if (selectedDate) {
         setTempDate(selectedDate);
       }
     }
   };
 
-  // When user presses Done on iOS modal
-  const onDonePress = () => {
-    if (pickerFor === 'start') {
-      setStartDate(tempDate);
-    } else if (pickerFor === 'end') {
-      setEndDate(tempDate);
-    }
+  const handleDone = () => {
+    onChange(tempDate);
     setModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Event Start:</Text>
-      <TouchableOpacity style={styles.buttonStyled} onPress={() => openPicker('start')}>
-        <Text style={styles.buttonText}>{startDate.toLocaleString()}</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.label}>Event End:</Text>
-      <TouchableOpacity style={styles.buttonStyled} onPress={() => openPicker('end')}>
-        <Text style={styles.buttonText}>{endDate.toLocaleString()}</Text>
+      <Text style={styles.label}>{label}</Text>
+      <TouchableOpacity style={styles.buttonStyled} onPress={openPicker}>
+        <Text style={styles.buttonText}>{date ? date.toLocaleString() : 'Select Date'}</Text>
       </TouchableOpacity>
 
       <Modal
@@ -101,17 +65,16 @@ export default function EventDateTimePicker() {
       >
         <View style={styles.modalContent}>
           <DateTimePicker
-            value={Platform.OS === 'ios' ? tempDate : (pickerFor === 'start' ? startDate : endDate)}
+            value={Platform.OS === 'ios' ? tempDate : date || new Date()}
             mode={mode}
             display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={onChange}
-            minimumDate={pickerFor === 'end' ? startDate : new Date()}
+            onChange={handleChange}
             is24Hour={true}
             style={{ width: '100%' }}
           />
           {Platform.OS === 'ios' && (
             <TouchableOpacity
-              onPress={onDonePress}
+              onPress={handleDone}
               style={styles.doneButton}
               activeOpacity={0.7}
             >
@@ -125,8 +88,8 @@ export default function EventDateTimePicker() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', },
-  label: { fontSize: 16, marginBottom: 10 },
+  container: { marginBottom: 10 },
+  label: { fontSize: 16 },
   buttonStyled: {
     backgroundColor: 'white',
     borderWidth: 1,
@@ -134,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    marginBottom: 16,
+    marginTop: -25,
     alignItems: 'center',
     justifyContent: 'center',
   },

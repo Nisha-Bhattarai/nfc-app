@@ -45,3 +45,26 @@ export const getPrimaryProfilesApi = async (): Promise<PrimaryProfile[]> => {
   const response = await apiService.get<GetPrimaryProfilesResponse>('/profile/primary');
   return response.data.profiles;
 };
+
+export interface EventProfileRequest {
+  eventProfileName: string;
+  eventName: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+  aboutEvent: string;
+  personalEmail: string;
+  workEmail: string;
+  personalPhone: string;
+  workPhone: string;
+  socialMedia: SocialMedia[];
+  relevantLinks: RelevantLink[];
+  skills: string[];
+  certifications: string[];
+  photoGallery: string[];
+}
+
+export const createEventProfileApi = async (payload: EventProfileRequest) => {
+  const response = await apiService.post('/profile/event', payload);
+  return response.data;
+};
