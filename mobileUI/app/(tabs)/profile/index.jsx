@@ -20,7 +20,7 @@ const Profile = () => {
 
        <TouchableOpacity
         activeOpacity={0.7}
-        style={styles.profileContainer} onPress={() => router.push('/profile/eventProfile')}>
+        style={styles.profileContainer} onPress={() => router.push('/profile/eventProfileList')}>
         <Text style={styles.text}>Event Profile</Text>
         <AntDesign style={styles.rightIcon} name="right" size={24} color="black" />
       </TouchableOpacity>

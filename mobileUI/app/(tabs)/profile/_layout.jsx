@@ -13,7 +13,7 @@ const ProfileLayout = () => {
         <Stack.Screen name='index' options={{title: 'Profile'}} />
         <Stack.Screen name='primaryProfileList' options={{title: 'Primary Profile'}} />
         <Stack.Screen name='createPrimaryProfile' options={{title: 'Create Primary Profile'}} />
-        <Stack.Screen name='eventProfile' options={{ title: 'Event Profile' }} />
+        <Stack.Screen name='eventProfileList' options={{ title: 'Event Profile' }} />
         <Stack.Screen name='createEventProfile' options={{ title: 'Create Event Profile' }} />
         </Stack>
       <StatusBar style="auto" />
