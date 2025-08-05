@@ -1,6 +1,8 @@
 // repositories/ProfileRepository.ts
 import apiService from '../services/apiService';
 import {PrimaryProfile} from '../models/PrimaryProfileListResponse'
+import {EventProfile} from '../models/EventProfileListResponse'
+
 
 export interface SocialMedia {
   platform: string;
@@ -41,8 +43,19 @@ export interface GetPrimaryProfilesResponse {
   profiles: PrimaryProfile[];
 }
 
+export interface EventProfilesBaseResponse {
+  message: string;
+  profiles: EventProfile[];
+}
+
 export const getPrimaryProfilesApi = async (): Promise<PrimaryProfile[]> => {
   const response = await apiService.get<GetPrimaryProfilesResponse>('/profile/primary');
+  return response.data.profiles;
+};
+
+
+export const getEventProfilesApi = async (): Promise<EventProfile[]> => {
+  const response = await apiService.get<EventProfilesBaseResponse>('/profile/event');
   return response.data.profiles;
 };
 
