@@ -1,15 +1,32 @@
 
 import EventProfileEmpty from '../../../components/eventProfileEmpty';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
-import React from 'react'
+import { useState, React } from 'react';
 import Colors from '../../../constants/Colors'
 import EventProfileCard from '../../../components/eventProfileCard'
+import { deleteEventProfile } from '../../../viewmodels/profiles/EventProfileViewModel';
 import { useRouter } from 'expo-router'
 import { useEventProfileListState } from '../../../states/useEventProfileListState';
 
 const EventProfileList = () => {
     const router = useRouter();
-    const { profiles, loading, error } = useEventProfileListState();
+    const { profiles, loading, error, reload } = useEventProfileListState();
+    const [deletingId, setDeletingId] = useState(null);
+
+    const handleDelete = async (id) => {
+        setDeletingId(id);
+        deleteEventProfile(
+            id, () => {
+                reload(); // refresh the list
+                setDeletingId(null);
+            },
+            (errMessage) => {
+                alert(errMessage);
+                setDeletingId(null);
+            }
+        );
+    };
+
 
     return (
         <View style={styles.container}>
@@ -32,6 +49,8 @@ const EventProfileList = () => {
                                 position={`${profile.eventName}`}
                                 createdDate={new Date(profile.createdAt).toDateString()}
                                 modifiedDate={new Date(profile.updatedAt).toDateString()}
+                                onDelete={() => handleDelete(profile._id)}
+                                deleting={deletingId === profile._id}
                             />
                         ))}
 
