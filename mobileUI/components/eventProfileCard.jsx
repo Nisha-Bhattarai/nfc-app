@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Colors from '../constants/Colors';
 
-const EventProfileCard = ({name, position, createdDate, modifiedDate}) => {
+const EventProfileCard = ({name, position, createdDate, modifiedDate, onDelete, deleting  }) => {
   return (
     <View style={styles.cardContainer}>
         <View style={styles.topContainer}>
@@ -22,8 +22,8 @@ const EventProfileCard = ({name, position, createdDate, modifiedDate}) => {
             <TouchableOpacity style={styles.editButton}>
                 <Text style={styles.buttonText}>Edit</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.deleteButton}>
-                <Text style={styles.buttonText}>Delete</Text>
+            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+          <Text style={styles.buttonText}>{deleting ? 'Deleting...' : 'Delete'}</Text>
             </TouchableOpacity>
         </View>   
     </View>
