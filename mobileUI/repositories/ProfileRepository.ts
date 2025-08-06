@@ -86,3 +86,8 @@ export const deleteEventProfileApi = async (id: string) => {
   const response = await apiService.delete(`/profile/event/${id}`);
   return response.data;
 };
+
+export const deletePrimaryProfileApi = async (id: string) => {
+  const response = await apiService.delete(`/profile/primary/${id}`);
+  return response.data;
+};

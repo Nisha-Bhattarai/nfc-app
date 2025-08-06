@@ -2,30 +2,30 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Colors from '../constants/Colors';
 
-const PrimaryProfileCard = ({name, position, createdDate, modifiedDate}) => {
+const PrimaryProfileCard = ({ name, position, createdDate, modifiedDate, onDelete, deleting }) => {
   return (
     <View style={styles.cardContainer}>
-        <View style={styles.topContainer}>
-            <View style={styles.imageContainer}>
-                <Image 
-                    style={styles.image}
-                    source={require('../assets/images/avatar.png')} />
-            </View>
-            <View style={styles.infoContainer}>
-                <Text style={styles.nameText}>{name}</Text>
-                <Text style={styles.otherText}>{position}</Text>
-                <Text style={styles.otherText}>Date Created: {createdDate}</Text>
-                <Text style={styles.otherText}>Date Modified: {modifiedDate}</Text>
-            </View>
-        </View>   
-        <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.editButton}>
-                <Text style={styles.buttonText}>Edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.deleteButton}>
-                <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
-        </View>   
+      <View style={styles.topContainer}>
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.image}
+            source={require('../assets/images/avatar.png')} />
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.nameText}>{name}</Text>
+          <Text style={styles.otherText}>{position}</Text>
+          <Text style={styles.otherText}>Date Created: {createdDate}</Text>
+          <Text style={styles.otherText}>Date Modified: {modifiedDate}</Text>
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.editButton}>
+          <Text style={styles.buttonText}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+          <Text style={styles.buttonText}>{deleting ? 'Deleting...' : 'Delete'}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -33,7 +33,7 @@ const PrimaryProfileCard = ({name, position, createdDate, modifiedDate}) => {
 export default PrimaryProfileCard
 
 const styles = StyleSheet.create({
-   cardContainer: {
+  cardContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     padding: 16,
@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 15,
     marginBottom: 16,
-   },
-   topContainer: {
+  },
+  topContainer: {
     flexDirection: 'row',
     gap: 14
-   },
-   image: {
+  },
+  image: {
     width: 100,
     height: 100,
   },
