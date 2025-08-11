@@ -1,16 +1,18 @@
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
 import Colors from '../../../constants/Colors';
 import ContactListCard from '../../../components/contactListCard';
 import BottomSheet from '../../../components/BottomSheet';
 import ContactsMoreModal from '../../../components/ContactsMoreModal';
 import EditContactFormModal from '../../../components/EditContactFormModal';
+import { useContactListState } from '../../../states/useContactListState';
+import { deleteContact } from '../../../viewmodels/auth/ContactViewModel';
 
 const Contacts = () => {
-    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-    const [bottomSheetContent, setBottomSheetContent] = useState(null);
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [bottomSheetContent, setBottomSheetContent] = useState(null);
 
-      const openBottomSheet = (content) => {
+  const openBottomSheet = (content) => {
     setBottomSheetContent(content);
     setBottomSheetVisible(true);
   };
@@ -19,77 +21,76 @@ const Contacts = () => {
     setBottomSheetVisible(false);
     setBottomSheetContent(null);
   };
+  const { contacts, loading, error, reload } = useContactListState();
+  const [deletingId, setDeletingId] = useState(null);
 
+  const handleDelete = async (id) => {
+    setDeletingId(id);
+    deleteContact(
+      id, () => {
+        closeBottomSheet()
+        reload(); 
+        setDeletingId(null);
+      },
+      (errMessage) => {
+        alert(errMessage);
+        setDeletingId(null);
+      }
+    );
+  };
   return (
     <View style={styles.container}>
       <View style={styles.background}>
         <View style={styles.addNewContactButton}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => {
+            openBottomSheet(<EditContactFormModal isEdit={false} onClose={closeBottomSheet} reloadPage={reload} />)
+          }}>
             <Text style={styles.buttonText}>+ Add a New Contact</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <ContactListCard
-            image={require('../../../assets/images/avatar.png')}
-            name="John Doe"
-            date="April 3, 2025"
-            email="johndoe@gmail.com"
-            phone="5596634498"
-            note="Met at technical conference and talked about partnership!"
-            onMorePress={() =>
-              openBottomSheet(
-                <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
-                />
-              )
-            }
-          />
-          <ContactListCard
-            image={require('../../../assets/images/avatar-female.webp')}
-            name="Jaz Miller"
-            date="April 3, 2025"
-            email="jazzmiller@gmail.com"
-            phone="5596634498"
-            note="Might consider hiring"
-            onMorePress={() =>
-              openBottomSheet(
-                <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
-                />
-              )
-            }
-          />
-          <ContactListCard
-            image={require('../../../assets/images/avatar.png')}
-            name="Jack Cooper"
-            date="May 15, 2025"
-            email="jack.cooper@ultratech.com"
-            phone="9865745362"
-            note="Met at Toronto conference. Interesting person!"
-            onMorePress={() =>
-              openBottomSheet(
-                <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
-                />
-              )
-            }
-          />
-          <ContactListCard
-            image={require('../../../assets/images/avatar-female.webp')}
-            name="Sarah Lee"
-            date="May 1, 2025"
-            email="lee.sarah24@outlook.com"
-            phone="4374563425"
-            note="Tech conference. Said she's a graphic designer" 
-            onMorePress={() =>
-              openBottomSheet(
-                <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
-                />
-              )
-            }
-          />
-        </ScrollView>
+
+
+        {loading ? (
+          <ActivityIndicator size="large" color={Colors.accent} />
+        ) : error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : (
+          <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+            {contacts.map((contact) => (
+
+              <ContactListCard
+                key={contact._id}
+                image={require('../../../assets/images/avatar.png')}
+                name={`${contact.name}`}
+                date={`${contact.createdAt}`}
+                email={`${contact.email}`}
+                phone={`${contact.phone}`}
+                note={`${contact.note}`}
+                onMorePress={() =>
+                  openBottomSheet(
+                    <ContactsMoreModal
+                     deleting={deletingId === contact._id}
+                      onEditPress={() => openBottomSheet(
+                        <EditContactFormModal
+                          isEdit={true}
+                          contactData={contact}
+                          onClose={closeBottomSheet}
+                          reloadPage={reload}
+                        />
+                      )}
+                      onDeletePress={() =>
+                        handleDelete(contact._id)
+                      }
+                    />
+                  )
+                }
+              />
+
+            ))}
+
+          </ScrollView>
+        )}
+
       </View>
       <BottomSheet visible={bottomSheetVisible} onClose={closeBottomSheet}>
         {bottomSheetContent}
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 18,
     padding: 16,
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   addNewContactButton: {
     marginBottom: 16,

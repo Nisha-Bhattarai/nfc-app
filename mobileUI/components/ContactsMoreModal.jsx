@@ -4,7 +4,7 @@ import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Colors from '../constants/Colors'
 
-const ContactsMoreModal = ({ onEditPress }) => {
+const ContactsMoreModal = ({ onEditPress, onDeletePress, deleting }) => {
   return (
     <View style={styles.bottomSheetContainer}>
       <TouchableOpacity style={styles.download}>
@@ -15,9 +15,9 @@ const ContactsMoreModal = ({ onEditPress }) => {
         <Feather name="edit" style={styles.icon} size={24} color={Colors.primary} /> 
         <Text style={styles.editText}>Edit</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.delete}>
+      <TouchableOpacity style={styles.delete} onPress={onDeletePress}>
         <AntDesign name="delete" style={styles.icon} size={24} color={Colors.delete} />
-        <Text style={styles.deleteText}>Delete</Text>
+        <Text style={styles.deleteText}>{deleting ? 'Deleting...' : 'Delete'}</Text>
       </TouchableOpacity>
     </View>
   )
