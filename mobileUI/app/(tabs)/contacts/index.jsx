@@ -7,10 +7,10 @@ import ContactsMoreModal from '../../../components/ContactsMoreModal';
 import EditContactFormModal from '../../../components/EditContactFormModal';
 
 const Contacts = () => {
-    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-    const [bottomSheetContent, setBottomSheetContent] = useState(null);
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [bottomSheetContent, setBottomSheetContent] = useState(null);
 
-      const openBottomSheet = (content) => {
+  const openBottomSheet = (content) => {
     setBottomSheetContent(content);
     setBottomSheetVisible(true);
   };
@@ -24,7 +24,9 @@ const Contacts = () => {
     <View style={styles.container}>
       <View style={styles.background}>
         <View style={styles.addNewContactButton}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => {
+            openBottomSheet(<EditContactFormModal isEdit={false} onClose={closeBottomSheet} />)
+          }}>
             <Text style={styles.buttonText}>+ Add a New Contact</Text>
           </TouchableOpacity>
         </View>
@@ -39,7 +41,7 @@ const Contacts = () => {
             onMorePress={() =>
               openBottomSheet(
                 <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                  onEditPress={() => openBottomSheet(<EditContactFormModal isEdit={true} onClose={closeBottomSheet} />)}
                 />
               )
             }
@@ -54,7 +56,7 @@ const Contacts = () => {
             onMorePress={() =>
               openBottomSheet(
                 <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                  onEditPress={() => openBottomSheet(<EditContactFormModal onClose={closeBottomSheet} />)}
                 />
               )
             }
@@ -69,7 +71,7 @@ const Contacts = () => {
             onMorePress={() =>
               openBottomSheet(
                 <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                  onEditPress={() => openBottomSheet(<EditContactFormModal onClose={closeBottomSheet} />)}
                 />
               )
             }
@@ -80,11 +82,11 @@ const Contacts = () => {
             date="May 1, 2025"
             email="lee.sarah24@outlook.com"
             phone="4374563425"
-            note="Tech conference. Said she's a graphic designer" 
+            note="Tech conference. Said she's a graphic designer"
             onMorePress={() =>
               openBottomSheet(
                 <ContactsMoreModal
-                onEditPress={() => openBottomSheet(<EditContactFormModal />)}
+                  onEditPress={() => openBottomSheet(<EditContactFormModal onClose={closeBottomSheet} />)}
                 />
               )
             }
