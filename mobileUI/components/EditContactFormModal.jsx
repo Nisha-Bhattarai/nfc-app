@@ -4,10 +4,10 @@ import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import FormInput from './formInput';
 import Colors from '../constants/Colors';
 import { useCreateContactState } from '../states/useCreateContactState';
-import { createContact } from '../viewmodels/auth/ContactViewModel'
+import { createContact, updateContact } from '../viewmodels/auth/ContactViewModel'
 
 
-const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose }) => {
+const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose, reloadPage }) => {
 
   useEffect(() => {
     if (isEdit && contactData) {
@@ -37,7 +37,7 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose }) => 
     setError('');
     setSuccess('');
 
-    const contactData = {
+    const contactRequest = {
       name,
       email,
       phone,
@@ -45,26 +45,67 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose }) => 
       image: '', // Optional for now
     };
 
-    await createContact(
-      contactData,
-      (res) => {
+    if (isEdit) {
+      const contactId = contactData._id;
+      if (!contactId) {
         setLoading(false);
-        setSuccess('Contact saved successfully!');
-        Alert.alert(
-          'Success',
-          res.message || 'Contact saved!',
-          [
-            { text: 'OK', onPress: () => onClose && onClose() }
-          ],
-          { cancelable: false }
-        ); if (onClose) onClose();
-      },
-      (err) => {
-        setLoading(false);
-        setError(errorMsg);
-        Alert.alert('Error', err?.message || 'Something went wrong');
+        Alert.alert('Error', 'Contact ID is missing for update.');
+        return;
       }
-    );
+
+      await updateContact(
+        contactId,
+        contactRequest,
+        (res) => {
+          setLoading(false);
+          setSuccess('Contact updated successfully!');
+          Alert.alert(
+            'Success',
+            res.message || 'Contact updated!',
+            [
+              { text: 'OK', onPress: () => onClose && onClose() }
+            ],
+            { cancelable: false }
+          );
+          if (reloadPage) reloadPage();
+          if (onClose) onClose();
+        },
+        (err) => {
+          setLoading(false);
+          setError(err?.message || 'Something went wrong');
+          Alert.alert('Error', err?.message || 'Something went wrong');
+        }
+      );
+    } else {
+      await createContact(
+        contactRequest,
+        (res) => {
+          setLoading(false);
+          setSuccess('Contact saved successfully!');
+          Alert.alert(
+            'Success',
+            res.message || 'Contact saved!',
+            [
+              { text: 'OK', onPress: () => onClose && onClose() }
+            ],
+            { cancelable: false }
+          );
+          if (reloadPage) reloadPage();
+          if (onClose) onClose();
+        },
+        (err) => {
+          setLoading(false);
+          setError(errorMsg);
+          Alert.alert('Error', err?.message || 'Something went wrong');
+        }
+      );
+
+
+    }
+
+
+
+
   };
 
   return (
@@ -72,10 +113,6 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose }) => 
       <View style={styles.container}>
         <Image style={styles.avatarImage} source={require('../assets/images/avatar.png')} />
         <Text style={styles.textName}>John Doe</Text>
-
-        <TouchableOpacity onPress={onClose} style={{ marginTop: 20 }}>
-  <Text style={{ color: Colors.accent }}>Close Sheet Directly</Text>
-</TouchableOpacity>
 
         <View style={styles.emailInput}>
           <Ionicons name="person-outline" size={30} color="#555" />

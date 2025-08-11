@@ -7,7 +7,7 @@ export interface CreateContactResponse {
     contact: Contact;
 }
 
-export interface ContactListResponse {
+export interface ContactsResponse {
   message: string;
   contacts: Contact[];
 }
@@ -22,7 +22,23 @@ export const createContactApi = async (
   return response.data;
 };
 
-export const getContactsApi = async (): Promise<ContactListResponse> => {
-  const response = await apiService.get<ContactListResponse>('contact/getContacts');
+export const getContactsApi = async (): Promise<ContactsResponse> => {
+  const response = await apiService.get<ContactsResponse>('contact/getContacts');
+  return response.data;
+};
+
+export const updateContactApi = async (
+  contactId: string,
+  contact: CreateContactRequest
+): Promise<CreateContactResponse> => {
+  const response = await apiService.put<CreateContactResponse>(
+    `contact/update/${contactId}`,
+    contact
+  );
+  return response.data;
+};
+
+export const deleteContactApi = async (id: string) => {
+  const response = await apiService.delete(`/contact/delete/${id}`);
   return response.data;
 };
