@@ -6,16 +6,20 @@ import { AntDesign, FontAwesome5, FontAwesome, Entypo, FontAwesome6 } from '@exp
 import FormInput from '../../../components/formInput';
 import Colors from '../../../constants/Colors';
 import { usePrimaryProfileState } from '../../../states/usePrimaryProfileState';
-import { useState } from 'react';
-import { createPrimaryProfile } from '../../../viewmodels/profiles/PrimaryProfileViewModel.ts';
+import { useState, useEffect } from 'react';
+import { createPrimaryProfile, updatePrimaryProfile } from '../../../viewmodels/profiles/PrimaryProfileViewModel.ts';
 import { useRouter } from 'expo-router';
 import SocialMediaModal from '../../../components/SocialMediaModal';
 import { platforms } from '../../../components/SocialMediaModal';
+import { useLocalSearchParams } from 'expo-router';
 
 const CreatePrimaryProfile = () => {
   const router = useRouter();
 
   const [isPlatformModalVisible, setIsPlatformModalVisible] = useState(false);
+  const { profile } = useLocalSearchParams();
+  const profileData = profile ? JSON.parse(profile) : null;
+  const isEditMode = !!profileData?._id;
 
   const {
     profileName, setProfileName,
@@ -36,7 +40,26 @@ const CreatePrimaryProfile = () => {
     setLoading, setError, setSuccess,
   } = usePrimaryProfileState();
 
-  const handleCreatePrimaryProfile = async () => {
+  useEffect(() => {
+    if (profileData) {
+      setProfileName(profileData.profileName || '');
+      setFirstName(profileData.firstName || '');
+      setLastName(profileData.lastName || '');
+      setJobTitle(profileData.jobTitle || '');
+      setCompany(profileData.company || '');
+      setLocation(profileData.location || '');
+      setBio(profileData.bio || '');
+      setPersonalEmail(profileData.personalEmail || '');
+      setWorkEmail(profileData.workEmail || '');
+      setPersonalPhone(profileData.personalPhone || '');
+      setWorkPhone(profileData.workPhone || '');
+      setSocialMedia(profileData.socialMedia || []);
+      setRelevantLinks(profileData.relevantLinks || []);
+      setPhotos(profileData.photoGallery?.map(url => ({ name: url.split('/').pop(), url })) || []);
+    }
+  }, []);
+
+  const handleSave = async () => {
     setLoading(true);
     setError('');
     setSuccess('');
@@ -59,19 +82,36 @@ const CreatePrimaryProfile = () => {
       photoGallery: photos?.map(photo => photo.url) || [],
     };
 
-    await createPrimaryProfile(
-      data,
-      (response) => {
-        setLoading(false);
-        setSuccess('Profile Created successfully');
-        router.back()
-      },
-      (errorMsg) => {
-        console.log(errorMsg)
-        setLoading(false);
-        setError(errorMsg);
-      }
-    );
+
+    if (isEditMode) {
+      await updatePrimaryProfile(
+        profileData._id,
+        data,
+        (response) => {
+          setLoading(false);
+          setSuccess('Profile update successfully');
+          router.back()
+        },
+        (errorMsg) => {
+          setLoading(false);
+          setError(errorMsg);
+        }
+      );
+    } else {
+      await createPrimaryProfile(
+        data,
+        (response) => {
+          setLoading(false);
+          setSuccess('Profile Created successfully');
+          router.back()
+        },
+        (errorMsg) => {
+          console.log(errorMsg)
+          setLoading(false);
+          setError(errorMsg);
+        }
+      );
+    }
   };
 
   const updateSocialMedia = (index, url) => {
@@ -210,11 +250,11 @@ const CreatePrimaryProfile = () => {
             {success ? <Text style={styles.successText}>{success}</Text> : null}
 
             <View style={styles.saveButtonContainer}>
-              <TouchableOpacity style={styles.saveButton} onPress={handleCreatePrimaryProfile} disabled={loading}>
+              <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
                 {loading ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
-                  <Text style={styles.saveText}>Save</Text>
+                  <Text style={styles.saveText}>{isEditMode ? 'Update' : 'Save'}</Text>
                 )}
               </TouchableOpacity>
             </View>
