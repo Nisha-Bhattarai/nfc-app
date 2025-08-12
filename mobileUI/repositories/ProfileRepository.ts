@@ -37,6 +37,10 @@ export const createPrimaryProfileApi = async (payload: PrimaryProfileRequest) =>
   return response.data;
 };
 
+export const updatePrimaryProfileApi = async (profileId: string ,payload: PrimaryProfileRequest) => {
+  const response = await apiService.put(`/profile/primary/${profileId}`, payload);
+  return response.data;
+};
 
 export interface GetPrimaryProfilesResponse {
   message: string;

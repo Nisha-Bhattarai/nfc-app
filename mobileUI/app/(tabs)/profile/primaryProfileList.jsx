@@ -1,13 +1,13 @@
 import PrimaryProfileEmpty from '../../../components/primaryProfileEmpty'
 
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
-import {React, useState} from 'react'
+import { React, useState, useCallback } from 'react'
 import Colors from '../../../constants/Colors'
 import PrimaryProfileCard from '../../../components/primaryProfileCard'
 import { deletePrimaryProfile } from '../../../viewmodels/profiles/PrimaryProfileViewModel';
-
 import { useRouter } from 'expo-router'
 import { usePrimaryProfileListState } from '../../../states/usePrimaryProfileListState';
+import { useFocusEffect } from '@react-navigation/native';
 
 const PrimaryProfileList = () => {
   const router = useRouter();
@@ -28,6 +28,13 @@ const PrimaryProfileList = () => {
       }
     );
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      reload();
+    }, [])
+  );
+  
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
@@ -49,6 +56,10 @@ const PrimaryProfileList = () => {
                 position={`${profile.jobTitle} - ${profile.company}`}
                 createdDate={new Date(profile.createdAt).toDateString()}
                 modifiedDate={new Date(profile.updatedAt).toDateString()}
+                onEdit={() => router.push({
+                  pathname: '/profile/createPrimaryProfile',
+                  params: { profile: JSON.stringify(profile) }
+                })}
                 onDelete={() => handleDelete(profile._id)}
                 deleting={deletingId === profile._id}
               />

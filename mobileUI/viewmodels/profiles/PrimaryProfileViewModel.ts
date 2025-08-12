@@ -1,4 +1,4 @@
-import { createPrimaryProfileApi, PrimaryProfileRequest, getPrimaryProfilesApi, deletePrimaryProfileApi } from '../../repositories/ProfileRepository';
+import { createPrimaryProfileApi, PrimaryProfileRequest, getPrimaryProfilesApi, deletePrimaryProfileApi, updatePrimaryProfileApi } from '../../repositories/ProfileRepository';
 import { PrimaryProfile } from '@/models/PrimaryProfileListResponse';
 
 export const createPrimaryProfile = async (
@@ -8,6 +8,24 @@ export const createPrimaryProfile = async (
 ) => {
   try {
     const response = await createPrimaryProfileApi(data);
+    onSuccess(response);
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message ||
+      error?.message ||
+      'Something went wrong. Please try again.';
+    onError(message);
+  }
+};
+
+export const updatePrimaryProfile = async (
+  profileId: string,
+  data: PrimaryProfileRequest,
+  onSuccess: (res: any) => void,
+  onError: (err: string) => void
+) => {
+  try {
+    const response = await updatePrimaryProfileApi(profileId, data);
     onSuccess(response);
   } catch (error: any) {
     const message =
