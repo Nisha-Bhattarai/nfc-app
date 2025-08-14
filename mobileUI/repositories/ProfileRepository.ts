@@ -86,6 +86,11 @@ export const createEventProfileApi = async (payload: EventProfileRequest) => {
   return response.data;
 };
 
+export const updateEventProfileApi = async (profileId: string ,payload: EventProfileRequest) => {
+  const response = await apiService.put(`/profile/event/${profileId}`, payload);
+  return response.data;
+};
+
 export const deleteEventProfileApi = async (id: string) => {
   const response = await apiService.delete(`/profile/event/${id}`);
   return response.data;
