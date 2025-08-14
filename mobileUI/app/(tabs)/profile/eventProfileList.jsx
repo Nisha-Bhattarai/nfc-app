@@ -1,12 +1,13 @@
 
 import EventProfileEmpty from '../../../components/eventProfileEmpty';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
-import { useState, React } from 'react';
+import { useState, React, useCallback } from 'react';
 import Colors from '../../../constants/Colors'
 import EventProfileCard from '../../../components/eventProfileCard'
 import { deleteEventProfile } from '../../../viewmodels/profiles/EventProfileViewModel';
 import { useRouter } from 'expo-router'
 import { useEventProfileListState } from '../../../states/useEventProfileListState';
+import { useFocusEffect } from '@react-navigation/native';
 
 const EventProfileList = () => {
     const router = useRouter();
@@ -27,6 +28,13 @@ const EventProfileList = () => {
         );
     };
 
+    // this block refresh the page once the user navigates back to this screen
+      useFocusEffect(
+        useCallback(() => {
+          reload();
+        }, [])
+      );
+    
 
     return (
         <View style={styles.container}>
@@ -49,6 +57,10 @@ const EventProfileList = () => {
                                 position={`${profile.eventName}`}
                                 createdDate={new Date(profile.createdAt).toDateString()}
                                 modifiedDate={new Date(profile.updatedAt).toDateString()}
+                                onEdit={() => router.push({
+                                    pathname: '/profile/createEventProfile',
+                                    params: { profile: JSON.stringify(profile) }
+                                })}
                                 onDelete={() => handleDelete(profile._id)}
                                 deleting={deletingId === profile._id}
                             />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Modal
 } from 'react-native';
@@ -13,11 +13,15 @@ import AddURLModal from '../../../components/AddURLModal';
 import AddCertificationModal from '../../../components/AddCertificationModal';
 import { useRouter } from 'expo-router';
 import { useEventProfileState } from '../../../states/useEventProfileState';
-import { createEventProfile } from '../../../viewmodels/profiles/EventProfileViewModel';
+import { createEventProfile, updateEventProfile } from '../../../viewmodels/profiles/EventProfileViewModel';
 import { platforms } from '../../../components/SocialMediaModal';
+import { useLocalSearchParams } from 'expo-router';
 
 const CreateEventProfile = () => {
   const router = useRouter();
+  const { profile } = useLocalSearchParams();
+  const profileData = profile ? JSON.parse(profile) : null;
+  const isEditMode = !!profileData?._id;
   const {
     eventProfileName, setEventProfileName,
     eventName, setEventName,
@@ -39,28 +43,77 @@ const CreateEventProfile = () => {
     success, setSuccess
   } = useEventProfileState();
 
+  useEffect(() => {
+    if (profileData) {
+      setEventProfileName(profileData.eventProfileName || '');
+      setEventName(profileData.eventName || '');
+      setStartDate(profileData.startDate || '');
+      setEndDate(profileData.endDate || '');
+      setLocation(profileData.location || '');
+      setAboutEvent(profileData.aboutEvent || '');
+      setPersonalEmail(profileData.personalEmail || '');
+      setWorkEmail(profileData.workEmail || '');
+      setPersonalPhone(profileData.personalPhone || '');
+      setWorkPhone(profileData.workPhone || '');
+      setSocialMedia(profileData.socialMedia || []);
+      setRelevantLinks(profileData.relevantLinks || []);
+      setSkills(profileData.skills || []);
+      setCertifications(profileData.certifications || []);
+      setPhotoGallery(
+        profileData.photoGallery?.map(url => ({
+          name: url.split('/').pop(),
+          url
+        })) || []
+      );
+    }
+  }, []);
+
   const [isPlatformModalVisible, setIsPlatformModalVisible] = useState(false);
   const [showURLModal, setShowURLModal] = useState(false);
   const [showCertModal, setShowCertModal] = useState(false);
 
   const handleSave = async () => {
-    setLoading(true); setError(''); setSuccess('');
-    await createEventProfile({
+    const requestData = {
       eventProfileName, eventName, startDate, endDate,
       location, aboutEvent, personalEmail, workEmail,
       personalPhone, workPhone, socialMedia, relevantLinks,
       skills, certifications, photoGallery
-    }, () => {
-      setLoading(false);
-      setSuccess('Event profile created successfully');
-      router.back();
-    }, err => {
-      setLoading(false);
-      setError(err);
-    });
-  };
+    };
 
-    const updateSocialMedia = (index, url) => {
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    if (isEditMode) {
+      await updateEventProfile(
+        profileData._id,
+        requestData,
+        (response) => {
+          setLoading(false);
+          setSuccess('Event Profile update successfully');
+          router.back()
+        },
+        (errorMsg) => {
+          setLoading(false);
+          setError(errorMsg);
+        }
+      );
+    } else {
+      await createEventProfile({
+        data: requestData
+      }, () => {
+        setLoading(false);
+        setSuccess('Event profile created successfully');
+        router.back();
+      }, err => {
+        setLoading(false);
+        setError(err);
+      });
+    };
+
+  }
+
+
+  const updateSocialMedia = (index, url) => {
     const updated = [...socialMedia];
     updated[index].url = url;
     setSocialMedia(updated);
@@ -104,25 +157,25 @@ const CreateEventProfile = () => {
           <FormInput placeholder="Personal Phone" value={personalPhone} onChangeText={setPersonalPhone} />
           <FormInput placeholder="Work Phone" value={workPhone} onChangeText={setWorkPhone} />
 
-           <Text style={styles.sectionTitle}>Social Media</Text>
-            {socialMedia.map((item, index) => (
-              <View style={styles.socialMediaLink} key={index}>
-                {getPlatformIcon(item.platform)}
-                <FormInput
-                  placeholder={`Your ${item.platform} URL`}
-                  value={item.url}
-                  onChangeText={(text) => updateSocialMedia(index, text)}
-                  style={styles.socialInput}
-                />
-                <TouchableOpacity onPress={() => setSocialMedia(socialMedia.filter((_, i) => i !== index))}>
-                  <AntDesign name="delete" size={20} color={Colors.delete} />
-                </TouchableOpacity>
-              </View>
-            ))}
+          <Text style={styles.sectionTitle}>Social Media</Text>
+          {socialMedia.map((item, index) => (
+            <View style={styles.socialMediaLink} key={index}>
+              {getPlatformIcon(item.platform)}
+              <FormInput
+                placeholder={`Your ${item.platform} URL`}
+                value={item.url}
+                onChangeText={(text) => updateSocialMedia(index, text)}
+                style={styles.socialInput}
+              />
+              <TouchableOpacity onPress={() => setSocialMedia(socialMedia.filter((_, i) => i !== index))}>
+                <AntDesign name="delete" size={20} color={Colors.delete} />
+              </TouchableOpacity>
+            </View>
+          ))}
 
-            <TouchableOpacity style={styles.addMoreBtn} onPress={() => setIsPlatformModalVisible(true)}>
-              <Text style={styles.addMoreText}>+ Add More</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.addMoreBtn} onPress={() => setIsPlatformModalVisible(true)}>
+            <Text style={styles.addMoreText}>+ Add More</Text>
+          </TouchableOpacity>
 
           <Text style={styles.sectionTitle}>Relevant Links</Text>
           {relevantLinks.map((rl, idx) => (
@@ -180,14 +233,14 @@ const CreateEventProfile = () => {
           {error ? <Text style={styles.error}>{error}</Text> : null}
           {success ? <Text style={styles.success}>{success}</Text> : null}
           <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
-            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.saveText}>Save</Text>}
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.saveText}>{isEditMode ? 'Update' : 'Save'}</Text>}
           </TouchableOpacity>
         </View>
       </ScrollView>
       <BottomSheet visible={showURLModal} onClose={() => setShowURLModal(false)}>
         <AddURLModal
           onAdd={(title, url) => {
-              console.log('Adding relevant link:', { title, url }); // for debugging
+            console.log('Adding relevant link:', { title, url }); // for debugging
             // setRelevantLinks([...relevantLinks, { title, url }]);
             // setShowURLModal(false);
             setRelevantLinks(prev => [...prev, { title, url }]);
@@ -289,7 +342,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 8,   
+    marginVertical: 8,
     gap: 12,
   },
   relevantURLRow: {

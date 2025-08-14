@@ -28,7 +28,7 @@ const PrimaryProfileList = () => {
       }
     );
   };
-
+ // this block refresh the page once the user navigates back to this screen
   useFocusEffect(
     useCallback(() => {
       reload();

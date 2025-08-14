@@ -1,5 +1,5 @@
 // File: viewmodels/profiles/EventProfileViewModel.ts
-import { createEventProfileApi, EventProfileRequest } from '../../repositories/ProfileRepository';
+import { createEventProfileApi, EventProfileRequest,updateEventProfileApi } from '../../repositories/ProfileRepository';
 import { getEventProfilesApi } from '../../repositories/ProfileRepository';
 import { deleteEventProfileApi } from '../../repositories/ProfileRepository';
 import { EventProfile } from '@/models/EventProfileListResponse';
@@ -21,6 +21,23 @@ export const createEventProfile = async (
   }
 };
 
+export const updateEventProfile = async (
+  profileId: string,
+  data: EventProfileRequest,
+  onSuccess: (res: any) => void,
+  onError: (err: string) => void
+) => {
+  try {
+    const response = await updateEventProfileApi(profileId, data);
+    onSuccess(response);
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message ||
+      error?.message ||
+      'Something went wrong. Please try again.';
+    onError(message);
+  }
+};
 
 export const fetchEventProfiles = async (
   onSuccess: (res: EventProfile[]) => void,
