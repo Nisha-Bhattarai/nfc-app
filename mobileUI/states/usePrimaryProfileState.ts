@@ -16,6 +16,7 @@ export const usePrimaryProfileState = () => {
 
   const [socialMedia, setSocialMedia] = useState([{ platform: 'facebook', url: '' }]);
   const [relevantLinks, setRelevantLinks] = useState([{ title: '', url: '' }]);
+  const [profilePicture, setProfilePicture] = useState('');
   const [photos, setPhotos] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,7 @@ export const usePrimaryProfileState = () => {
     socialMedia, setSocialMedia,
     relevantLinks, setRelevantLinks,
     photos, setPhotos,
+    profilePicture, setProfilePicture,
     loading, setLoading,
     error, setError,
     success, setSuccess

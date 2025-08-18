@@ -2,14 +2,29 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Colors from '../constants/Colors';
 
-const PrimaryProfileCard = ({ name, position, createdDate, modifiedDate, onDelete, onEdit, deleting }) => {
+const PrimaryProfileCard = ({ profilePicture, name, position, createdDate, modifiedDate, onDelete, onEdit, deleting }) => {
+
+  const isValidUrl = (url) => {
+    return typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'));
+  };
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.topContainer}>
         <View style={styles.imageContainer}>
           <Image
-            style={styles.image}
-            source={require('../assets/images/avatar.png')} />
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              resizeMode: 'cover',
+            }}
+            source={
+              isValidUrl(profilePicture)
+                ? { uri: profilePicture, height: 100, width: 100 }
+                : require('../assets/images/avatar.png')
+            }
+          />
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.nameText}>{name}</Text>

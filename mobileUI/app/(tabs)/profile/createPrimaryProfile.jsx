@@ -1,10 +1,12 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, ActivityIndicator,
+  View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, ActivityIndicator,Image
 } from 'react-native';
 import { AntDesign, FontAwesome5, FontAwesome, Entypo, FontAwesome6 } from '@expo/vector-icons';
 import FormInput from '../../../components/formInput';
 import Colors from '../../../constants/Colors';
+import * as ImagePicker from 'expo-image-picker';
+import {uploadImageToCloudinary} from '../../../utils/cloudinaryUpload.ts'
 import { usePrimaryProfileState } from '../../../states/usePrimaryProfileState';
 import { useState, useEffect } from 'react';
 import { createPrimaryProfile, updatePrimaryProfile } from '../../../viewmodels/profiles/PrimaryProfileViewModel.ts';
@@ -35,6 +37,7 @@ const CreatePrimaryProfile = () => {
     workPhone, setWorkPhone,
     socialMedia, setSocialMedia,
     relevantLinks, setRelevantLinks,
+    profilePicture, setProfilePicture,
     photos, setPhotos,
     loading, error, success,
     setLoading, setError, setSuccess,
@@ -56,6 +59,7 @@ const CreatePrimaryProfile = () => {
       setSocialMedia(profileData.socialMedia || []);
       setRelevantLinks(profileData.relevantLinks || []);
       setPhotos(profileData.photoGallery?.map(url => ({ name: url.split('/').pop(), url })) || []);
+      setProfilePicture(profileData.profilePicture || '');
     }
   }, []);
 
@@ -78,12 +82,15 @@ const CreatePrimaryProfile = () => {
       workPhone,
       socialMedia,
       relevantLinks,
-      profilePicture: photos?.[0]?.url || '', // main profile picture
+      profilePicture: profilePicture || '', 
       photoGallery: photos?.map(photo => photo.url) || [],
     };
 
 
     if (isEditMode) {
+      const imageUploadResult = await uploadImageToCloudinary(profilePicture)
+      setProfilePicture(imageUploadResult)
+      console.log("uploaded Image url:", imageUploadResult)
       await updatePrimaryProfile(
         profileData._id,
         data,
@@ -126,6 +133,27 @@ const CreatePrimaryProfile = () => {
     setRelevantLinks(updated);
   };
 
+  
+  const pickImage = async (setter) => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      alert('Permission to access gallery is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes:  ['images'],
+      allowsEditing: true,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      console.log(`urllll => ${result.assets[0].uri}`)
+      setter(result.assets[0].uri);
+    }
+  };
+
+
   return (
     <>
       <Modal
@@ -151,7 +179,7 @@ const CreatePrimaryProfile = () => {
       </Modal>
 
       <ScrollView style={styles.container}>
-        <View style={styles.backgroundContainer}>
+        {/* <View style={styles.backgroundContainer}>
           <View style={styles.profileHeader}>
             <View style={styles.avatar}>
               <FontAwesome name="user-circle-o" size={80} color={Colors.border} />
@@ -159,6 +187,20 @@ const CreatePrimaryProfile = () => {
                 <Entypo name="dots-three-horizontal" size={16} color="#fff" />
               </View>
             </View>
+          </View> */}
+
+             <View style={styles.backgroundContainer}>
+          <View style={styles.profileHeader}>
+            <TouchableOpacity style={styles.avatar} onPress={() => pickImage(setProfilePicture)}>
+              {profilePicture ? (
+                <Image source={{ uri: profilePicture, height:100, width: 100 }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+              ) : (
+                <FontAwesome name="user-circle-o" size={80} color={Colors.border} />
+              )}
+              <View style={styles.chatIcon}>
+                <Entypo name="dots-three-horizontal" size={16} color="#fff" />
+              </View>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.form}>
