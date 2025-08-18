@@ -52,6 +52,7 @@ const PrimaryProfileList = () => {
             {profiles.map((profile) => (
               <PrimaryProfileCard
                 key={profile._id}
+                profilePicture={profile.profilePicture}
                 name={`${profile.firstName} ${profile.lastName}`}
                 position={`${profile.jobTitle} - ${profile.company}`}
                 createdDate={new Date(profile.createdAt).toDateString()}
