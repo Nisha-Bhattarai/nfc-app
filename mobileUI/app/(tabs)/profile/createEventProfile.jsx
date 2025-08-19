@@ -112,6 +112,24 @@ const CreateEventProfile = () => {
 
   }
 
+    const pickImage = async (setter) => {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permissionResult.granted) {
+        alert('Permission to access gallery is required!');
+        return;
+      }
+  
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        quality: 0.7,
+      });
+  
+      if (!result.canceled) {
+        console.log(`URI => ${result.assets[0].uri}`)
+        setter(result.assets[0].uri);
+      }
+    };
 
   const updateSocialMedia = (index, url) => {
     const updated = [...socialMedia];

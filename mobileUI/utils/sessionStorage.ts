@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const USER_KEY = 'user';
 const TOKEN_KEY = 'token';
 const LOGGED_IN_KEY = 'isLoggedIn';
+const IS_SECOND_LOGIN = 'isSecondLogin';
+
 
 export const saveSession = async (user: any, token: string) => {
   try {
@@ -10,6 +12,7 @@ export const saveSession = async (user: any, token: string) => {
       [USER_KEY, JSON.stringify(user)],
       [TOKEN_KEY, token],
       [LOGGED_IN_KEY, 'true'],
+      [IS_SECOND_LOGIN, 'true'],
     ]);
   } catch (err) {
     console.error('Failed to save session', err);
@@ -18,11 +21,12 @@ export const saveSession = async (user: any, token: string) => {
 
 export const getSession = async () => {
   try {
-    const values = await AsyncStorage.multiGet([USER_KEY, TOKEN_KEY, LOGGED_IN_KEY]);
+    const values = await AsyncStorage.multiGet([USER_KEY, TOKEN_KEY, LOGGED_IN_KEY, IS_SECOND_LOGIN]);
     return {
       user: values[0][1] ? JSON.parse(values[0][1]) : null,
       token: values[1][1],
       isLoggedIn: values[2][1] === 'true',
+      isSecondLogin: values[3][1] === 'true',
     };
   } catch (err) {
     console.error('Failed to get session', err);
