@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Modal
+  View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, Dimensions, Image
 } from 'react-native';
 import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import FormInput from '../../../components/formInput';
 import Colors from '../../../constants/Colors';
 import SkillsSelector from '../../../components/skillsSelector';
@@ -16,12 +17,21 @@ import { useEventProfileState } from '../../../states/useEventProfileState';
 import { createEventProfile, updateEventProfile } from '../../../viewmodels/profiles/EventProfileViewModel';
 import { platforms } from '../../../components/SocialMediaModal';
 import { useLocalSearchParams } from 'expo-router';
+import { uploadImageToCloudinary } from '../../../utils/cloudinaryUpload.ts'
 
 const CreateEventProfile = () => {
   const router = useRouter();
   const { profile } = useLocalSearchParams();
   const profileData = profile ? JSON.parse(profile) : null;
   const isEditMode = !!profileData?._id;
+
+  const numColumns = 3;
+  const spacing = 2;
+  const screenWidth = Dimensions.get('window').width;
+  const horizontalPadding = 64;
+  const imageSize =
+    (screenWidth - horizontalPadding - spacing * (numColumns - 1)) / numColumns;
+
   const {
     eventProfileName, setEventProfileName,
     eventName, setEventName,
@@ -59,12 +69,8 @@ const CreateEventProfile = () => {
       setRelevantLinks(profileData.relevantLinks || []);
       setSkills(profileData.skills || []);
       setCertifications(profileData.certifications || []);
-      setPhotoGallery(
-        profileData.photoGallery?.map(url => ({
-          name: url.split('/').pop(),
-          url
-        })) || []
-      );
+      setPhotoGallery(profileData.photoGallery?.map(url => url || []));
+
     }
   }, []);
 
@@ -73,16 +79,48 @@ const CreateEventProfile = () => {
   const [showCertModal, setShowCertModal] = useState(false);
 
   const handleSave = async () => {
-    const requestData = {
-      eventProfileName, eventName, startDate, endDate,
-      location, aboutEvent, personalEmail, workEmail,
-      personalPhone, workPhone, socialMedia, relevantLinks,
-      skills, certifications, photoGallery
-    };
-
+    let uploadedPhotos = photoGallery;
     setLoading(true);
     setError('');
     setSuccess('');
+
+    try {
+      uploadedPhotos = await Promise.all(
+        photoGallery.map(async (photo) => {
+          if (photo.startsWith("http://") || photo.startsWith("https://")) {
+            return photo; // already uploaded
+          } else {
+            const uploadedUrl = await uploadImageToCloudinary(photo);
+            return uploadedUrl;
+          }
+        })
+      );
+      console.log("Uploaded gallery photos:", uploadedPhotos);
+    } catch (err) {
+      setLoading(false);
+      setError("Some gallery photos failed to upload");
+      return;
+    }
+
+    const requestData = {
+      eventProfileName,
+      eventName,
+      startDate,
+      endDate,
+      location,
+      aboutEvent,
+      personalEmail,
+      workEmail,
+      personalPhone,
+      workPhone,
+      socialMedia,
+      relevantLinks,
+      skills,
+      certifications,
+      photoGallery: uploadedPhotos || [],
+    };
+
+
     if (isEditMode) {
       await updateEventProfile(
         profileData._id,
@@ -110,26 +148,26 @@ const CreateEventProfile = () => {
       });
     };
 
-  }
+  };
 
-    const pickImage = async (setter) => {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (!permissionResult.granted) {
-        alert('Permission to access gallery is required!');
-        return;
-      }
-  
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ['images'],
-        allowsEditing: true,
-        quality: 0.7,
-      });
-  
-      if (!result.canceled) {
-        console.log(`URI => ${result.assets[0].uri}`)
-        setter(result.assets[0].uri);
-      }
-    };
+  const pickMultipleImages = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      alert('Permission to access gallery is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsMultipleSelection: true,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      const selected = result.assets.map((asset) => asset.uri);
+      setPhotoGallery((prev) => [...prev, ...selected]);
+    }
+  };
 
   const updateSocialMedia = (index, url) => {
     const updated = [...socialMedia];
@@ -244,15 +282,62 @@ const CreateEventProfile = () => {
           </TouchableOpacity>
 
           <Text style={styles.sectionTitle}>Event Gallery</Text>
-          <TouchableOpacity style={styles.addMoreBtn}>
+
+
+
+          {/* <TouchableOpacity style={styles.addMoreBtn}>
+            <Text style={styles.addMoreText}>+ Add Photos</Text>
+          </TouchableOpacity> */}
+
+          <View style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}>
+            {photoGallery.map((photo, i) => (
+              <View
+                key={i}
+                style={{
+                  width: imageSize,
+                  height: imageSize,
+                  marginRight: (i + 1) % numColumns === 0 ? 0 : spacing,
+                  marginBottom: spacing,
+                  position: 'relative',
+                }}
+              >
+                <Image
+                  source={{ uri: photo }}
+                  style={{ width: '100%', height: '100%', borderRadius: 10 }}
+                />
+                <TouchableOpacity
+                  style={{ position: 'absolute', top: 4, right: 4 }}
+                  onPress={() => setPhotoGallery(photoGallery.filter((_, idx) => idx !== i))}
+                >
+                  <AntDesign name="closecircle" size={20} color="red" />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+
+          <TouchableOpacity onPress={pickMultipleImages} style={styles.addMoreBtn}>
             <Text style={styles.addMoreText}>+ Add Photos</Text>
           </TouchableOpacity>
 
+
           {error ? <Text style={styles.error}>{error}</Text> : null}
           {success ? <Text style={styles.success}>{success}</Text> : null}
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
+
+          {/* <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
             {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.saveText}>{isEditMode ? 'Update' : 'Save'}</Text>}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View style={styles.saveButtonContainer}>
+            <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.saveText}>{isEditMode ? 'Update' : 'Save'}</Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
       <BottomSheet visible={showURLModal} onClose={() => setShowURLModal(false)}>
