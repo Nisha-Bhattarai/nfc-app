@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { getSession } from '../../utils/sessionStorage'; 
+
 import {
   View,
   Text,
@@ -31,6 +33,16 @@ const routes = [
 export default function AuthTabView() {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(1);
+
+  React.useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (session?.isSecondLogin) {
+        setIndex(0); 
+      }
+    };
+    checkSession();
+  }, []);
 
   const renderTabBar = (props) => {
     const { navigationState, position, jumpTo } = props;
