@@ -67,6 +67,18 @@ const CreatePrimaryProfile = () => {
     setLoading(true);
     setError('');
     setSuccess('');
+  let uploadedProfilePicture = profilePicture;
+
+    if (profilePicture &&  !(profilePicture.startsWith("http://") || profilePicture.startsWith("https://"))) {
+    try {
+      uploadedProfilePicture = await uploadImageToCloudinary(profilePicture);
+      console.log("uploaded Image url:", uploadedProfilePicture);
+    } catch (err) {
+      setLoading(false);
+      setError("Image upload failed");
+      return;
+    }
+  }
 
     const data = {
       profileName,
@@ -82,15 +94,12 @@ const CreatePrimaryProfile = () => {
       workPhone,
       socialMedia,
       relevantLinks,
-      profilePicture: profilePicture || '', 
+      profilePicture: uploadedProfilePicture || '', 
       photoGallery: photos?.map(photo => photo.url) || [],
     };
 
 
     if (isEditMode) {
-      const imageUploadResult = await uploadImageToCloudinary(profilePicture)
-      setProfilePicture(imageUploadResult)
-      console.log("uploaded Image url:", imageUploadResult)
       await updatePrimaryProfile(
         profileData._id,
         data,
