@@ -81,3 +81,47 @@ export const uploadImageToCloudinary = async (
   }
 };
 
+export const uploadMultipleImagesToCloudinary = async (
+  imageUris: string[]
+): Promise<string[]> => {
+  try {
+    // Run all uploads in parallel
+    const uploadPromises = imageUris.map(async (uri) => {
+      const data = new FormData();
+      const fileName = `nfc_${new Date()
+        .toISOString()
+        .replace(/[:.]/g, "-")}.jpg`;
+
+      data.append("file", {
+        uri,
+        type: "image/jpeg",
+        name: fileName,
+      } as any);
+
+      data.append("upload_preset", "nfc_preset");
+      data.append("folder", "nfc");
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dacayiktf/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const result = await res.json();
+      return result.secure_url ?? null;
+    });
+
+    // Wait until all are finished
+    const uploadedUrls = await Promise.all(uploadPromises);
+
+    // Filter out any failed uploads (nulls)
+    return uploadedUrls.filter((url): url is string => !!url);
+  } catch (error) {
+    console.error("Multiple upload failed", error);
+    return [];
+  }
+};
+
+
