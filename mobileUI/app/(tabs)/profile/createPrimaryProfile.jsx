@@ -1,12 +1,20 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, ActivityIndicator,Image
+  View,
+  Text, 
+  StyleSheet, 
+  ScrollView, 
+  TouchableOpacity, 
+  Modal, 
+  ActivityIndicator, 
+  Image, 
+  Dimensions
 } from 'react-native';
 import { AntDesign, FontAwesome5, FontAwesome, Entypo, FontAwesome6 } from '@expo/vector-icons';
 import FormInput from '../../../components/formInput';
 import Colors from '../../../constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
-import {uploadImageToCloudinary} from '../../../utils/cloudinaryUpload.ts'
+import { uploadImageToCloudinary, uploadMultipleImagesToCloudinary } from '../../../utils/cloudinaryUpload.ts'
 import { usePrimaryProfileState } from '../../../states/usePrimaryProfileState';
 import { useState, useEffect } from 'react';
 import { createPrimaryProfile, updatePrimaryProfile } from '../../../viewmodels/profiles/PrimaryProfileViewModel.ts';
@@ -17,6 +25,13 @@ import { useLocalSearchParams } from 'expo-router';
 
 const CreatePrimaryProfile = () => {
   const router = useRouter();
+
+  const numColumns = 3;
+  const spacing = 2;
+  const screenWidth = Dimensions.get('window').width;
+  const horizontalPadding = 64;
+  const imageSize =
+    (screenWidth - horizontalPadding - spacing * (numColumns - 1)) / numColumns;
 
   const [isPlatformModalVisible, setIsPlatformModalVisible] = useState(false);
   const { profile } = useLocalSearchParams();
@@ -58,7 +73,7 @@ const CreatePrimaryProfile = () => {
       setWorkPhone(profileData.workPhone || '');
       setSocialMedia(profileData.socialMedia || []);
       setRelevantLinks(profileData.relevantLinks || []);
-      setPhotos(profileData.photoGallery?.map(url => ({ name: url.split('/').pop(), url })) || []);
+      setPhotos(profileData.photoGallery?.map(url => url || []));
       setProfilePicture(profileData.profilePicture || '');
     }
   }, []);
@@ -67,18 +82,37 @@ const CreatePrimaryProfile = () => {
     setLoading(true);
     setError('');
     setSuccess('');
-  let uploadedProfilePicture = profilePicture;
+    let uploadedProfilePicture = profilePicture;
+    let uploadedPhotos = photos;
 
-    if (profilePicture &&  !(profilePicture.startsWith("http://") || profilePicture.startsWith("https://"))) {
+    if (profilePicture && !(profilePicture.startsWith("http://") || profilePicture.startsWith("https://"))) {
+      try {
+        uploadedProfilePicture = await uploadImageToCloudinary(profilePicture);
+        console.log("uploaded Image url:", uploadedProfilePicture);
+      } catch (err) {
+        setLoading(false);
+        setError("Image upload failed");
+        return;
+      }
+    }
+
     try {
-      uploadedProfilePicture = await uploadImageToCloudinary(profilePicture);
-      console.log("uploaded Image url:", uploadedProfilePicture);
+      uploadedPhotos = await Promise.all(
+        photos.map(async (photo) => {
+          if (photo.startsWith("http://") || photo.startsWith("https://")) {
+            return photo; // already uploaded
+          } else {
+            const uploadedUrl = await uploadImageToCloudinary(photo);
+            return uploadedUrl;
+          }
+        })
+      );
+      console.log("Uploaded gallery photos:", uploadedPhotos);
     } catch (err) {
       setLoading(false);
-      setError("Image upload failed");
+      setError("Some gallery photos failed to upload");
       return;
     }
-  }
 
     const data = {
       profileName,
@@ -94,10 +128,9 @@ const CreatePrimaryProfile = () => {
       workPhone,
       socialMedia,
       relevantLinks,
-      profilePicture: uploadedProfilePicture || '', 
-      photoGallery: photos?.map(photo => photo.url) || [],
+      profilePicture: uploadedProfilePicture || '',
+      photoGallery: uploadedPhotos ||[],
     };
-
 
     if (isEditMode) {
       await updatePrimaryProfile(
@@ -142,7 +175,7 @@ const CreatePrimaryProfile = () => {
     setRelevantLinks(updated);
   };
 
-  
+
   const pickImage = async (setter) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
@@ -151,17 +184,35 @@ const CreatePrimaryProfile = () => {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes:  ['images'],
+      mediaTypes: ['images'],
       allowsEditing: true,
       quality: 0.7,
     });
 
     if (!result.canceled) {
-      console.log(`urllll => ${result.assets[0].uri}`)
+      console.log(`URI => ${result.assets[0].uri}`)
       setter(result.assets[0].uri);
     }
   };
 
+  const pickMultipleImages = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      alert('Permission to access gallery is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsMultipleSelection: true,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      const selected = result.assets.map((asset) => asset.uri);
+      setPhotos((prev) => [...prev, ...selected]);
+    }
+  };
 
   return (
     <>
@@ -188,21 +239,12 @@ const CreatePrimaryProfile = () => {
       </Modal>
 
       <ScrollView style={styles.container}>
-        {/* <View style={styles.backgroundContainer}>
-          <View style={styles.profileHeader}>
-            <View style={styles.avatar}>
-              <FontAwesome name="user-circle-o" size={80} color={Colors.border} />
-              <View style={styles.chatIcon}>
-                <Entypo name="dots-three-horizontal" size={16} color="#fff" />
-              </View>
-            </View>
-          </View> */}
 
-             <View style={styles.backgroundContainer}>
+        <View style={styles.backgroundContainer}>
           <View style={styles.profileHeader}>
             <TouchableOpacity style={styles.avatar} onPress={() => pickImage(setProfilePicture)}>
               {profilePicture ? (
-                <Image source={{ uri: profilePicture, height:100, width: 100 }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                <Image source={{ uri: profilePicture, height: 100, width: 100 }} style={{ width: 100, height: 100, borderRadius: 50 }} />
               ) : (
                 <FontAwesome name="user-circle-o" size={80} color={Colors.border} />
               )}
@@ -280,20 +322,38 @@ const CreatePrimaryProfile = () => {
             <TouchableOpacity onPress={() => setRelevantLinks([...relevantLinks, { title: '', url: '' }])} style={styles.addMoreBtn}>
               <Text style={styles.addMoreText}>+ Add More</Text>
             </TouchableOpacity>
-
             <Text style={styles.sectionTitle}>Photo Gallery</Text>
-            {photos.map((photo, i) => (
-              <View key={i} style={styles.photoItem}>
-                <Text style={{ flex: 1 }}>{photo.name}</Text>
-                <TouchableOpacity onPress={() => setPhotos(photos.filter((_, idx) => idx !== i))}>
-                  <AntDesign name="delete" size={20} color={Colors.delete} />
-                </TouchableOpacity>
-              </View>
-            ))}
-            <TouchableOpacity onPress={() => {
-              // Call image picker logic externally
-              // setPhotos([...photos, { name: 'example.jpg', url: '/uploads/example.jpg' }])
-            }} style={styles.addMoreBtn}>
+
+            <View style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}>
+              {photos.map((photo, i) => (
+                <View
+                  key={i}
+                  style={{
+                    width: imageSize,
+                    height: imageSize,
+                    marginRight: (i + 1) % numColumns === 0 ? 0 : spacing,
+                    marginBottom: spacing,
+                    position: 'relative',
+                  }}
+                >
+                  <Image
+                    source={{ uri: photo }}
+                    style={{ width: '100%', height: '100%', borderRadius: 10 }}
+                  />
+                  <TouchableOpacity
+                    style={{ position: 'absolute', top: 4, right: 4 }}
+                    onPress={() => setPhotos(photos.filter((_, idx) => idx !== i))}
+                  >
+                    <AntDesign name="closecircle" size={20} color="red" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+
+            <TouchableOpacity onPress={pickMultipleImages} style={styles.addMoreBtn}>
               <Text style={styles.addMoreText}>+ Add Photos</Text>
             </TouchableOpacity>
 
@@ -322,6 +382,15 @@ const getPlatformIcon = (platform) => {
 
 
 const styles = StyleSheet.create({
+  photoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  deleteBtn: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
