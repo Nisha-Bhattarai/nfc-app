@@ -136,9 +136,7 @@ const CreateEventProfile = () => {
         }
       );
     } else {
-      await createEventProfile({
-        data: requestData
-      }, () => {
+      await createEventProfile(requestData, () => {
         setLoading(false);
         setSuccess('Event profile created successfully');
         router.back();
