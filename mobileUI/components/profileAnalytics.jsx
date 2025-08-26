@@ -1,60 +1,76 @@
-import { View, Text, StyleSheet, ScrollView,  } from 'react-native';
+import { View, Text, StyleSheet, ScrollView,ActivityIndicator } from 'react-native';
 import Colors from "../constants/Colors";
 import ScanOverviewCard, { PeakScanTimeCard, TopLocationCard } from "../components/scanOverviewCard";
 import ScansOverTimeCard from "../components/ScansOverTimeCard";
 import ScansByDayAndHourTab from "../components/ScansByDayAndHourTab";
 import DetailedAnalyticsCard from "../components/detailedAnalyticsCard"
-
+import { useHomeAnalyticsState } from '../states/useHomeAnalyticsState'; // your custom hook
 
 const ProfileAnalytics = () => {
+  const { homeAnalytics, loading, error, reload } = useHomeAnalyticsState();
+  if (loading) return <ActivityIndicator size="large" color={Colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
+  if (error) return <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>{error}</Text>;
+
   return (
     <View style={styles.background}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.cardContainer}>
-          <ScanOverviewCard 
+          <ScanOverviewCard
             title='Total Scans'
-            number='1250'
+            number={homeAnalytics?.totalScans || 0}
             text='Scans'
           />
-          <ScanOverviewCard 
+          <ScanOverviewCard
             title='Unique Scanners'
-            number='70'
+            number={homeAnalytics?.uniqueScanners || 0}
             text='Scans'
           />
         </View>
         <View style={styles.cardContainer}>
-          <TopLocationCard 
+        
+          <TopLocationCard
             title='Top Location'
-            number
-            locationText='Toronto, ON'
+            locationText={homeAnalytics?.topLocation || 'N/A'}
           />
-          <PeakScanTimeCard 
+          <PeakScanTimeCard
             title='Peak Scan Time'
             text='Between'
-            time='2PM - 4PM'
+            time={homeAnalytics?.peakScanTime || 'N/A'}
           />
         </View>
-        <ScansOverTimeCard />
-        <ScansByDayAndHourTab />
-        <View style={styles.detailedAnalytics}>
-          <Text style={styles.detailedAnalyticsTitle}>Detailed Analytics</Text>
-          <DetailedAnalyticsCard
-        date = 'September 15, 2024' 
-        time = '10:30 AM'
-        deviceName = 'iPhone' 
-        location = 'North York' 
-        ipAddress = '45.67.189.23' />
-        <DetailedAnalyticsCard 
-        date= 'May 12, 2025'
-        time= '2:34 PM'
-        deviceName= 'Android'
-        location = 'Scarborough'
-        ipAddress = '36.59.198.25'
-        />
+        <ScansOverTimeCard data={homeAnalytics} activeTab="day" />
+        <ScansByDayAndHourTab data={homeAnalytics} />
+
+         <View style={styles.detailedAnalytics}>
+            <Text style={styles.detailedAnalyticsTitle}>Detailed Analytics</Text>
+            {homeAnalytics?.latestScans?.map((scan, index) => {
+                const scanDate = new Date(scan.date);
+                const formattedDate = scanDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                const formattedTime = scanDate.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                });
+
+                return (
+                    <DetailedAnalyticsCard
+                        key={index}
+                        date={formattedDate}
+                        time={formattedTime}
+                        deviceName={scan.device}
+                        location={scan.location}
+                        ipAddress={scan.ipAddress}
+                    />
+                );
+            })}
         </View>
-        
-        </ScrollView>
-      </View>
+
+      </ScrollView>
+    </View>
   )
 }
 

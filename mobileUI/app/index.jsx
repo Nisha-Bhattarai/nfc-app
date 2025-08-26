@@ -5,32 +5,6 @@ import EventAnalytics from "../components/eventAnalytics"
 import ProfileAnalytics from "../components/profileAnalytics"
 import AuthTabView from "./(auth)/index"
 
-
-
-// const App = () => {
-//   return (
-//     // <>
-//     // <View style={styles.container}>
-//     //   <View style={styles.greetingHeader}>
-//     //     <Text style={styles.headerText}>Hello, Mary!</Text>
-//     //     <Image 
-//     //       style={styles.image}
-//     //       source={require('../../assets/images/avatar.png')} />
-//     //   </View>
-//     //   {/* <ProfileAnalytics /> */}
-//     //   {/* <EventAnalytics /> */}
-//     //   <AuthTabView/>
-//     // </View>
-//     // </>
-//           <AuthTabView/>
-
-//   );
-// };
-
-// export default App;
-
-
-
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../contexts/AuthContext';

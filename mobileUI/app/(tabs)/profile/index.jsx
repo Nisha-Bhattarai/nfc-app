@@ -9,7 +9,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Hello Mary! Welcome to your profile page.</Text>
+      {/* <Text style={styles.title}>Hello Mary! Welcome to your profile page.</Text> */}
       <Text style={styles.subtitle}>Manage your profiles below — choose what to share and when.</Text>
       <TouchableOpacity
         activeOpacity={0.7}
