@@ -4,6 +4,7 @@ import BoothScanOverviewCard, { PeakScanTimeCard } from "../components/boothScan
 import ScansOverTimeCard from "../components/ScansOverTimeCard";
 import DetailedAnalyticsCard from "../components/detailedAnalyticsCard"
 import EventsList from "../components/eventsList"
+import EventsScanOverTime from "../components/eventsScanOvertime"
 import { useHomeEventAnalyticsState } from '../states/useHomeEventAnalyticsState';
 
 const EventAnalytics = () => {
@@ -38,9 +39,7 @@ const EventAnalytics = () => {
           <EventsList recentProfiles={analytics.recentProfiles} />
         )}
 
-
-        {/*  TODO scan over time card */}
-        <ScansOverTimeCard />
+        <EventsScanOverTime scanOverTimesData={analytics?.scanOverTimesData}/>
 
 
         <View>
@@ -151,7 +150,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Poppins_600SemiBold",
     color: Colors.textPrimary,
-    marginTop: 8,
     marginBottom: 8,
   }
 });

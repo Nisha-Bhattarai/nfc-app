@@ -32,8 +32,8 @@ const Home = () => {
           </TouchableOpacity>
 
         </View>
-        <ProfileAnalytics />
-        {/* <EventAnalytics /> */}
+        {/* <ProfileAnalytics /> */}
+        <EventAnalytics />
         {/* <AuthTabView/> */}
       </View>
 
