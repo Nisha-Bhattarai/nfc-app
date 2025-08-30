@@ -1,62 +1,85 @@
-import { View, Text, StyleSheet, ScrollView,  } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import Colors from "../constants/Colors";
 import BoothScanOverviewCard, { PeakScanTimeCard } from "../components/boothScanOverviewCard";
 import ScansOverTimeCard from "../components/ScansOverTimeCard";
 import DetailedAnalyticsCard from "../components/detailedAnalyticsCard"
 import EventsList from "../components/eventsList"
+import { useHomeEventAnalyticsState } from '../states/useHomeEventAnalyticsState';
 
 const EventAnalytics = () => {
-  return (    
-      <View style={styles.background}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.eventName}>
-                <Text style={styles.eventNameText}>Tech Conference 2025</Text>
+  const { analytics, loading, error, reload } = useHomeEventAnalyticsState();
+  if (loading) return <ActivityIndicator size="large" color={Colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
+  if (error) return <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>{error}</Text>;
+  return (
+    <View style={styles.background}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {analytics?.analytics.map((item, index) => (
+
+          <View key={item.profile._id} style={{ marginBottom: 20 }}>
+            <Text style={styles.eventNameText}>
+              {item.profile.eventName}
+            </Text>
+            <View style={styles.cardContainer}>
+              <BoothScanOverviewCard
+                title="Total Scans"
+                number={String(item.totalScans ?? 0)}
+                text="Scans"
+              />
+              <PeakScanTimeCard
+                title="Peak Scan Time"
+                text="Between"
+                time={item.peakScanTime ?? "-"}
+              />
             </View>
-        <View style={styles.cardContainer}>
-          <BoothScanOverviewCard 
-            title='Booth 1 Total Scans'
-            number='1250'
-            text='Scans'
-          />
-          <BoothScanOverviewCard 
-            title='Booth 2 Total Scans'
-            number='70'
-            text='Scans'
-          />
-        </View>
-        <View style={styles.cardContainer}>
-          <PeakScanTimeCard 
-            title='Booth 1 Peak Scan Time'
-            text='Between'
-            time='2PM - 4PM'
-          />
-          <PeakScanTimeCard 
-            title='Booth 2 Peak Scan Time'
-            text='Between'
-            time='2PM - 4PM'
-          />
-        </View>
-        <EventsList />
+          </View>
+        ))}
+
+        {analytics?.recentProfiles?.length > 0 && (
+          <EventsList recentProfiles={analytics.recentProfiles} />
+        )}
+
+
+        {/*  TODO scan over time card */}
         <ScansOverTimeCard />
+
+
         <View>
           <Text style={styles.detailedAnalyticsTitle}>Detailed Analytics</Text>
-          <DetailedAnalyticsCard
-        date = 'September 15, 2024' 
-        time = '10:30 AM'
-        deviceName = 'iPhone' 
-        location = 'Booth 1' 
-        ipAddress = '45.67.189.23' />
-        <DetailedAnalyticsCard 
-        date= 'May 12, 2025'
-        time= '2:34 PM'
-        deviceName= 'Android'
-        location = 'Booth 2'
-        ipAddress = '36.59.198.25'
-        />
+
+          {analytics?.detailedAnalytics?.map((item) => (
+            item.scans?.length > 0 && (
+              <View key={item.profile} style={{ marginBottom: 16 }}>
+                <Text style={styles.eventNameText}>{item.profile}</Text>
+
+                {item.scans.map((scan, index) => {
+                  const dateObj = new Date(scan.createdAt);
+                  const date = dateObj.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  });
+                  const time = dateObj.toLocaleTimeString("en-US", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  });
+
+                  return (
+                    <DetailedAnalyticsCard
+                      key={scan.deviceId + index}
+                      date={date}
+                      time={time}
+                      deviceName={scan.device}
+                      location={scan.location}
+                      ipAddress={scan.ipAddress}
+                    />
+                  );
+                })}
+              </View>
+            )
+          ))}
         </View>
-        
-        </ScrollView>
-      </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -80,7 +103,8 @@ const styles = StyleSheet.create({
   eventNameText: {
     fontSize: 18,
     color: '#000000',
-    textAlign: 'center',
+    textAlign: 'start',
+    marginBottom: 10
   },
   heading: {
     fontSize: 42,
@@ -121,7 +145,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 16,
     width: '100%'
   },
   detailedAnalyticsTitle: {

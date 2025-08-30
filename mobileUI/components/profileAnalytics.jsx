@@ -4,7 +4,7 @@ import ScanOverviewCard, { PeakScanTimeCard, TopLocationCard } from "../componen
 import ScansOverTimeCard from "../components/ScansOverTimeCard";
 import ScansByDayAndHourTab from "../components/ScansByDayAndHourTab";
 import DetailedAnalyticsCard from "../components/detailedAnalyticsCard"
-import { useHomeAnalyticsState } from '../states/useHomeAnalyticsState'; // your custom hook
+import { useHomeAnalyticsState } from '../states/useHomeAnalyticsState';
 
 const ProfileAnalytics = () => {
   const { homeAnalytics, loading, error, reload } = useHomeAnalyticsState();

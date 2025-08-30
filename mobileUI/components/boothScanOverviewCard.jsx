@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import Colors from "../constants/Colors"
 
-const BoothScanOverviewCard = ({ title, number, text }) => {
+const BoothScanOverviewCard = ({ title,  number, text }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{title}</Text>
