@@ -1,5 +1,7 @@
 import { View, Text, StyleSheet, ScrollView,ActivityIndicator } from 'react-native';
 import Colors from "../constants/Colors";
+import { useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import ScanOverviewCard, { PeakScanTimeCard, TopLocationCard } from "../components/scanOverviewCard";
 import ScansOverTimeCard from "../components/ScansOverTimeCard";
 import ScansByDayAndHourTab from "../components/ScansByDayAndHourTab";
@@ -7,9 +9,15 @@ import DetailedAnalyticsCard from "../components/detailedAnalyticsCard"
 import { useHomeAnalyticsState } from '../states/useHomeAnalyticsState';
 
 const ProfileAnalytics = () => {
-  const { homeAnalytics, loading, error, reload } = useHomeAnalyticsState();
+   const { homeAnalytics, loading, error, reload } = useHomeAnalyticsState();
+
+  useFocusEffect(
+    useCallback(() => {
+      reload();
+    }, [reload])
+  );
   if (loading) return <ActivityIndicator size="large" color={Colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
-  if (error) return <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>{error}</Text>;
+  // if (error) return <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>{error}</Text>;
 
   return (
     <View style={styles.background}>

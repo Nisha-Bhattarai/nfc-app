@@ -1,6 +1,7 @@
 import {  HomeAnalyticsResponse } from '@/models/HomeAnalyticsResponse';
 import { HomeEventAnalyticsResponse } from '../../models/HomeEventAnalyticsResponse';
-import { getHomeAnalytics, getEventHomeAnalytics } from '../../repositories/HomeRepository';
+import { ProfilesResponse } from '../../models/ProfilesResponse';
+import { getHomeAnalytics, getEventHomeAnalytics , getProfiles, setRunningProfileApi} from '../../repositories/HomeRepository';
 
 
 export const fetchHomeAnalytics = async (
@@ -30,5 +31,42 @@ export const fetchEventHomeAnalytics = async (
     onSuccess(data);
   } catch (err: any) {
     onError(err.message || 'Something went wrong while fetching event home analytics');
+  }
+};
+
+export const fetchProfiles = async (
+  onSuccess: (data: ProfilesResponse) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const data = await getProfiles();
+    onSuccess(data);
+  } catch (err: any) {
+    onError(err.message || 'Something went wrong while fetching event home analytics');
+  }
+};
+
+export const setRunningProfile = async (
+  profileId: string,
+  profileType: "PRIMARY" | "EVENT",
+  onSuccess: (message: string) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    // Call backend API
+    const response = await setRunningProfileApi(profileId, profileType);
+
+    // Your backend now returns { success, message }
+    if (response?.message) {
+      onSuccess(response.message);
+    } else {
+      onSuccess("Profile updated successfully");
+    }
+  } catch (err: any) {
+    const message =
+      err?.response?.data?.message ||
+      err?.message ||
+      "Something went wrong while updating the running profile";
+    onError(message);
   }
 };
