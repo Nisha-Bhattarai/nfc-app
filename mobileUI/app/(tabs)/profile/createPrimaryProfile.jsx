@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   View,
-  Text, 
-  StyleSheet, 
-  ScrollView, 
-  TouchableOpacity, 
-  Modal, 
-  ActivityIndicator, 
-  Image, 
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  ActivityIndicator,
+  Image,
   Dimensions
 } from 'react-native';
 import { AntDesign, FontAwesome5, FontAwesome, Entypo, FontAwesome6 } from '@expo/vector-icons';
@@ -79,9 +79,38 @@ const CreatePrimaryProfile = () => {
   }, []);
 
   const handleSave = async () => {
-    setLoading(true);
     setError('');
     setSuccess('');
+
+    if (!profileName.trim()) return setError('Profile Name* is required');
+    if (!firstName.trim()) return setError('First Name is required');
+    if (!lastName.trim()) return setError('Last Name is required');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (personalEmail && !emailRegex.test(personalEmail.trim())) return setError(`Invalid Personal Email ${personalEmail}`);
+    if (workEmail && !emailRegex.test(workEmail.trim())) return setError('Invalid Work Email');
+
+    const phoneRegex = /^[0-9+]{6,15}$/; // allows + and digits, length 6-15
+    if (personalPhone && !phoneRegex.test(personalPhone)) return setError('Invalid Personal Phone');
+    if (workPhone && !phoneRegex.test(workPhone)) return setError('Invalid Work Phone');
+
+    const urlPattern = /^(https?:\/\/)?([\w\d-]+\.){1,2}[\w\d-]+(\/.*)?$/;
+    for (let i = 0; i < socialMedia.length; i++) {
+      if (!socialMedia[i].platform) return setError(`Social Media ${i + 1}: Platform is required`);
+      if (!socialMedia[i].url) return setError(`Social Media ${i + 1}: Enter URL or delete the default item.`);
+      if (!urlPattern.test(socialMedia[i].url)) {
+        setError(`Social Media at position ${i + 1} is invalid.`);
+        return;
+      }
+    }
+
+    for (let i = 0; i < relevantLinks.length; i++) {
+      if (!relevantLinks[i].title) return setError(`Relevant Link ${i + 1}: Enter title or delete the default item.`);
+      if (!relevantLinks[i].url) return setError(`Relevant Link ${i + 1}: Enter URL or delete the default item.`);
+    }
+
+    setLoading(true);
+
     let uploadedProfilePicture = profilePicture;
     let uploadedPhotos = photos;
 
@@ -129,7 +158,7 @@ const CreatePrimaryProfile = () => {
       socialMedia,
       relevantLinks,
       profilePicture: uploadedProfilePicture || '',
-      photoGallery: uploadedPhotos ||[],
+      photoGallery: uploadedPhotos || [],
     };
 
     if (isEditMode) {
@@ -256,9 +285,9 @@ const CreatePrimaryProfile = () => {
 
           <View style={styles.form}>
             {[
-              { label: 'Profile Name', value: profileName, setter: setProfileName },
-              { label: 'First Name', value: firstName, setter: setFirstName },
-              { label: 'Last Name', value: lastName, setter: setLastName },
+              { label: 'Profile Name*', value: profileName, setter: setProfileName },
+              { label: 'First Name*', value: firstName, setter: setFirstName },
+              { label: 'Last Name*', value: lastName, setter: setLastName },
               { label: 'Job Title', value: jobTitle, setter: setJobTitle },
               { label: 'Company', value: company, setter: setCompany },
               { label: 'Location', value: location, setter: setLocation },
@@ -303,7 +332,7 @@ const CreatePrimaryProfile = () => {
             {relevantLinks.map((l, i) => (
               <View style={styles.row} key={i}>
                 <FormInput
-                  placeholder="URL Title"
+                  placeholder="Title"
                   value={l.title}
                   onChangeText={(text) => updateRelevantLink(i, 'title', text)}
                   style={styles.urlTitleInput}
@@ -404,6 +433,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  errorText: {
+    color: Colors.delete,
+    marginBottom: 20, // Space between Forgot Password? and the Sign In button
+    textAlign: 'start',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
   },
   modalTitle: {
     fontSize: 18,

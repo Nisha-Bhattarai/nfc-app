@@ -11,9 +11,14 @@ export const signup = async (user: SignUpRequest): Promise<SignUpResponse> => {
 
 export const verifyEmail = async (email: string, otp: string) => {
   const response = await apiService.post<VerifyOtpResponse>('auth/verifyOtp', { otp, email });
-   const { user, token } = response.data;
+  const { user, token } = response.data;
   await saveSession(user, token);
   return response.data;
+};
+
+export const resendEmailOtp = async (email: string) => {
+  const response = await apiService.post<GenerateNewOtpResponse>('auth/generateNewOtp', { email });
+    return response.data;
 };
 
 export const login = async (email: string, password: string) => {
@@ -30,6 +35,11 @@ export interface VerifyOtpResponse {
     email: string;
   };
   token: string;
+}
+
+export interface GenerateNewOtpResponse {
+  message: string;
+  email: string;
 }
 
 export interface LoginResponse {

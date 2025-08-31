@@ -28,9 +28,9 @@ const PrimaryProfileCard = ({ profilePicture, name, position, createdDate, modif
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.otherText}>{position}</Text>
-          <Text style={styles.otherText}>Date Created: {createdDate}</Text>
-          <Text style={styles.otherText}>Date Modified: {modifiedDate}</Text>
+          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">{position}</Text>
+          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">Date Created: {createdDate.trim()}</Text>
+          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">Date Modified: {modifiedDate.trim()}</Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>
@@ -65,16 +65,18 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
-  infoContainer: {
+ infoContainer: {
+    flex: 1,     
     flexDirection: 'column',
-    gap: 6
+    gap: 6,
+    flexShrink: 1,  
   },
   nameText: {
     fontSize: 15,
     color: Colors.textPrimary
   },
   otherText: {
-    fontSize: 15,
+    fontSize: 12,
     color: Colors.textSecondary
   },
   buttonContainer: {

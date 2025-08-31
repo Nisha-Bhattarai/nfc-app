@@ -20,8 +20,19 @@ const Login = () => {
   } = useLoginState();
 
   const handleSignIn = async () => {
-    setLoading(true);
     setError('');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!password || password.trim().length < 5) {
+      setError('Please enter a valid password (at least 5 characters).');
+      return;
+    }
+
+    setLoading(true);
 
     await loginUser(email, password,
       (userData) => {
@@ -117,6 +128,13 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontFamily: 'Lato_400Regular',
     fontSize: 16,
+  },
+  errorText: {
+    color: Colors.delete,
+    marginBottom: 20, // Space between Forgot Password? and the Sign In button
+    textAlign: 'start',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
   },
   signInButton: {
     height: 60,
