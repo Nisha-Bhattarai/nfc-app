@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { fetchHomeAnalytics } from '../viewmodels/main/HomeViewModel';
 import { HomeAnalyticsResponse } from '@/models/HomeAnalyticsResponse';
 
@@ -7,7 +7,7 @@ export const useHomeAnalyticsState = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const loadHomeAnalytics = () => {
+  const loadHomeAnalytics = useCallback(() => {
     setLoading(true);
     setError('');
     fetchHomeAnalytics(
@@ -20,16 +20,12 @@ export const useHomeAnalyticsState = () => {
         setLoading(false);
       }
     );
-  };
-
-  useEffect(() => {
-    loadHomeAnalytics();
   }, []);
 
   return {
     homeAnalytics,
     loading,
     error,
-    reload: loadHomeAnalytics,
+    reload: loadHomeAnalytics, 
   };
 };

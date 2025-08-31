@@ -5,17 +5,22 @@ import EventsCard from "../components/eventsCard"
 
 
 
-const EventsList = () => {
-    
-
+const EventsList = ({ recentProfiles }) => {
   return (
     <View style={styles.container}>
         <View style={styles.titleContainer}>
-            <Text style={styles.title}>Events</Text>
+            <Text style={styles.title}>Upcoming Events</Text>
             <Text style={styles.titleText}>See all</Text>
         </View>  
-        <EventsCard />
-        <EventsCard />
+        {recentProfiles.map((profile) => (
+        <EventsCard
+          key={profile._id}
+          title={profile.eventName}
+          location={profile.location}
+          startDate={profile.startDate}
+          endDate={profile.endDate}
+        />
+      ))}
     </View>
   )
 }
@@ -26,7 +31,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.white,
         padding: 16,
-        marginTop: 10,
         marginBottom: 10,
         borderRadius: 18,
     },
