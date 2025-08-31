@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import React, { useState } from 'react';
 import Colors from '../../../constants/Colors';
 import ContactListCard from '../../../components/contactListCard';
@@ -7,6 +7,7 @@ import ContactsMoreModal from '../../../components/ContactsMoreModal';
 import EditContactFormModal from '../../../components/EditContactFormModal';
 import { useContactListState } from '../../../states/useContactListState';
 import { deleteContact } from '../../../viewmodels/auth/ContactViewModel';
+import * as AppContacts from 'expo-contacts';
 
 const Contacts = () => {
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
@@ -29,7 +30,7 @@ const Contacts = () => {
     deleteContact(
       id, () => {
         closeBottomSheet()
-        reload(); 
+        reload();
         setDeletingId(null);
       },
       (errMessage) => {
@@ -38,6 +39,31 @@ const Contacts = () => {
       }
     );
   };
+
+
+  const handleDownloadContact = async (contact) => {
+    const { status } = await AppContacts.requestPermissionsAsync();
+    if (status === 'granted') {
+      try {
+        await AppContacts.addContactAsync({
+          [AppContacts.Fields.FirstName]: contact.name,
+          [AppContacts.Fields.PhoneNumbers]: [
+            { label: 'mobile', number: contact.phone },
+          ],
+          [AppContacts.Fields.Emails]: [
+            { label: 'work', email: contact.email },
+          ],
+          [AppContacts.Fields.Notes]: contact.note || '',
+        });
+        Alert.alert('Success', 'Contact saved to your phone!');
+      } catch (err) {
+        Alert.alert('Error', 'Failed to save contact');
+      }
+    } else {
+      Alert.alert('Permission denied', 'Cannot save contact without permission');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.background}>
@@ -69,7 +95,8 @@ const Contacts = () => {
                 onMorePress={() =>
                   openBottomSheet(
                     <ContactsMoreModal
-                     deleting={deletingId === contact._id}
+                      onDownloadPress={() => handleDownloadContact(contact)}
+                      deleting={deletingId === contact._id}
                       onEditPress={() => openBottomSheet(
                         <EditContactFormModal
                           isEdit={true}

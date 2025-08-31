@@ -4,10 +4,10 @@ import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Colors from '../constants/Colors'
 
-const ContactsMoreModal = ({ onEditPress, onDeletePress, deleting }) => {
+const ContactsMoreModal = ({ onEditPress, onDeletePress, deleting, onDownloadPress }) => {
   return (
     <View style={styles.bottomSheetContainer}>
-      <TouchableOpacity style={styles.download}>
+      <TouchableOpacity style={styles.download} onPress={onDownloadPress}>
         <AntDesign name='download' style={styles.icon} size={24} color={Colors.primary} />
         <Text style={styles.downloadText}>Download</Text>
       </TouchableOpacity>
