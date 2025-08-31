@@ -29,12 +29,12 @@ const EventProfileList = () => {
     };
 
     // this block refresh the page once the user navigates back to this screen
-      useFocusEffect(
+    useFocusEffect(
         useCallback(() => {
-          reload();
+            reload();
         }, [])
-      );
-    
+    );
+
 
     return (
         <View style={styles.container}>
@@ -53,6 +53,7 @@ const EventProfileList = () => {
                         {profiles.map((profile) => (
                             <EventProfileCard
                                 key={profile._id}
+                                images={profile.photoGallery}
                                 name={`${profile.eventProfileName}`}
                                 position={`${profile.eventName}`}
                                 createdDate={new Date(profile.createdAt).toDateString()}

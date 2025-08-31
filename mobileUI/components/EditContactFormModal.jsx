@@ -99,21 +99,13 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose, reloa
           Alert.alert('Error', err?.message || 'Something went wrong');
         }
       );
-
-
     }
-
-
-
-
   };
 
   return (
     <View style={styles.bottomSheetContainer}>
       <View style={styles.container}>
         <Image style={styles.avatarImage} source={require('../assets/images/avatar.png')} />
-        <Text style={styles.textName}>John Doe</Text>
-
         <View style={styles.emailInput}>
           <Ionicons name="person-outline" size={30} color="#555" />
           <FormInput

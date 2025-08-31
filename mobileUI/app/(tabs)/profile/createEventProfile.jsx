@@ -79,10 +79,101 @@ const CreateEventProfile = () => {
   const [showCertModal, setShowCertModal] = useState(false);
 
   const handleSave = async () => {
-    let uploadedPhotos = photoGallery;
-    setLoading(true);
+
+
     setError('');
     setSuccess('');
+
+    // ---------- Validation ----------
+    if (!eventProfileName.trim()) {
+      setError('Event Profile Name is required.');
+      return;
+    }
+
+    if (!eventName.trim()) {
+      setError('Event Name is required.');
+      return;
+    }
+
+    if (!startDate) {
+      setError('Start Date is required.');
+      return;
+    }
+
+    if (!endDate) {
+      setError('End Date is required.');
+      return;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      setError('End Date must be after Start Date.');
+      return;
+    }
+
+    const urlPattern = /^(https?:\/\/)?([\w\d-]+\.){1,2}[\w\d-]+(\/.*)?$/;
+    for (let i = 0; i < socialMedia.length; i++) {
+      if (!socialMedia[i].platform) return setError(`Social Media ${i + 1}: Platform is required`);
+      if (!socialMedia[i].url) return setError(`Social Media ${i + 1}: Enter URL or delete the default item.`);
+      if (!urlPattern.test(socialMedia[i].url)) {
+        setError(`Social Media at position ${i + 1} is invalid.`);
+        return;
+      }
+    }
+
+    for (let i = 0; i < relevantLinks.length; i++) {
+      if (!relevantLinks[i].title) return setError(`Relevant Link ${i + 1}: Enter title or delete the default item.`);
+      if (!relevantLinks[i].url) return setError(`Relevant Link ${i + 1}: Enter URL or delete the default item.`);
+    }
+
+    // Validate Relevant Links
+    for (let i = 0; i < relevantLinks.length; i++) {
+      const rl = relevantLinks[i];
+      if (!rl.title || !rl.url) {
+        setError(`Relevant Link at position ${i + 1} is incomplete.`);
+        return;
+      }
+      const urlPattern = /^(https?:\/\/)?([\w\d-]+\.){1,2}[\w\d-]+(\/.*)?$/;
+      if (!urlPattern.test(rl.url)) {
+        setError(`Relevant Link URL at position ${i + 1} is invalid.`);
+        return;
+      }
+    }
+
+    // Validate Emails
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (personalEmail && !emailPattern.test(personalEmail)) {
+      setError('Personal Email is invalid.');
+      return;
+    }
+    if (workEmail && !emailPattern.test(workEmail)) {
+      setError('Work Email is invalid.');
+      return;
+    }
+
+    // Validate Phones
+    const phonePattern = /^[0-9+()\s-]{5,20}$/;
+    if (personalPhone && !phonePattern.test(personalPhone)) {
+      setError('Personal Phone is invalid.');
+      return;
+    }
+    if (workPhone && !phonePattern.test(workPhone)) {
+      setError('Work Phone is invalid.');
+      return;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    let uploadedPhotos = photoGallery;
+    setLoading(true);
+
 
     try {
       uploadedPhotos = await Promise.all(
@@ -198,8 +289,8 @@ const CreateEventProfile = () => {
       </Modal>
       <ScrollView style={styles.container}>
         <View style={styles.backgroundContainer}>
-          <FormInput placeholder="Event Profile Name" value={eventProfileName} onChangeText={setEventProfileName} />
-          <FormInput placeholder="Event Name" value={eventName} onChangeText={setEventName} />
+          <FormInput placeholder="Event Profile Name*" value={eventProfileName} onChangeText={setEventProfileName} />
+          <FormInput placeholder="Event Name*" value={eventName} onChangeText={setEventName} />
           <Text style={styles.sectionTitle}>Start Date</Text>
           <EventDateTimePicker date={startDate} onChange={setStartDate} />
           <Text style={styles.sectionTitle}>End Date</Text>
@@ -321,7 +412,7 @@ const CreateEventProfile = () => {
           </TouchableOpacity>
 
 
-          {error ? <Text style={styles.error}>{error}</Text> : null}
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
           {success ? <Text style={styles.success}>{success}</Text> : null}
 
           {/* <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={loading}>
@@ -492,6 +583,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 26,
     width: 150,
+  },
+  errorText: {
+    color: Colors.delete,
+    marginBottom: 20, // Space between Forgot Password? and the Sign In button
+    textAlign: 'start',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
   },
   saveButtonContainer: {
     alignSelf: 'flex-end',

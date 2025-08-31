@@ -16,36 +16,47 @@ import { useSignupState } from '../../states/useSignUpState';
 
 const CreateAccount = () => {
   const router = useRouter();
-
-  // Form state
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
 
-  // const [loading, setLoading] = useState(false);
-  // const [error, setError] = useState('');
-  // const [success, setSuccess] = useState('');
-
   const {
-    firstName, 
+    firstName,
     setFirstName,
-    lastName, 
+    lastName,
     setLastName,
-    email, 
+    email,
     setEmail,
-    password, 
+    password,
     setPassword,
-    loading, 
+    loading,
     setLoading,
-    error, 
+    error,
     setError,
-    success, 
+    success,
     setSuccess
   } = useSignupState();
 
   const handleCreateAccount = async () => {
+    if (!firstName || firstName.trim().length < 1) {
+      setError('Please enter your first name.');
+      return;
+    }
+
+    if (!lastName || lastName.trim().length < 1) {
+      setError('Please enter your last name.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!password || password.trim().length < 5) {
+      setError('Please enter a valid password (at least 5 characters).');
+      return;
+    }
+
     if (!isChecked) {
       setError('Please agree to the Terms & Conditions');
       return;
@@ -59,12 +70,12 @@ const CreateAccount = () => {
 
     await signupUser(
       user,
-      (message) => {
+      (response) => {
         setLoading(false);
-        setSuccess(message);
+        setSuccess(response.message);
         router.push({
           pathname: '/(auth)/verifyEmail',
-          params: { email },
+          params: { email: response.email },
         });
 
       },
@@ -187,6 +198,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  errorText: {
+    color: Colors.delete,
+    marginBottom: 20, // Space between Forgot Password? and the Sign In button
+    textAlign: 'start',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
   },
   checkedBox: {
     backgroundColor: Colors.accent,

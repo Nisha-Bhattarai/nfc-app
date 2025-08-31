@@ -2,30 +2,32 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Colors from '../constants/Colors';
 
-const EventProfileCard = ({name, position, createdDate, modifiedDate, onDelete, onEdit, deleting  }) => {
+const EventProfileCard = ({ images, name, position, createdDate, modifiedDate, onDelete, onEdit, deleting }) => {
+  const imageSource =
+    images && images.length > 0 && typeof images[0] === 'string'
+      ? { uri: images[0] }
+      : require('../assets/images/avatar.png');
   return (
     <View style={styles.cardContainer}>
-        <View style={styles.topContainer}>
-            <View style={styles.imageContainer}>
-                <Image 
-                    style={styles.image}
-                    source={require('../assets/images/avatar.png')} />
-            </View>
-            <View style={styles.infoContainer}>
-                <Text style={styles.nameText}>{name}</Text>
-                <Text style={styles.otherText}>{position}</Text>
-                <Text style={styles.otherText}>Date Created: {createdDate}</Text>
-                <Text style={styles.otherText}>Date Modified: {modifiedDate}</Text>
-            </View>
-        </View>   
-        <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.editButton} onPress={onEdit}>
-                <Text style={styles.buttonText}>Edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+      <View style={styles.topContainer}>
+        <View style={styles.imageContainer}>
+          <Image style={styles.image} source={imageSource} resizeMode="cover" />
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.nameText}>{name}</Text>
+          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">{position}</Text>
+          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail" >Date Created: {createdDate}</Text>
+          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail" >Date Modified: {modifiedDate}</Text>
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.editButton} onPress={onEdit}>
+          <Text style={styles.buttonText}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
           <Text style={styles.buttonText}>{deleting ? 'Deleting...' : 'Delete'}</Text>
-            </TouchableOpacity>
-        </View>   
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -33,7 +35,7 @@ const EventProfileCard = ({name, position, createdDate, modifiedDate, onDelete, 
 export default EventProfileCard
 
 const styles = StyleSheet.create({
-   cardContainer: {
+  cardContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     padding: 16,
@@ -41,25 +43,34 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 15,
     marginBottom: 16,
-   },
-   topContainer: {
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,  
+    overflow: 'hidden', 
+  },
+  topContainer: {
     flexDirection: 'row',
     gap: 14
-   },
-   image: {
+  },
+  image: {
     width: 100,
     height: 100,
   },
   infoContainer: {
+    flex: 1,
     flexDirection: 'column',
-    gap: 6
+    gap: 4,
+    flexShrink: 1,
   },
+
   nameText: {
     fontSize: 15,
     color: Colors.textPrimary
   },
   otherText: {
-    fontSize: 15,
+    fontSize: 12,
     color: Colors.textSecondary
   },
   buttonContainer: {

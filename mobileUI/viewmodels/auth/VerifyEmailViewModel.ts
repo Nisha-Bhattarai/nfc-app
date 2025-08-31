@@ -14,3 +14,18 @@ export const verifyEmailOtp = async (
     onError(message);
   }
 };
+
+export const resendEmailOtp = async (
+  email: string,
+  onSuccess: (message: string) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const response = await AuthRepository.resendEmailOtp(email);
+    onSuccess(response.message || 'Otp sent to your email');
+  } catch (error: any) {
+    console.log(error)
+    const message = error?.response?.data?.message || 'Verification failed. Please try again.';
+    onError(message);
+  }
+};
