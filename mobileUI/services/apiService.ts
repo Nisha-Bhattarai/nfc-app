@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearSession } from '../utils/sessionStorage'; // adjust path as needed
+import { authEmitter } from '../utils/authEmitter';
 
 const apiService = axios.create({
   baseURL: 'https://nfc-be.onrender.com/api/v1/',
@@ -56,8 +57,10 @@ apiService.interceptors.response.use(
       });
 
       if (error.response.status === 401) {
+        console.log("Session clear called========================> ")
         // 🔥 Clear session on 401 Unauthorized
         await clearSession();
+              authEmitter.emit('logout');
 
         // Optional: trigger global logout event or navigation reset here
         // Example with event emitter:

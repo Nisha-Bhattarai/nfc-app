@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getSession } from '../utils/sessionStorage';
+import { authEmitter } from '../utils/authEmitter';
 
 export const AuthContext = createContext<{
   isAuthenticated: boolean | null;
@@ -17,6 +18,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const session = await getSession();
       setIsAuthenticated(!!session?.token);
     })();
+
+     const handleLogout = () => setIsAuthenticated(false);
+
+    authEmitter.on('logout', handleLogout);
+
+    return () => {
+      authEmitter.off('logout', handleLogout);
+    };
   }, []);
 
   return (

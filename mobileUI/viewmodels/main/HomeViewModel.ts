@@ -1,7 +1,8 @@
 import {  HomeAnalyticsResponse } from '@/models/HomeAnalyticsResponse';
 import { HomeEventAnalyticsResponse } from '../../models/HomeEventAnalyticsResponse';
 import { ProfilesResponse } from '../../models/ProfilesResponse';
-import { getHomeAnalytics, getEventHomeAnalytics , getProfiles, setRunningProfileApi} from '../../repositories/HomeRepository';
+import { getHomeAnalytics, getEventHomeAnalytics , getProfiles, setRunningProfileApi,getUserInfoFromSession} from '../../repositories/HomeRepository';
+import { UserInfoModel } from "../../models/UserInfoModel";
 
 
 export const fetchHomeAnalytics = async (
@@ -43,6 +44,23 @@ export const fetchProfiles = async (
     onSuccess(data);
   } catch (err: any) {
     onError(err.message || 'Something went wrong while fetching event home analytics');
+  }
+};
+
+export const fetchUserInfo = async (
+  onSuccess: (data: UserInfoModel) => void,
+  onError: (message: string) => void
+) => {
+  try {
+    const userInfo = await getUserInfoFromSession();
+    if (userInfo) {
+      onSuccess(userInfo);
+    } else {
+      onError("No user info found in session");
+    }
+  } catch (err: any) {
+    console.error("Failed to fetch user info", err);
+    onError(err.message || "Something went wrong while fetching user info");
   }
 };
 
