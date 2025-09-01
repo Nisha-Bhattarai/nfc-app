@@ -16,7 +16,7 @@ import ProfileAnalytics from "../../components/profileAnalytics";
 import EventAnalytics from "../../components/eventAnalytics";
 import { Ionicons } from "@expo/vector-icons";
 import { useProfilesState } from "../../states/useProfilesState";
-import { setRunningProfile } from "../../viewmodels/main/HomeViewModel"
+import { setRunningProfile, fetchUserInfo } from "../../viewmodels/main/HomeViewModel"
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
@@ -48,17 +48,43 @@ const BottomSheet = ({ visible, onClose, children }) => {
 };
 
 const Home = () => {
-  const firstName = "User";
   const defaultAvatar = require("../../assets/images/avatar.png");
 
   const [imageSource, setImageSource] = useState(defaultAvatar);
-  const [selectedProfileId, setSelectedProfileId] = useState(null);
-  const [selectedProfileType, setSelectedProfileType] = useState("PRIMARY");
+  const [firstName, setFirstName] = useState('User');
   const [isSheetVisible, setIsSheetVisible] = useState(false);
-  const { profileData, loading, error, fetchProfiles } = useProfilesState();
+  const {
+    profileData,
+    loading,
+    error,
+    fetchProfiles,
+    selectedProfileId,
+    setSelectedProfileId,
+    selectedProfileType,
+    setSelectedProfileType } = useProfilesState();
+  //  userId: string;
+  //   runningProfileId: string| null;
+  //   profileType: string |null;
+  //   profilePicture: string;
+    useEffect(() => {
+  fetchUserInfo(
+    (userInfo) => {
+      console.log("User info:", userInfo);
+      // You can now set running profile based on userInfo.runningProfileId
+      setSelectedProfileId(userInfo.runningProfileId);
+      setSelectedProfileType(userInfo.profileType);
+      setFirstName(userInfo.firstName)
+      setImageSource(userInfo.profilePicture ? { uri: userInfo.profilePicture } : defaultAvatar);
+    },
+    (errMessage) => {
+      console.error(errMessage);
+    }
+  );
+}, []);
 
   useEffect(() => {
-    if (isSheetVisible && (!profileData?.profiles || profileData.profiles.length === 0)) {
+    // if (isSheetVisible && (!profileData?.profiles || profileData.profiles.length === 0)) {
+    if (isSheetVisible) {
       fetchProfiles();
     }
   }, [isSheetVisible]);
@@ -67,15 +93,15 @@ const Home = () => {
     if (!profileData?.profiles) return;
 
     const runningProfile = profileData.profiles.find((p) => p.isRunningProfile);
-    const defaultProfile = runningProfile || profileData.profiles.find((p) => p.profileType === "PRIMARY");
+    // const defaultProfile = runningProfile || profileData.profiles.find((p) => p.profileType === "PRIMARY");
 
-    if (defaultProfile) {
-      setSelectedProfileId(defaultProfile._id);
-      setSelectedProfileType(defaultProfile.profileType);
-      setImageSource(defaultProfile.profilePicture ? { uri: defaultProfile.profilePicture } : defaultAvatar);
+    if (runningProfile) {
+      setSelectedProfileId(runningProfile._id);
+      setSelectedProfileType(runningProfile.profileType);
+      // setImageSource(defaultProfile.profilePicture ? { uri: defaultProfile.profilePicture } : defaultAvatar);
     } else {
       setSelectedProfileId(null);
-      setImageSource(defaultAvatar);
+      // setImageSource(defaultAvatar);
     }
   }, [profileData]);
 
@@ -200,5 +226,5 @@ const styles = StyleSheet.create({
   eventText: { fontSize: 14, flex: 1 },
   overlay: { ...StyleSheet.absoluteFillObject, justifyContent: "flex-end" },
   background: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.3)" },
-  sheet: { backgroundColor: "#fff", borderTopLeftRadius: 16, borderTopRightRadius: 16, paddingBottom: 20, maxHeight: SCREEN_HEIGHT * 0.7, minHeight: SCREEN_HEIGHT * 0.3 },
+  sheet: { backgroundColor: "#fff", borderTopLeftRadius: 16, borderTopRightRadius: 16, paddingBottom: 20, maxHeight: SCREEN_HEIGHT * 0.7, minHeight: SCREEN_HEIGHT * 0.7 },
 });

@@ -7,7 +7,8 @@ export const useProfilesState = () => {
   const [profileData, setProfileData] = useState<ProfilesResponse>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const [selectedProfileId, setSelectedProfileId] = useState(null);
+  const [selectedProfileType, setSelectedProfileType] = useState("PRIMARY");
   // Function to fetch profiles on demand
   const fetchProfiles = async () => {
     setLoading(true);
@@ -34,5 +35,9 @@ export const useProfilesState = () => {
     loading,
     error,
     fetchProfiles, // call this from BottomSheet when it opens
+    selectedProfileId,
+    setSelectedProfileId,
+    selectedProfileType,
+    setSelectedProfileType
   };
 };
