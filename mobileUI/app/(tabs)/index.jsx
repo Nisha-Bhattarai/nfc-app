@@ -66,21 +66,21 @@ const Home = () => {
   //   runningProfileId: string| null;
   //   profileType: string |null;
   //   profilePicture: string;
-    useEffect(() => {
-  fetchUserInfo(
-    (userInfo) => {
-      console.log("User info:", userInfo);
-      // You can now set running profile based on userInfo.runningProfileId
-      setSelectedProfileId(userInfo.runningProfileId);
-      setSelectedProfileType(userInfo.profileType);
-      setFirstName(userInfo.firstName)
-      setImageSource(userInfo.profilePicture ? { uri: userInfo.profilePicture } : defaultAvatar);
-    },
-    (errMessage) => {
-      console.error(errMessage);
-    }
-  );
-}, []);
+  useEffect(() => {
+    fetchUserInfo(
+      (userInfo) => {
+        console.log("User info:", userInfo);
+        // You can now set running profile based on userInfo.runningProfileId
+        setSelectedProfileId(userInfo.runningProfileId);
+        setSelectedProfileType(userInfo.profileType);
+        setFirstName(userInfo.firstName)
+        setImageSource(userInfo.profilePicture ? { uri: userInfo.profilePicture } : defaultAvatar);
+      },
+      (errMessage) => {
+        console.error(errMessage);
+      }
+    );
+  }, []);
 
   useEffect(() => {
     // if (isSheetVisible && (!profileData?.profiles || profileData.profiles.length === 0)) {
@@ -147,7 +147,21 @@ const Home = () => {
         </View>
 
         {/* Show Analytics based on selected profile type */}
-        {selectedProfileType === "PRIMARY" ? <ProfileAnalytics key={selectedProfileId} /> : <EventAnalytics key={selectedProfileId} />}
+        {/* {console.log('dsdsdsdsdsd',selectedProfileType)}
+        {selectedProfileType === "PRIMARY" ? <ProfileAnalytics key={selectedProfileId} /> : <EventAnalytics key={selectedProfileId} />} */}
+        {selectedProfileType === null ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
+            <View style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc', borderRadius: 10, padding: 16, shadowColor: '#000', shadowOpacity: 0, shadowOffset: { width: 0, height: 0 }, shadowRadius: 4, elevation: 0 }}>
+              <Text style={{ textAlign: 'center', fontSize: 14, fontFamily: "Lato_400Regular", color: Colors.textPrimary , lineHeight: 20  }}>
+                It seems like you haven’t created a profile yet. Please create one from the Profile section, or if you already have, select a profile from the avatar at the top right.      </Text>
+            </View>
+          </View>
+        ) : selectedProfileType === "PRIMARY" ? (
+          <ProfileAnalytics key={selectedProfileId} />
+        ) : (
+          <EventAnalytics key={selectedProfileId} />
+        )}
+
       </View>
 
       <BottomSheet visible={isSheetVisible} onClose={() => setIsSheetVisible(false)}>
