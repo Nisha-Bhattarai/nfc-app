@@ -14,7 +14,9 @@ export const verifyEmail = async (email: string, otp: string) => {
   const response = await apiService.post<VerifyOtpResponse>('auth/verifyOtp', { otp, email });
   const { user, token, runningProfile } = response.data;
   await saveSession(user, token);
-  await setRunningProfile(runningProfile.id, runningProfile.profileType);
+  if (runningProfile) {
+    await setRunningProfile(runningProfile.id, runningProfile.profileType);
+  }
   return response.data;
 };
 
@@ -27,7 +29,9 @@ export const login = async (email: string, password: string) => {
   const response = await apiService.post<LoginResponse>('auth/login', { email, password });
   const { user, token, runningProfile } = response.data;
   await saveSession(user, token);
-  await setRunningProfile(runningProfile.id, runningProfile.profileType);
+  if (runningProfile) {
+    await setRunningProfile(runningProfile.id, runningProfile.profileType);
+  }
   return response.data;
 };
 
