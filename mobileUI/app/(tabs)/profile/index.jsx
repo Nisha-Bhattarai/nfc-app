@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import Colors from '../../../constants/Colors'
 import { AntDesign } from '@expo/vector-icons'
-import { useRouter } from 'expo-router'
+import { useRouter, Link } from 'expo-router'
 
 const Profile = () => {
 

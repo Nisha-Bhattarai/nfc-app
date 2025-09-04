@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Colors from "../../constants/Colors"
-import { useRouter } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 import { signupUser } from '../../viewmodels/auth/SignUpViewModel';
 import { useSignupState } from '../../states/useSignUpState';
 
@@ -132,8 +132,14 @@ const CreateAccount = () => {
           <View style={[styles.checkbox, isChecked && styles.checkedBox]}>
             {isChecked && <MaterialIcons name="check" size={18} color="white" />}
           </View>
+          
           <Text style={styles.termsText}>
-            I agree to the <Text style={styles.link}>Terms & Conditions</Text>
+            I agree to the <Link
+            href="/terms"
+            style={styles.link}
+          >
+            Terms & Conditions
+          </Link>
           </Text>
         </TouchableOpacity>
 
