@@ -1,36 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
 import FormInput from './formInput';
-import Colors from '../constants/Colors';
 
-const predefinedSkills = [
-  'JavaScript', 'React', 'React Native', 'Node.js', 'Python', 'Figma', 'UI/UX'
-];
-
-const SkillsSelector = () => {
+const SkillsSelector = ({ selected = [], onChange }) => {
   const [input, setInput] = useState('');
-  const [filteredSkills, setFilteredSkills] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState(selected);
 
-  const handleInputChange = (text) => {
-    setInput(text);
-    const filtered = predefinedSkills.filter(skill =>
-      skill.toLowerCase().includes(text.toLowerCase()) &&
-      !selectedSkills.includes(skill)
-    );
-    setFilteredSkills(filtered);
-  };
+  useEffect(() => {
+    setSelectedSkills(selected);
+  }, [selected]);
 
   const addSkill = (skill) => {
-    if (skill.trim().length === 0 || selectedSkills.includes(skill)) return;
-    setSelectedSkills([...selectedSkills, skill]);
+    const trimmedSkill = skill.trim();
+    if (!trimmedSkill || selectedSkills.includes(trimmedSkill)) return;
+    const updatedSkills = [...selectedSkills, trimmedSkill];
+    setSelectedSkills(updatedSkills);
+    onChange?.(updatedSkills);
     setInput('');
-    setFilteredSkills([]);
     Keyboard.dismiss();
   };
 
   const handleRemoveSkill = (skill) => {
-    setSelectedSkills(selectedSkills.filter(s => s !== skill));
+    const updatedSkills = selectedSkills.filter(s => s !== skill);
+    setSelectedSkills(updatedSkills);
+    onChange?.(updatedSkills);
   };
 
   return (
@@ -47,24 +40,14 @@ const SkillsSelector = () => {
 
         <FormInput
           value={input}
-          onChangeText={handleInputChange}
+          onChangeText={setInput}
           onSubmitEditing={() => addSkill(input)}
           placeholder="Type a skill"
           style={styles.skillInput}
         />
       </View>
 
-      {input.length > 0 && filteredSkills.length > 0 && (
-        <View>
-          {filteredSkills.map((item) => (
-            <TouchableOpacity key={item} onPress={() => addSkill(item)} style={styles.suggestion}>
-              <Text>{item}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      {input.length > 0 && filteredSkills.length === 0 && (
+      {input.trim().length > 0 && (
         <TouchableOpacity onPress={() => addSkill(input)} style={styles.suggestion}>
           <Text>Add "{input}"</Text>
         </TouchableOpacity>
@@ -74,19 +57,15 @@ const SkillsSelector = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 10,
-  },
+  container: { marginBottom: 10 },
   tagsContainer: {
     flexDirection: 'row',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  borderWidth: 1,
-  borderColor: '#ccc',
-  padding: 8,
-  borderRadius: 8,
-  maxWidth: '100%',
-    fontFamily: 'Lato_400Regular',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 8,
+    borderRadius: 8,
   },
   tag: {
     flexDirection: 'row',
@@ -95,28 +74,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 20,
-    margin: 4
+    margin: 4,
   },
-  tagText: {
-    marginRight: 6
-  },
-  removeBtn: {
-    fontSize: 16,
-    color: '#1565c0'
-  },
-  skillInput: {
-    borderWidth: 0,
-    flexGrow: 1,
-    marginBottom: 0,
-    height: 36,
-    paddingHorizontal: 0
-  },
-  suggestion: {
-    padding: 10,
-    backgroundColor: '#f1f1f1',
-    borderBottomWidth: 1,
-    borderColor: '#ddd'
-  }
+  tagText: { marginRight: 6 },
+  removeBtn: { fontSize: 16, color: '#1565c0' },
+  skillInput: { borderWidth: 0, flexGrow: 1, marginBottom: 0, height: 36, paddingHorizontal: 0 },
+  suggestion: { padding: 10, backgroundColor: '#f1f1f1', borderBottomWidth: 1, borderColor: '#ddd' },
 });
 
 export default SkillsSelector;

@@ -67,7 +67,7 @@ const CreateEventProfile = () => {
       setWorkPhone(profileData.workPhone || '');
       setSocialMedia(profileData.socialMedia || []);
       setRelevantLinks(profileData.relevantLinks || []);
-      setSkills(profileData.skills || []);
+      setSkills(Array.isArray(profileData.skills) ? profileData.skills : []);
       setCertifications(profileData.certifications || []);
       setPhotoGallery(profileData.photoGallery?.map(url => url || []));
 
@@ -162,15 +162,6 @@ const CreateEventProfile = () => {
     }
 
 
-
-
-
-
-
-
-
-
-
     let uploadedPhotos = photoGallery;
     setLoading(true);
 
@@ -196,8 +187,8 @@ const CreateEventProfile = () => {
     const requestData = {
       eventProfileName,
       eventName,
-      startDate,
-      endDate,
+      startDate: startDate ? new Date(startDate).toISOString() : null,
+      endDate: endDate ? new Date(endDate).toISOString() : null,
       location,
       aboutEvent,
       personalEmail,
@@ -206,10 +197,12 @@ const CreateEventProfile = () => {
       workPhone,
       socialMedia,
       relevantLinks,
-      skills,
+      skills: Array.isArray(skills) && skills.length > 0 ? skills : [],
       certifications,
       photoGallery: uploadedPhotos || [],
     };
+
+    console.log("DATA ===============================>", JSON.stringify(requestData));
 
 
     if (isEditMode) {
