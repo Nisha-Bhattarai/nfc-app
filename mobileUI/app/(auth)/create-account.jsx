@@ -124,25 +124,24 @@ const CreateAccount = () => {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity
-          style={styles.checkboxRow}
-          onPress={() => setIsChecked(!isChecked)}
-          activeOpacity={0.8}
-        >
-          <View style={[styles.checkbox, isChecked && styles.checkedBox]}>
-            {isChecked && <MaterialIcons name="check" size={18} color="white" />}
-          </View>
-          
-          <Text style={styles.termsText}>
-            I agree to the <Link
-            href="/terms"
-            style={styles.link}
+        <View style={styles.checkboxContainer}>
+          <TouchableOpacity
+            style={styles.checkboxRow}
+            onPress={() => setIsChecked(!isChecked)}
+            activeOpacity={0.8}
           >
-            Terms & Conditions
-          </Link>
-          </Text>
-        </TouchableOpacity>
+            <View style={[styles.checkbox, isChecked && styles.checkedBox]}>
+              {isChecked && <MaterialIcons name="check" size={18} color="white" />}
+            </View>
+          </TouchableOpacity>
 
+          <Text style={styles.termsText}>
+            I agree to the{' '}
+            <Link href="/terms" style={styles.link}>
+              Terms & Conditions
+            </Link>
+          </Text>
+        </View>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         {success ? <Text style={styles.successText}>{success}</Text> : null}
@@ -189,6 +188,10 @@ const styles = StyleSheet.create({
   },
   halfInput: {
     flex: 1,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center_vertical', 
   },
   checkboxRow: {
     flexDirection: 'row',

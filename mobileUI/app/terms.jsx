@@ -1,6 +1,8 @@
 // TermsScreen.tsx
 import React from "react";
 import { ScrollView, View, Text, StyleSheet, Pressable, Linking, Platform } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons'; // or any icon library
+import { useNavigation } from "@react-navigation/native";
 
 const APP_NAME = "NFC Business Card Management System";
 const COMPANY_NAME = "Captain Printworks";
@@ -11,6 +13,7 @@ const LAST_UPDATED = "September 4, 2025";
 const PRIVACY_URL = ""; 
 
 export default function TermsScreen() {
+    const navigation = useNavigation();
   const openPrivacy = () => {
     if (PRIVACY_URL) Linking.openURL(PRIVACY_URL);
   };
@@ -18,7 +21,10 @@ export default function TermsScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Terms & Conditions</Text>
+          <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
+          <MaterialIcons name="arrow-back" size={24} color="#1f3a52" />
+        </Pressable>
+        <Text style={styles.title} marginTop="16">Terms & Conditions</Text>
         <Text style={styles.subtitle}>{APP_NAME}</Text>
       </View>
 
