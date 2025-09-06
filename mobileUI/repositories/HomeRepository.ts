@@ -48,7 +48,7 @@ export const getHomeAnalytics = async (): Promise<HomeAnalyticsResponse> => {
 }
 
 export const getEventHomeAnalytics = async (
-  comparingEventName?: string
+  comparingProfileId?: string
 ): Promise<HomeEventAnalyticsResponse> => {
   try {
     const session = await getSession();
@@ -59,10 +59,11 @@ export const getEventHomeAnalytics = async (
     const userId = session.user.id;
 
     const response = await apiService.get<HomeEventAnalyticsResponse>(
-      `eventProfile/getHomeAnalytics/${userId}${comparingEventName ? `?comparingEventName=${encodeURIComponent(comparingEventName)}` : ''
+      `eventProfile/getHomeAnalytics/${userId}${comparingProfileId ? `?comparingProfileId=${encodeURIComponent(comparingProfileId)}` : ''
       }`
     );
 
+   console.log("\n \n GetEventHomeAnalytics ============> \n\n\n ", JSON.stringify(response.data));
     return response.data;
   } catch (err) {
     console.error('Failed to fetch event home analytics', err);
