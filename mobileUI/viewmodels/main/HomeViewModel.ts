@@ -24,13 +24,13 @@ export const fetchHomeAnalytics = async (
 
 
 export const fetchEventHomeAnalytics = async (
-  comparingEventName: string | undefined,
+  comparingProfileId: string | undefined,
   onSuccess: (data: HomeEventAnalyticsResponse) => void,
   onError: (message: string) => void
 ) => {
     console.log("Event profile called =============================================> ")
   try {
-    const data = await getEventHomeAnalytics(comparingEventName);
+    const data = await getEventHomeAnalytics(comparingProfileId);
     onSuccess(data);
   } catch (err: any) {
     onError(err.message || 'Something went wrong while fetching event home analytics');

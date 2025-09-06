@@ -1,4 +1,6 @@
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { Dropdown } from "react-native-element-dropdown";
 import Colors from "../constants/Colors";
 import BoothScanOverviewCard, { PeakScanTimeCard } from "../components/boothScanOverviewCard";
 import ScansOverTimeCard from "../components/ScansOverTimeCard";
@@ -8,11 +10,48 @@ import EventsScanOverTime from "../components/eventsScanOvertime"
 import { useHomeEventAnalyticsState } from '../states/useHomeEventAnalyticsState';
 
 const EventAnalytics = () => {
-  const { analytics, loading, error, reload } = useHomeEventAnalyticsState();
+  const [selectedProfileId, setSelectedProfileId] = useState(undefined);
+
+  const { analytics, loading, error } = useHomeEventAnalyticsState(selectedProfileId);
   if (loading) return <ActivityIndicator size="large" color={Colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
   if (error) return <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>{error}</Text>;
+
+  const dropdownItems =
+    analytics?.comparingProfiles?.map((profile) => ({
+      label: profile.eventName,
+      value: profile._id,
+    })) || [];
+
+
   return (
     <View style={styles.background}>
+
+
+      <View style={styles.header}>
+        <Text style={styles.title}>Event Analytics</Text>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          data={dropdownItems}
+          labelField="label"
+          valueField="value"
+          placeholder="Filter"
+          value={selectedProfileId}
+          maxHeight={300}                                 // scrollable if too many items
+          renderItem={(item) => (
+            <View style={{ paddingHorizontal: 12, paddingVertical: 8 }}>
+              <Text style={{ fontSize: 14, color: "#000" }}>{item.label}</Text>
+            </View>
+          )}
+          dropdownStyle={{                            // ✅ make dropdown width flexible
+            minWidth: 0,                               // remove fixed width
+            alignSelf: "flex-start",                   // width expands to content
+          }}
+          dropdownPosition="auto"
+          onChange={(item) => setSelectedProfileId(item.value)}
+        />
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {analytics?.analytics.map((item, index) => (
 
@@ -39,7 +78,7 @@ const EventAnalytics = () => {
           <EventsList recentProfiles={analytics.recentProfiles} />
         )}
 
-        <EventsScanOverTime scanOverTimesData={analytics?.scanOverTimesData}/>
+        <EventsScanOverTime scanOverTimesData={analytics?.scanOverTimesData} />
 
 
         <View>
@@ -85,11 +124,53 @@ const EventAnalytics = () => {
 export default EventAnalytics;
 
 const styles = StyleSheet.create({
-  container: {
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+  background: {
+    backgroundColor: Colors.secondary,
+    margin: 16,
     flex: 1,
-    alignItems: "center",
-    backgroundColor: Colors.white,
+    borderRadius: 18,
     padding: 16,
+    width: "100%",
+  },
+  dropdown: {
+    width: 160,
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical:8,
+    backgroundColor: "#fff",
+    numberOfLines: 1,
+    ellipsizeMode:"tail"
+
+  },
+
+  selectedTextStyle: {
+    fontSize: 14,
+    color: "#000",
+    numberOfLines: 1,               // ✅ single line
+    ellipsizeMode: "tail",          // ✅ ellipsis at end
+  },
+
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  placeholderStyle: {
+    fontSize: 14,
+    color: "#888",
+    numberOfLines: 1,
+    ellipsizeMode: "tail"
+  },
+
+  title: {
+    fontSize: 20,
+    fontFamily: "Poppins_600SemiBold",
+    color: Colors.textPrimary,
   },
   eventName: {
     backgroundColor: '#ffffff',
@@ -131,15 +212,6 @@ const styles = StyleSheet.create({
   image: {
     width: 42,
     height: 42,
-  },
-  background: {
-    backgroundColor: Colors.secondary,
-    margin: 16,
-    flex: 1,
-    borderRadius: 18,
-    padding: 16,
-    alignItems: 'center',
-    width: '100%',
   },
   cardContainer: {
     flexDirection: 'row',
