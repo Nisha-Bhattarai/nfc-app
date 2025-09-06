@@ -15,7 +15,7 @@ export const verifyEmail = async (email: string, otp: string) => {
   const { user, token, runningProfile } = response.data;
   await saveSession(user, token);
   if (runningProfile) {
-    await setRunningProfile(runningProfile.id, runningProfile.profileType);
+    await setRunningProfile(runningProfile.id, runningProfile.profileType, runningProfile.profilePicture);
   }
   return response.data;
 };
@@ -30,7 +30,7 @@ export const login = async (email: string, password: string) => {
   const { user, token, runningProfile } = response.data;
   await saveSession(user, token);
   if (runningProfile) {
-    await setRunningProfile(runningProfile.id, runningProfile.profileType);
+    await setRunningProfile(runningProfile.id, runningProfile.profileType, runningProfile.profilePicture);
   }
   return response.data;
 };
@@ -47,6 +47,7 @@ export interface VerifyOtpResponse {
   runningProfile: {
     id: string;
     profileType: string;
+    profilePicture:string;
   }
   token: string;
 }
@@ -68,6 +69,7 @@ export interface LoginResponse {
   runningProfile: {
     id: string;
     profileType: string;
+    profilePicture: string;
   }
   token: string;
 }

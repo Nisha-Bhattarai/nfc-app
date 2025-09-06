@@ -105,13 +105,27 @@ const Home = () => {
     }
   }, [profileData]);
 
-  const updateRunningProfile = async (slectedProfile) => {
+  const updateRunningProfile = async (selectedProfile, profileType) => {
+    let profilePicture = "";
+    if (profileType === "PRIMARY") {
+      profilePicture = selectedProfile?.profilePicture || "";
+    } else if (profileType === "EVENT") {
+      profilePicture = selectedProfile?.photoGallery?.[0] || "";
+      console.log("Event selected: ", profilePicture)
+    }
+
     try {
       await setRunningProfile(
-        slectedProfile._id,
-        slectedProfile.profileType,
+        selectedProfile._id,
+        selectedProfile.profileType,
+        profilePicture,
         (msg) => {
           console.log(msg);
+          setImageSource(
+            profilePicture && profilePicture !== ""
+              ? { uri: profilePicture }
+              : defaultAvatar
+          );
           fetchProfiles()
           setIsSheetVisible(false);
         },
@@ -125,8 +139,8 @@ const Home = () => {
   };
 
 
-  const handleProfileSelect = (p) => {
-    updateRunningProfile(p);
+  const handleProfileSelect = (p, profileType) => {
+    updateRunningProfile(p, profileType);
   };
 
   const renderRadio = (selected) => (
@@ -146,10 +160,8 @@ const Home = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Show Analytics based on selected profile type */}
-        {/* {console.log('dsdsdsdsdsd',selectedProfileType)}
-        {selectedProfileType === "PRIMARY" ? <ProfileAnalytics key={selectedProfileId} /> : <EventAnalytics key={selectedProfileId} />} */}
-        {selectedProfileType === null ? (
+
+        {/* {selectedProfileType === null ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
             <View style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc', borderRadius: 10, padding: 16, shadowColor: '#000', shadowOpacity: 0, shadowOffset: { width: 0, height: 0 }, shadowRadius: 4, elevation: 0 }}>
               <Text style={{ textAlign: 'center', fontSize: 14, fontFamily: "Lato_400Regular", color: Colors.textPrimary , lineHeight: 20  }}>
@@ -160,7 +172,49 @@ const Home = () => {
           <ProfileAnalytics key={selectedProfileId} />
         ) : (
           <EventAnalytics key={selectedProfileId} />
+        )} */}
+
+        {selectedProfileType === null && (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
+            <View
+              style={{
+                backgroundColor: '#fff',
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 10,
+                padding: 16,
+                shadowColor: '#000',
+                shadowOpacity: 0,
+                shadowOffset: { width: 0, height: 0 },
+                shadowRadius: 4,
+                elevation: 0,
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 14,
+                  fontFamily: 'Lato_400Regular',
+                  color: Colors.textPrimary,
+                  lineHeight: 20,
+                }}
+              >
+                It seems like you haven’t created a profile yet. Please create one from
+                the Profile section, or if you already have, select a profile from the
+                avatar at the top right.
+              </Text>
+            </View>
+          </View>
         )}
+
+        {selectedProfileType === 'PRIMARY' && (
+          <ProfileAnalytics key={selectedProfileId} />
+        )}
+
+        {selectedProfileType === 'EVENT' && (
+          <EventAnalytics key={selectedProfileId} />
+        )}
+
 
       </View>
 
@@ -184,7 +238,7 @@ const Home = () => {
                 <TouchableOpacity
                   key={p._id}
                   style={[styles.profileRow, selectedProfileId === p._id && styles.profileRowActive]}
-                  onPress={() => handleProfileSelect(p)}
+                  onPress={() => handleProfileSelect(p, "PRIMARY")}
                 >
                   {p.profilePicture && <Image source={{ uri: p.profilePicture }} style={styles.avatar} />}
                   <View style={{ flex: 1 }}>
@@ -205,7 +259,7 @@ const Home = () => {
                 <TouchableOpacity
                   key={p._id}
                   style={[styles.eventRow, selectedProfileId === p._id && styles.profileRowActive]}
-                  onPress={() => handleProfileSelect(p)}
+                  onPress={() => handleProfileSelect(p, "EVENT")}
                 >
                   <Text style={styles.eventText}>{p.profileName}</Text>
                   {renderRadio(selectedProfileId === p._id)}

@@ -6,6 +6,7 @@ const LOGGED_IN_KEY = 'isLoggedIn';
 const IS_SECOND_LOGIN = 'isSecondLogin';
 const RUNNING_PROFILE_ID = 'runningProfileId';
 const RUNNING_PROFILE_TYPE = 'runningProfileType';
+const RUNNING_PROFILE_PROFILE_PIC = 'runningProfilePicture';
 
 
 export const saveSession = async (user: any, token: string) => {
@@ -21,12 +22,15 @@ export const saveSession = async (user: any, token: string) => {
   }
 };
 
-export const setRunningProfile = async (runningProfileId: string | null, profileType: string | null) => {
+export const setRunningProfile = async (runningProfileId: string | null, profileType: string | null, profilePicture: string | null) => {
   try {
     if (runningProfileId && profileType) {
+            const safeProfilePic = profilePicture && profilePicture.trim() !== '' ? profilePicture : '';
+
       await AsyncStorage.multiSet([
         [RUNNING_PROFILE_ID, runningProfileId],
         [RUNNING_PROFILE_TYPE, profileType],
+        [RUNNING_PROFILE_PROFILE_PIC, safeProfilePic],
       ]);
     }
     //  else {
@@ -39,27 +43,29 @@ export const setRunningProfile = async (runningProfileId: string | null, profile
 
 export const getRunningProfile = async () => {
   try {
-    const values = await AsyncStorage.multiGet([RUNNING_PROFILE_ID, RUNNING_PROFILE_TYPE]);
+    const values = await AsyncStorage.multiGet([RUNNING_PROFILE_ID, RUNNING_PROFILE_TYPE, RUNNING_PROFILE_PROFILE_PIC]);
     return {
       runningProfileId: values[0][1] || null,
       runningProfileType: values[1][1] || null,
+      runningProfilePicture: values[2][1] || null,
     };
   } catch (err) {
     console.error('Failed to get running profile', err);
-    return { runningProfileId: null, runningProfileType: null };
+    return { runningProfileId: null, runningProfileType: null, runningProfilePicture: null };
   }
 };
 
 export const getSession = async () => {
   try {
-    const values = await AsyncStorage.multiGet([USER_KEY, TOKEN_KEY, LOGGED_IN_KEY, IS_SECOND_LOGIN, RUNNING_PROFILE_ID, RUNNING_PROFILE_TYPE]);
+    const values = await AsyncStorage.multiGet([USER_KEY, TOKEN_KEY, LOGGED_IN_KEY, IS_SECOND_LOGIN, RUNNING_PROFILE_ID, RUNNING_PROFILE_TYPE, RUNNING_PROFILE_PROFILE_PIC]);
     return {
       user: values[0][1] ? JSON.parse(values[0][1]) : null,
       token: values[1][1],
       isLoggedIn: values[2][1] === 'true',
       isSecondLogin: values[3][1] === 'true',
       runningProfileId: values[4][1] || null,
-      runningProfileType: values[5][1] || null
+      runningProfileType: values[5][1] || null,
+      runningProfilePicture: values[6][1] || null
     };
   } catch (err) {
     console.error('Failed to get session', err);
@@ -69,7 +75,7 @@ export const getSession = async () => {
 
 export const clearSession = async () => {
   try {
-    await AsyncStorage.multiRemove([USER_KEY, TOKEN_KEY, LOGGED_IN_KEY, RUNNING_PROFILE_ID, RUNNING_PROFILE_TYPE]);
+    await AsyncStorage.multiRemove([USER_KEY, TOKEN_KEY, LOGGED_IN_KEY, RUNNING_PROFILE_ID, RUNNING_PROFILE_TYPE, RUNNING_PROFILE_PROFILE_PIC]);
   } catch (err) {
     console.error('Failed to clear session', err);
   }
