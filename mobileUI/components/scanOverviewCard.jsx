@@ -18,7 +18,7 @@ const TopLocationCard = ({ title, locationText, number }) => {
         <View style={styles.locationCard}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.number}>{number}</Text>
-            <Text style={styles.locationText}>{locationText}</Text>
+            <Text style={styles.locationText}  numberOfLines={2} ellipsizeMode="tail" >{locationText}</Text>
         </View>
     );
 };
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 6,
+    gap: 0,
   },
 });
 

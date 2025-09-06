@@ -1,10 +1,5 @@
-import { View, Text, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
-import { Link } from 'expo-router';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import Colors from "../constants/Colors";
-import EventAnalytics from "../components/eventAnalytics"
-import ProfileAnalytics from "../components/profileAnalytics"
-import AuthTabView from "./(auth)/index"
-
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../contexts/AuthContext';

@@ -8,7 +8,7 @@ export const useProfilesState = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedProfileId, setSelectedProfileId] = useState(null);
-  const [selectedProfileType, setSelectedProfileType] = useState("PRIMARY");
+  const [selectedProfileType, setSelectedProfileType] = useState();
   // Function to fetch profiles on demand
   const fetchProfiles = async () => {
     setLoading(true);

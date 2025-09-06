@@ -17,7 +17,7 @@ export const getUserInfoFromSession = async (): Promise<UserInfoModel | null> =>
       firstName: session.user.firstName,
       runningProfileId: runningProfile.runningProfileId,
       profileType: runningProfile.runningProfileType,
-      profilePicture: session.user.profilePicture || null,
+      profilePicture: runningProfile.runningProfilePicture ?? '',
     };
     return userInfo;
   } catch (err) {
@@ -48,7 +48,7 @@ export const getHomeAnalytics = async (): Promise<HomeAnalyticsResponse> => {
 }
 
 export const getEventHomeAnalytics = async (
-  comparingEventName?: string
+  comparingProfileId?: string
 ): Promise<HomeEventAnalyticsResponse> => {
   try {
     const session = await getSession();
@@ -59,10 +59,11 @@ export const getEventHomeAnalytics = async (
     const userId = session.user.id;
 
     const response = await apiService.get<HomeEventAnalyticsResponse>(
-      `eventProfile/getHomeAnalytics/${userId}${comparingEventName ? `?comparingEventName=${encodeURIComponent(comparingEventName)}` : ''
+      `eventProfile/getHomeAnalytics/${userId}${comparingProfileId ? `?comparingProfileId=${encodeURIComponent(comparingProfileId)}` : ''
       }`
     );
 
+   console.log("\n \n GetEventHomeAnalytics ============> \n\n\n ", JSON.stringify(response.data));
     return response.data;
   } catch (err) {
     console.error('Failed to fetch event home analytics', err);
@@ -73,6 +74,7 @@ export const getEventHomeAnalytics = async (
 export const getProfiles = async (): Promise<ProfilesResponse> => {
   try {
     const response = await apiService.get<ProfilesResponse>("profile/all");
+    console.log("Get all Profiles =======> \n \n\n", JSON.stringify(response.data));
     return response.data;
   } catch (err) {
     console.error('Failed to fetch profiles', err);
@@ -90,11 +92,12 @@ interface SetRunningProfileResponse {
   success: boolean;
 }
 
-export const setRunningProfileApi = async (profileId: string, profileType: string): Promise<SetRunningProfileResponse> => {
+export const setRunningProfileApi = async (profileId: string, profileType: string, profilePicture: string): Promise<SetRunningProfileResponse> => {
   try {
     const payload: SetRunningProfileRequest = { profileId: profileId, profileType: profileType };
     const response = await apiService.put<SetRunningProfileResponse>("profile/updateRunningProfile", payload);
-    await setRunningProfile(profileId, profileType)
+    console.log("Running profilePic:============> \n \n \n", profilePicture)
+    await setRunningProfile(profileId, profileType, profilePicture)
     return response.data;
   } catch (err) {
     console.error("Failed to set running profile", err);

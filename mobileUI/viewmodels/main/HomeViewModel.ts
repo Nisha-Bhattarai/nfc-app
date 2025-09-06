@@ -9,6 +9,7 @@ export const fetchHomeAnalytics = async (
   onSuccess: (res: HomeAnalyticsResponse ) => void,
   onError: (err: string) => void
 ) => {
+  console.log("Primary profile called =============================================> ")
   try {
     const response = await getHomeAnalytics();
     onSuccess(response);
@@ -23,12 +24,13 @@ export const fetchHomeAnalytics = async (
 
 
 export const fetchEventHomeAnalytics = async (
-  comparingEventName: string | undefined,
+  comparingProfileId: string | undefined,
   onSuccess: (data: HomeEventAnalyticsResponse) => void,
   onError: (message: string) => void
 ) => {
+    console.log("Event profile called =============================================> ")
   try {
-    const data = await getEventHomeAnalytics(comparingEventName);
+    const data = await getEventHomeAnalytics(comparingProfileId);
     onSuccess(data);
   } catch (err: any) {
     onError(err.message || 'Something went wrong while fetching event home analytics');
@@ -67,13 +69,13 @@ export const fetchUserInfo = async (
 export const setRunningProfile = async (
   profileId: string,
   profileType: "PRIMARY" | "EVENT",
+  profilePicure:string,
   onSuccess: (message: string) => void,
   onError: (message: string) => void
 ) => {
   try {
     // Call backend API
-    const response = await setRunningProfileApi(profileId, profileType);
-
+    const response = await setRunningProfileApi(profileId, profileType, profilePicure);
     // Your backend now returns { success, message }
     if (response?.message) {
       onSuccess(response.message);

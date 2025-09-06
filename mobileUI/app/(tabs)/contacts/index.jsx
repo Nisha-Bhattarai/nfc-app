@@ -91,7 +91,7 @@ const Contacts = () => {
                 date={`${contact.createdAt}`}
                 email={`${contact.email}`}
                 phone={`${contact.phone}`}
-                note={`${contact.note}`}
+                note={`${contact.note || '-'}`}
                 onMorePress={() =>
                   openBottomSheet(
                     <ContactsMoreModal
