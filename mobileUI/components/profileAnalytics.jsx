@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, ScrollView,ActivityIndicator } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import Colors from "../constants/Colors";
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,19 +10,31 @@ import DetailedAnalyticsCard from "../components/detailedAnalyticsCard"
 import { useHomeAnalyticsState } from '../states/useHomeAnalyticsState';
 
 const ProfileAnalytics = () => {
-   const { homeAnalytics, loading, error, reload } = useHomeAnalyticsState();
+  const { homeAnalytics, loading, error, reload } = useHomeAnalyticsState();
+  const [refreshing, setRefreshing] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
       reload();
     }, [reload])
   );
+
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    reload();
+    setRefreshing(false);
+  }, [reload]);
+
+
   if (loading) return <ActivityIndicator size="large" color={Colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
-  // if (error) return <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>{error}</Text>;
 
   return (
     <View style={styles.background}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.primary]} />}
+      >
         <View style={styles.cardContainer}>
           <ScanOverviewCard
             title='Total Scans'
@@ -35,7 +48,7 @@ const ProfileAnalytics = () => {
           />
         </View>
         <View style={styles.cardContainer}>
-        
+
           <TopLocationCard
             title='Top Location'
             locationText={homeAnalytics?.topLocation || 'N/A'}
@@ -49,32 +62,32 @@ const ProfileAnalytics = () => {
         <ScansOverTimeCard data={homeAnalytics} activeTab="day" />
         <ScansByDayAndHourTab data={homeAnalytics} />
 
-         <View style={styles.detailedAnalytics}>
-            <Text style={styles.detailedAnalyticsTitle}>Detailed Analytics</Text>
-            {homeAnalytics?.latestScans?.map((scan, index) => {
-                const scanDate = new Date(scan.date);
-                const formattedDate = scanDate.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                });
-                const formattedTime = scanDate.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true
-                });
+        <View style={styles.detailedAnalytics}>
+          <Text style={styles.detailedAnalyticsTitle}>Detailed Analytics</Text>
+          {homeAnalytics?.latestScans?.map((scan, index) => {
+            const scanDate = new Date(scan.date);
+            const formattedDate = scanDate.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            });
+            const formattedTime = scanDate.toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: 'numeric',
+              hour12: true
+            });
 
-                return (
-                    <DetailedAnalyticsCard
-                        key={index}
-                        date={formattedDate}
-                        time={formattedTime}
-                        deviceName={scan.device}
-                        location={scan.location}
-                        ipAddress={scan.ipAddress}
-                    />
-                );
-            })}
+            return (
+              <DetailedAnalyticsCard
+                key={index}
+                date={formattedDate}
+                time={formattedTime}
+                deviceName={scan.device}
+                location={scan.location}
+                ipAddress={scan.ipAddress}
+              />
+            );
+          })}
         </View>
 
       </ScrollView>

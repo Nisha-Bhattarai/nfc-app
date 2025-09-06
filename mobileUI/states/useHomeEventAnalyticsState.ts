@@ -1,5 +1,5 @@
 // hooks/useEventHomeAnalyticsState.ts
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { fetchEventHomeAnalytics } from '../viewmodels/main/HomeViewModel';
 import { HomeEventAnalyticsResponse } from '@/models/HomeEventAnalyticsResponse';
 
@@ -8,7 +8,7 @@ export const useHomeEventAnalyticsState = (comparingProfileId?: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const loadAnalytics = () => {
+  const loadAnalytics = useCallback(() => {
     setLoading(true);
     setError('');
     fetchEventHomeAnalytics(
@@ -22,10 +22,6 @@ export const useHomeEventAnalyticsState = (comparingProfileId?: string) => {
         setLoading(false);
       }
     );
-  };
-
-  useEffect(() => {
-    loadAnalytics();
   }, [comparingProfileId]);
 
   return {

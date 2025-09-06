@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { Dropdown } from "react-native-element-dropdown";
 import Colors from "../constants/Colors";
+import { useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import BoothScanOverviewCard, { PeakScanTimeCard } from "../components/boothScanOverviewCard";
-import ScansOverTimeCard from "../components/ScansOverTimeCard";
 import DetailedAnalyticsCard from "../components/detailedAnalyticsCard"
 import EventsList from "../components/eventsList"
 import EventsScanOverTime from "../components/eventsScanOvertime"
@@ -11,8 +12,22 @@ import { useHomeEventAnalyticsState } from '../states/useHomeEventAnalyticsState
 
 const EventAnalytics = () => {
   const [selectedProfileId, setSelectedProfileId] = useState(undefined);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const { analytics, loading, error } = useHomeEventAnalyticsState(selectedProfileId);
+  const { analytics, loading, error, reload } = useHomeEventAnalyticsState(selectedProfileId);
+
+  useFocusEffect(
+    useCallback(() => {
+      reload();
+    }, [reload])
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    reload();
+    setRefreshing(false);
+  }, [reload]);
+
   if (loading) return <ActivityIndicator size="large" color={Colors.primary} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} />;
   if (error) return <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>{error}</Text>;
 
@@ -52,7 +67,9 @@ const EventAnalytics = () => {
           onChange={(item) => setSelectedProfileId(item.value)}
         />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[Colors.primary]} />}
+      >
         {analytics?.analytics.map((item, index) => (
 
           <View key={item.profile._id} style={{ marginBottom: 20 }}>
@@ -140,10 +157,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
-    paddingVertical:8,
+    paddingVertical: 8,
     backgroundColor: "#fff",
     numberOfLines: 1,
-    ellipsizeMode:"tail"
+    ellipsizeMode: "tail"
 
   },
 
