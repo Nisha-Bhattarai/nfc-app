@@ -54,7 +54,7 @@ const PrimaryProfileList = () => {
                 key={profile._id}
                 profilePicture={profile.profilePicture}
                 name={`${profile.firstName} ${profile.lastName}`}
-                position={`${profile.jobTitle} - ${profile.company}`}
+                profileName={`${profile.profileName}`}
                 createdDate={new Date(profile.createdAt).toDateString()}
                 modifiedDate={new Date(profile.updatedAt).toDateString()}
                 onEdit={() => router.push({

@@ -43,6 +43,7 @@ export const fetchPrimaryProfiles = async (
 ) => {
   try {
     const response = await getPrimaryProfilesApi();
+    console.log("Primary profiles===>", JSON.stringify(response))
     onSuccess(response);
   } catch (error: any) {
     const message =

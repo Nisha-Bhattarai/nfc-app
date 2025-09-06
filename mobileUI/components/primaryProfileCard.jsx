@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Colors from '../constants/Colors';
 
-const PrimaryProfileCard = ({ profilePicture, name, position, createdDate, modifiedDate, onDelete, onEdit, deleting }) => {
+const PrimaryProfileCard = ({ profilePicture, name, profileName, createdDate, modifiedDate, onDelete, onEdit, deleting }) => {
 
   const isValidUrl = (url) => {
     return typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'));
@@ -28,7 +28,7 @@ const PrimaryProfileCard = ({ profilePicture, name, position, createdDate, modif
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">{position}</Text>
+          <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">{profileName}</Text>
           <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">Date Created: {createdDate.trim()}</Text>
           <Text style={styles.otherText} numberOfLines={1} ellipsizeMode="tail">Date Modified: {modifiedDate.trim()}</Text>
         </View>

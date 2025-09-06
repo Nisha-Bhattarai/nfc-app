@@ -285,9 +285,9 @@ const CreateEventProfile = () => {
           <FormInput placeholder="Event Profile Name*" value={eventProfileName} onChangeText={setEventProfileName} />
           <FormInput placeholder="Event Name*" value={eventName} onChangeText={setEventName} />
           <Text style={styles.sectionTitle}>Start Date</Text>
-          <EventDateTimePicker date={startDate} onChange={setStartDate} />
+         <EventDateTimePicker date={startDate ? new Date(startDate) : new Date()} onChange={setStartDate} />
           <Text style={styles.sectionTitle}>End Date</Text>
-          <EventDateTimePicker date={endDate} onChange={setEndDate} />
+          <EventDateTimePicker date={endDate ? new Date(endDate) : new Date()} onChange={setEndDate} />
           <FormInput placeholder="Event Location" value={location} onChangeText={setLocation} />
           <FormInput placeholder="About Event" value={aboutEvent} onChangeText={setAboutEvent} multiline style={{ height: 100 }} />
           <FormInput placeholder="Personal Email" value={personalEmail} onChangeText={setPersonalEmail} />
