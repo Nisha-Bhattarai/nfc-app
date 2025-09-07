@@ -1,10 +1,11 @@
 // screens/More.js
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Button, Linking, Alert } from 'react-native';
 import Colors from '../../../constants/Colors';
 import LabeledInput from '../../../components/labeledInput'
 import { MaterialIcons } from '@expo/vector-icons';
 import { clearSession } from '../../../utils/sessionStorage'
+import { getSession } from '../../../utils/sessionStorage';
 import { useRouter } from 'expo-router';
 
 const More = () => {
@@ -22,6 +23,22 @@ const More = () => {
       router.replace('/(auth)');
     } catch (error) {
       console.error("Logout error:", error);
+    }
+  };
+
+   const handleConnectHubSpot = async () => {
+    try {
+      const session = await getSession();
+    if (!session?.user?.id) return Alert.alert("Error", "User not found");
+        const userId = session.user.id;
+
+      // 1. Open backend OAuth redirect
+      const url = `https://nfc-be.onrender.com/api/v1/hubspotauth/connect?userId=${userId}`;
+      Linking.openURL(url);
+      Alert.alert("Redirecting", "Please complete HubSpot connection in your browser.");
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Error", "Failed to connect HubSpot.");
     }
   };
 
@@ -96,6 +113,10 @@ const More = () => {
             <MaterialIcons name="logout" size={22} color={Colors.accent} />
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
+
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <Button title="Connect HubSpot CRM" onPress={handleConnectHubSpot} />
+          </View>
         </ScrollView>
       </View>
     </View>
