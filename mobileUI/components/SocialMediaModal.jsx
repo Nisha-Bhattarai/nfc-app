@@ -68,23 +68,22 @@
 
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
 // CHANGE FROM ARRAY TO OBJECT:
 export const platforms = {
   facebook: {
     label: 'Facebook',
-    icon: <AntDesign name="facebook-square" size={28} color="#1877F2" />,
+    icon: <FontAwesome name="facebook-square" size={28} color="#1877F2" />,
   },
   instagram: {
     label: 'Instagram',
-    icon: <AntDesign name="instagram" size={28} color="#E1306C" />,
+    icon: <FontAwesome name="instagram" size={28} color="#E1306C" />,
   },
   linkedin: {
     label: 'LinkedIn',
-    icon: <AntDesign name="linkedin-square" size={28} color="#0A66C2" />,
+    icon: <FontAwesome name="linkedin-square" size={28} color="#0A66C2" />,
   },
   twitter: {
     label: 'Twitter',
@@ -92,7 +91,7 @@ export const platforms = {
   },
   youtube: {
     label: 'YouTube',
-    icon: <AntDesign name="youtube" size={28} color="#FF0000" />,
+    icon: <FontAwesome name="youtube-play" size={28} color="#FF0000" />,
   },
   tiktok: {
     label: 'TikTok',

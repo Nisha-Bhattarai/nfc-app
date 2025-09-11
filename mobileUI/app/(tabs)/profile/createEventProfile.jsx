@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, Modal, Dimensions, Image
 } from 'react-native';
-import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
+import { AntDesign, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import FormInput from '../../../components/formInput';
 import Colors from '../../../constants/Colors';
@@ -394,7 +394,7 @@ const CreateEventProfile = () => {
                   style={{ position: 'absolute', top: 4, right: 4 }}
                   onPress={() => setPhotoGallery(photoGallery.filter((_, idx) => idx !== i))}
                 >
-                  <AntDesign name="closecircle" size={20} color="red" />
+                  <Ionicons name="close-circle" size={20} color="red" />
                 </TouchableOpacity>
               </View>
             ))}

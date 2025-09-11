@@ -10,7 +10,7 @@ import {
   Image,
   Dimensions
 } from 'react-native';
-import { AntDesign, FontAwesome5, FontAwesome, Entypo, FontAwesome6 } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, FontAwesome, Entypo, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import FormInput from '../../../components/formInput';
 import Colors from '../../../constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
@@ -376,7 +376,7 @@ const CreatePrimaryProfile = () => {
                     style={{ position: 'absolute', top: 4, right: 4 }}
                     onPress={() => setPhotos(photos.filter((_, idx) => idx !== i))}
                   >
-                    <AntDesign name="closecircle" size={20} color="red" />
+                    <Ionicons name="close-circle" size={20} color="red" />
                   </TouchableOpacity>
                 </View>
               ))}
