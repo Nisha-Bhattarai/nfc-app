@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert} from 'react-native';
 import React, { useState } from 'react';
 import Colors from '../../../constants/Colors';
 import ContactListCard from '../../../components/contactListCard';
@@ -65,64 +65,65 @@ const Contacts = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.background}>
-        <View style={styles.addNewContactButton}>
-          <TouchableOpacity style={styles.button} onPress={() => {
-            openBottomSheet(<EditContactFormModal isEdit={false} onClose={closeBottomSheet} reloadPage={reload} />)
-          }}>
-            <Text style={styles.buttonText}>+ Add a New Contact</Text>
-          </TouchableOpacity>
+
+      <View style={styles.container}>
+        <View style={styles.background}>
+          <View style={styles.addNewContactButton}>
+            <TouchableOpacity style={styles.button} onPress={() => {
+              openBottomSheet(<EditContactFormModal isEdit={false} onClose={closeBottomSheet} reloadPage={reload} />)
+            }}>
+              <Text style={styles.buttonText}>+ Add a New Contact</Text>
+            </TouchableOpacity>
+          </View>
+
+
+          {loading ? (
+            <ActivityIndicator size="large" color={Colors.accent} />
+          ) : error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : (
+            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+              {contacts.map((contact) => (
+
+                <ContactListCard
+                  key={contact._id}
+                  image={require('../../../assets/images/avatar.png')}
+                  name={`${contact.name}`}
+                  date={`${contact.createdAt}`}
+                  email={`${contact.email}`}
+                  phone={`${contact.phone}`}
+                  note={`${contact.note || '-'}`}
+                  onMorePress={() =>
+                    openBottomSheet(
+                      <ContactsMoreModal
+                        onDownloadPress={() => handleDownloadContact(contact)}
+                        deleting={deletingId === contact._id}
+                        onEditPress={() => openBottomSheet(
+                          <EditContactFormModal
+                            isEdit={true}
+                            contactData={contact}
+                            onClose={closeBottomSheet}
+                            reloadPage={reload}
+                          />
+                        )}
+                        onDeletePress={() =>
+                          handleDelete(contact._id)
+                        }
+                      />
+                    )
+                  }
+                />
+
+              ))}
+
+            </ScrollView>
+          )}
+
         </View>
-
-
-        {loading ? (
-          <ActivityIndicator size="large" color={Colors.accent} />
-        ) : error ? (
-          <Text style={styles.errorText}>{error}</Text>
-        ) : (
-          <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-            {contacts.map((contact) => (
-
-              <ContactListCard
-                key={contact._id}
-                image={require('../../../assets/images/avatar.png')}
-                name={`${contact.name}`}
-                date={`${contact.createdAt}`}
-                email={`${contact.email}`}
-                phone={`${contact.phone}`}
-                note={`${contact.note || '-'}`}
-                onMorePress={() =>
-                  openBottomSheet(
-                    <ContactsMoreModal
-                      onDownloadPress={() => handleDownloadContact(contact)}
-                      deleting={deletingId === contact._id}
-                      onEditPress={() => openBottomSheet(
-                        <EditContactFormModal
-                          isEdit={true}
-                          contactData={contact}
-                          onClose={closeBottomSheet}
-                          reloadPage={reload}
-                        />
-                      )}
-                      onDeletePress={() =>
-                        handleDelete(contact._id)
-                      }
-                    />
-                  )
-                }
-              />
-
-            ))}
-
-          </ScrollView>
-        )}
-
+        <BottomSheet visible={bottomSheetVisible} onClose={closeBottomSheet}>
+          {bottomSheetContent}
+        </BottomSheet>
       </View>
-      <BottomSheet visible={bottomSheetVisible} onClose={closeBottomSheet}>
-        {bottomSheetContent}
-      </BottomSheet>
-    </View>
   );
 };
 

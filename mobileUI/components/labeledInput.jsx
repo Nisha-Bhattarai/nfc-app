@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Colors from '../constants/Colors'; // adjust the path as needed
@@ -13,9 +13,13 @@ const LabeledInput = ({
   value,
   onChangeText,
   secureTextEntry = false,
+  readOnly = false, // new prop
 }) => {
   const IconComponent = iconLibrary === 'MaterialIcons' ? MaterialIcons : FontAwesome5;
-    return (
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
     <View style={styles.eachFormContainer}>
       <View style={styles.labelIconContainer}>
         <IconComponent name={iconName} size={24} color="black" style={styles.icon} />
@@ -30,8 +34,21 @@ const LabeledInput = ({
           autoCapitalize="none"
           value={value}
           onChangeText={onChangeText}
-          secureTextEntry={secureTextEntry} 
+          secureTextEntry={secureTextEntry && !showPassword}
+          editable={!readOnly}
         />
+        {secureTextEntry && (
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowPassword(prev => !prev)}
+          >
+            <MaterialIcons
+              name={showPassword ? 'visibility' : 'visibility-off'}
+              size={22}
+              color="#424b5cff"
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -48,28 +65,35 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   labelIconContainer: {
-     flexDirection: 'row',
-  alignItems: 'center',
-  flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   icon: {
     marginRight: 8,
     fontSize: 14,
   },
   labelText: {
-    fontSize: 16,
+    fontSize: 14,
+    marginEnd: 14,
     fontFamily: 'Lato_400Regular',
   },
   inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     width: '75%',
-  },
-  input: {
-    height: 60,
     borderBottomWidth: 1,
     borderColor: Colors.border,
     borderRadius: 10,
+  },
+  input: {
+    flex: 1,
+    height: 60,
     paddingHorizontal: 16,
     fontSize: 16,
     fontFamily: 'Lato_400Regular',
+  },
+  eyeIcon: {
+    paddingHorizontal: 8,
   },
 });
