@@ -8,7 +8,7 @@ const apiService = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000,
+  timeout: 80000,
 });
 
 // Request interceptor to attach token
