@@ -92,7 +92,6 @@ const Login = () => {
         </View>
 
         {/* Forgot Password */}
-        // TODO: Uncomment this in the future
         {/* <TouchableOpacity>
           <Text style={styles.forgotText}>Forgot Password?</Text>
         </TouchableOpacity> */}
