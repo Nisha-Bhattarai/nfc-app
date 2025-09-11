@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard  } from 'react-native';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import FormInput from './formInput';
 import Colors from '../constants/Colors';
@@ -103,6 +103,8 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose, reloa
   };
 
   return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+
     <View style={styles.bottomSheetContainer}>
       <View style={styles.container}>
         <Image style={styles.avatarImage} source={require('../assets/images/avatar.png')} />
@@ -152,6 +154,7 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose, reloa
         </Text>
       </TouchableOpacity>
     </View>
+    </TouchableWithoutFeedback>
   )
 }
 

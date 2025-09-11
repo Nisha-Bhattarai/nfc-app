@@ -1,10 +1,11 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
-import Colors from "../../constants/Colors"
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import Colors from "../../constants/Colors";
 import { useRouter } from 'expo-router';
 import { useLoginState } from '../../states/useLoginState';
 import { loginUser } from '../../viewmodels/auth/LoginViewModel';
 import Toast from 'react-native-toast-message';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Login = () => {
   const router = useRouter();
@@ -18,6 +19,8 @@ const Login = () => {
     error,
     setError,
   } = useLoginState();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignIn = async () => {
     setError('');
@@ -34,7 +37,9 @@ const Login = () => {
 
     setLoading(true);
 
-    await loginUser(email, password,
+    await loginUser(
+      email,
+      password,
       (userData) => {
         setLoading(false);
         Toast.show({
@@ -49,10 +54,11 @@ const Login = () => {
       }
     );
   };
+
   return (
     <View style={styles.container}>
-
       <View style={styles.formContainer}>
+        {/* Email Input */}
         <TextInput
           placeholder="Email"
           placeholderTextColor="#718096"
@@ -62,26 +68,43 @@ const Login = () => {
           value={email}
           onChangeText={setEmail}
         />
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor="#718096"
-          style={styles.input}
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
 
-        <TouchableOpacity>
+        {/* Password Input with eye toggle */}
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#718096"
+            style={styles.passwordInput}
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowPassword((prev) => !prev)}
+          >
+            <MaterialIcons
+              name={showPassword ? 'visibility' : 'visibility-off'}
+              size={22}
+              color="#4A5568"
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Forgot Password */}
+        // TODO: Uncomment this in the future
+        {/* <TouchableOpacity>
           <Text style={styles.forgotText}>Forgot Password?</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {/* Error Message */}
+        {error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : (
+          <View style={{ height: 20 }} />
+        )}
 
-
-        {/* <TouchableOpacity style={styles.signInButton} onPress={handleSignIn} disabled={loading}>
-            <Text style={styles.signInButtonText}>Sign In</Text>
-          </TouchableOpacity> */}
-
+        {/* Sign In Button */}
         <TouchableOpacity
           style={styles.signInButton}
           onPress={handleSignIn}
@@ -94,7 +117,6 @@ const Login = () => {
           )}
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
@@ -103,13 +125,13 @@ export default Login;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Ensure the container takes up the full screen
+    flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'flex-start', // Align children to the top
+    justifyContent: 'flex-start',
   },
   formContainer: {
-    paddingHorizontal: 16, // Padding left and right for the form
-    paddingBottom: 32, // Space at the bottom of the form
+    paddingHorizontal: 16,
+    paddingBottom: 32,
   },
   input: {
     height: 60,
@@ -118,20 +140,40 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 16,
     fontSize: 16,
-    marginBottom: 20, // Space between input fields
-    width: '100%', // Ensure inputs take full width
-    fontFamily: 'Lato_400Regular'
+    marginBottom: 20,
+    width: '100%',
+    fontFamily: 'Lato_400Regular',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    marginBottom: 20,
+    height: 60,
+    paddingRight: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    height: '100%',
+    paddingHorizontal: 16,
+    fontSize: 16,
+    fontFamily: 'Lato_400Regular',
+  },
+  eyeIcon: {
+    paddingHorizontal: 8,
   },
   forgotText: {
     color: Colors.accent,
-    marginBottom: 32, // Space between Forgot Password? and the Sign In button
+    marginBottom: 32,
     textAlign: 'right',
     fontFamily: 'Lato_400Regular',
     fontSize: 16,
   },
   errorText: {
     color: Colors.delete,
-    marginBottom: 20, // Space between Forgot Password? and the Sign In button
+    marginBottom: 20,
     textAlign: 'start',
     fontFamily: 'Lato_400Regular',
     fontSize: 14,
@@ -142,11 +184,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%', // Ensure the button takes the full width
+    width: '100%',
   },
   signInButtonText: {
     color: 'white',
     fontSize: 18,
-    fontFamily: 'Poppins_400Regular'
+    fontFamily: 'Poppins_400Regular',
   },
 });
