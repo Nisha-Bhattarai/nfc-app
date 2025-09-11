@@ -3,6 +3,7 @@ import { View, StyleSheet, Dimensions, ScrollView, Text } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { BarChart } from 'react-native-chart-kit';
 import Colors from "../constants/Colors";
+import { FontAwesome } from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get("window").width - 60;
 const initialLayout = { width: Dimensions.get('window').width - 40 };
@@ -115,30 +116,43 @@ const ScansByDayAndHourTab = ({ data }) => {
   );
 
   const DayHourRoute = () => (
-    <ScrollView horizontal>
-      <View style={{ flexDirection: "column", paddingLeft: 16 }}>
-        {days.map((day, rowIndex) => (
-          <View key={rowIndex} style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ width: 40, fontSize: 12 }}>{day.slice(0, 3)}</Text>
-            {hours.map((hour, colIndex) => (
-              <View
-                key={colIndex}
-                style={[styles.heatmapCell, { backgroundColor: getHeatmapColor(day, hour) }]}
-              />
-            ))}
-          </View>
-        ))}
-        <View style={{ flexDirection: "row", marginLeft: 40, marginTop: 4 }}>
-          {hours.map((h, i) =>
-            i % 6 === 0 ? (
-              <Text key={i} style={{ width: 40, textAlign: "center", fontSize: 10 }}>
-                {i === 0 ? "12 AM" : i === 6 ? "6 AM" : i === 12 ? "12 PM" : i === 18 ? "6 PM" : ""}
-              </Text>
-            ) : <View key={i} style={{ width: 30 }} />
-          )}
-        </View>
+    <>
+      <View style={styles.helperPill} accessible accessibilityRole="text" accessibilityLabel="Swipe left">
+        <FontAwesome
+          name="long-arrow-left"
+          size={16}
+          color="#1f3a52"
+          style={styles.helperIcon}
+        />
+        <Text style={styles.helperText}>Scroll left</Text>
       </View>
-    </ScrollView>
+
+
+      <ScrollView horizontal>
+        <View style={{ flexDirection: "column", paddingLeft: 16 }}>
+          {days.map((day, rowIndex) => (
+            <View key={rowIndex} style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={{ width: 40, fontSize: 12 }}>{day.slice(0, 3)}</Text>
+              {hours.map((hour, colIndex) => (
+                <View
+                  key={colIndex}
+                  style={[styles.heatmapCell, { backgroundColor: getHeatmapColor(day, hour) }]}
+                />
+              ))}
+            </View>
+          ))}
+          <View style={{ flexDirection: "row", marginLeft: 40, marginTop: 4 }}>
+            {hours.map((h, i) =>
+              i % 6 === 0 ? (
+                <Text key={i} style={{ width: 40, textAlign: "center", fontSize: 10 }}>
+                  {i === 0 ? "12 AM" : i === 6 ? "6 AM" : i === 12 ? "12 PM" : i === 18 ? "6 PM" : ""}
+                </Text>
+              ) : <View key={i} style={{ width: 30 }} />
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </>
   );
 
   const HourRoute = () => (
@@ -211,13 +225,30 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderRadius: 18,
     width: '100%',
-    height: 320,
+    height: 340,
     overflow: 'hidden',
   },
   tabBar: { backgroundColor: Colors.white, elevation: 0, shadowOpacity: 0 },
   indicator: { backgroundColor: Colors.accent, height: 2 },
   label: { fontWeight: 'bold', textTransform: 'none' },
   heatmapCell: { width: 30, height: 30, margin: 0.5, justifyContent: "center", alignItems: "center" },
+  helperPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    backgroundColor: '#f0f4f8',
+    borderRadius: 6,
+    marginVertical: 10,
+    marginHorizontal: 20,
+  },
+  helperIcon: { marginRight: 6 },
+  helperText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1f3a52',
+  },
 });
 
 export default ScansByDayAndHourTab;
