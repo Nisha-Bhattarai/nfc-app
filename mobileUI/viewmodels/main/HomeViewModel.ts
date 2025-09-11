@@ -9,9 +9,9 @@ export const fetchHomeAnalytics = async (
   onSuccess: (res: HomeAnalyticsResponse ) => void,
   onError: (err: string) => void
 ) => {
-  console.log("Primary profile called =============================================> ")
   try {
     const response = await getHomeAnalytics();
+      console.log("\n\n\nPrimary profile called =============================================> \n\n\n", JSON.stringify(response))
     onSuccess(response);
   } catch (error: any) {
     const message =
