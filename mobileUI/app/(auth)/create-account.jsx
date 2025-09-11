@@ -17,6 +17,7 @@ import { useSignupState } from '../../states/useSignUpState';
 const CreateAccount = () => {
   const router = useRouter();
   const [isChecked, setIsChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     firstName,
@@ -77,7 +78,6 @@ const CreateAccount = () => {
           pathname: '/(auth)/verifyEmail',
           params: { email: response.email },
         });
-
       },
       (message) => {
         setLoading(false);
@@ -115,14 +115,28 @@ const CreateAccount = () => {
           value={email}
           onChangeText={setEmail}
         />
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor="#718096"
-          style={styles.input}
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+
+        {/* Password with eye icon */}
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#718096"
+            style={styles.passwordInput}
+            secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <MaterialIcons
+              name={showPassword ? "visibility" : "visibility-off"}
+              size={24}
+              color="#718096"
+            />
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.checkboxContainer}>
           <TouchableOpacity
@@ -189,9 +203,29 @@ const styles = StyleSheet.create({
   halfInput: {
     flex: 1,
   },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    marginBottom: 20,
+    paddingRight: 12,
+  },
+  passwordInput: {
+    flex: 1,
+    height: 60,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    fontFamily: 'Lato_400Regular',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 12,
+  },
   checkboxContainer: {
     flexDirection: 'row',
-    alignItems: 'center_vertical', 
+    alignItems: 'center_vertical',
   },
   checkboxRow: {
     flexDirection: 'row',
@@ -208,13 +242,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  errorText: {
-    color: Colors.delete,
-    marginBottom: 20, // Space between Forgot Password? and the Sign In button
-    textAlign: 'start',
-    fontFamily: 'Lato_400Regular',
-    fontSize: 14,
-  },
   checkedBox: {
     backgroundColor: Colors.accent,
     borderColor: Colors.accent,
@@ -229,6 +256,20 @@ const styles = StyleSheet.create({
   link: {
     color: Colors.accent,
     fontWeight: '500',
+  },
+  errorText: {
+    color: Colors.delete,
+    marginBottom: 20,
+    textAlign: 'start',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
+  },
+  successText: {
+    color: 'green',
+    marginBottom: 20,
+    textAlign: 'start',
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
   },
   createAccountButton: {
     height: 60,

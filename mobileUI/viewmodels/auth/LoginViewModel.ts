@@ -10,7 +10,10 @@ export const loginUser = async (
     const userData = await AuthRepository.login(email, password);
     onSuccess(userData);
   } catch (error: any) {
-    const message = error?.response?.data?.message || 'Login failed. Please try again.';
+    const message =
+      error?.response?.data?.error || // check for "error"
+      error?.response?.data?.message || // fallback "message"
+      'Login failed. Please try again.';
     onError(message);
   }
 };
