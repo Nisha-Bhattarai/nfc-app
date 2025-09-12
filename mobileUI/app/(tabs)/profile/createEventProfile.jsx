@@ -79,7 +79,7 @@ const CreateEventProfile = () => {
   const [showCertModal, setShowCertModal] = useState(false);
 
   const handleSave = async () => {
-
+console.log("Personal phone ===", personalPhone)
 
     setError('');
     setSuccess('');
@@ -107,6 +107,34 @@ const CreateEventProfile = () => {
 
     if (new Date(startDate) > new Date(endDate)) {
       setError('End Date must be after Start Date.');
+      return;
+    }
+
+     // Validate Emails
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (personalEmail && !emailPattern.test(personalEmail)) {
+      setError('Personal Email is invalid.');
+      return;
+    }
+    if (workEmail && !emailPattern.test(workEmail)) {
+      setError('Work Email is invalid.');
+      return;
+    }
+
+    // Validate Phones
+    const phonePattern = /^[0-9+()\s-]{5,20}$/;
+    if (!personalPhone || !personalPhone.trim()) {
+      setError('Personal phone is required.');
+      return;
+    }
+
+    if (!phonePattern.test(personalPhone.trim())) {
+      setError('Personal Phone is invalid.');
+      return;
+    }
+
+    if (workPhone && !phonePattern.test(workPhone)) {
+      setError('Work Phone is invalid.');
       return;
     }
 
@@ -139,27 +167,7 @@ const CreateEventProfile = () => {
       }
     }
 
-    // Validate Emails
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (personalEmail && !emailPattern.test(personalEmail)) {
-      setError('Personal Email is invalid.');
-      return;
-    }
-    if (workEmail && !emailPattern.test(workEmail)) {
-      setError('Work Email is invalid.');
-      return;
-    }
-
-    // Validate Phones
-    const phonePattern = /^[0-9+()\s-]{5,20}$/;
-    if (personalPhone && !phonePattern.test(personalPhone)) {
-      setError('Personal Phone is invalid.');
-      return;
-    }
-    if (workPhone && !phonePattern.test(workPhone)) {
-      setError('Work Phone is invalid.');
-      return;
-    }
+   
 
 
     let uploadedPhotos = photoGallery;
@@ -285,14 +293,14 @@ const CreateEventProfile = () => {
           <FormInput placeholder="Event Profile Name*" value={eventProfileName} onChangeText={setEventProfileName} />
           <FormInput placeholder="Event Name*" value={eventName} onChangeText={setEventName} />
           <Text style={styles.sectionTitle}>Start Date</Text>
-         <EventDateTimePicker date={startDate ? new Date(startDate) : new Date()} onChange={setStartDate} />
+          <EventDateTimePicker date={startDate ? new Date(startDate) : new Date()} onChange={setStartDate} />
           <Text style={styles.sectionTitle}>End Date</Text>
           <EventDateTimePicker date={endDate ? new Date(endDate) : new Date()} onChange={setEndDate} />
           <FormInput placeholder="Event Location" value={location} onChangeText={setLocation} />
           <FormInput placeholder="About Event" value={aboutEvent} onChangeText={setAboutEvent} multiline style={{ height: 100 }} />
           <FormInput placeholder="Personal Email" value={personalEmail} onChangeText={setPersonalEmail} />
           <FormInput placeholder="Work Email" value={workEmail} onChangeText={setWorkEmail} />
-          <FormInput placeholder="Personal Phone" value={personalPhone} onChangeText={setPersonalPhone} />
+          <FormInput placeholder="Personal Phone*" value={personalPhone} onChangeText={setPersonalPhone} />
           <FormInput placeholder="Work Phone" value={workPhone} onChangeText={setWorkPhone} />
 
           <Text style={styles.sectionTitle}>Social Media</Text>

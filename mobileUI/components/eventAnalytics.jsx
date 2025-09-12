@@ -72,7 +72,7 @@ const EventAnalytics = () => {
       >
         {analytics?.analytics.map((item, index) => (
 
-          <View key={item.profile._id} style={{ marginBottom: 20 }}>
+          <View key={`${item.profile._id ?? 'profile'}-${index}`} style={{ marginBottom: 20 }}>
             <Text style={styles.eventNameText}>
               {item.profile.eventName}
             </Text>
@@ -95,15 +95,16 @@ const EventAnalytics = () => {
           <EventsList recentProfiles={analytics.recentProfiles} />
         )}
 
-        <EventsScanOverTime scanOverTimesData={analytics?.scanOverTimesData} />
+        <EventsScanOverTime key={analytics?.scanOverTimesData?.length ?? 0}
+          scanOverTimesData={analytics?.scanOverTimesData} />
 
 
         <View>
           <Text style={styles.detailedAnalyticsTitle}>Detailed Analytics</Text>
 
-          {analytics?.detailedAnalytics?.map((item) => (
+          {analytics?.detailedAnalytics?.map((item, index) => (
             item.scans?.length > 0 && (
-              <View key={item.profile} style={{ marginBottom: 16 }}>
+              <View key={`analytics-${index}`} style={{ marginBottom: 16 }}>
                 <Text style={styles.eventNameText}>{item.profile}</Text>
 
                 {item.scans.map((scan, index) => {
@@ -120,7 +121,7 @@ const EventAnalytics = () => {
 
                   return (
                     <DetailedAnalyticsCard
-                      key={scan.deviceId + index}
+                      key={`${scan.deviceId ?? 'scan'}-${index}`}
                       date={date}
                       time={time}
                       deviceName={scan.device}
