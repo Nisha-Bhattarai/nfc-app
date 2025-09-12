@@ -87,12 +87,24 @@ const CreatePrimaryProfile = () => {
     if (!lastName.trim()) return setError('Last Name is required');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (personalEmail && !emailRegex.test(personalEmail.trim())) return setError(`Invalid Personal Email ${personalEmail}`);
-    if (workEmail && !emailRegex.test(workEmail.trim())) return setError('Invalid Work Email');
+    if (personalEmail && !emailRegex.test(personalEmail.trim())) {
+      return setError(`Invalid Personal Email ${personalEmail}`);
+    }
+    if (workEmail && !emailRegex.test(workEmail.trim())) {
+      return setError('Invalid Work Email');
+    }
+    if(!personalPhone.trim()){
+            return setError('Personal Phone is required');
+    }
 
     const phoneRegex = /^[0-9+]{6,15}$/; // allows + and digits, length 6-15
-    if (personalPhone && !phoneRegex.test(personalPhone)) return setError('Invalid Personal Phone');
-    if (workPhone && !phoneRegex.test(workPhone)) return setError('Invalid Work Phone');
+    if (personalPhone && !phoneRegex.test(personalPhone)) {
+      return setError('Invalid Personal Phone');
+    }
+
+    if (workPhone && !phoneRegex.test(workPhone)) {
+      return setError('Invalid Work Phone');
+    }
 
     const urlPattern = /^(https?:\/\/)?([\w\d-]+\.){1,2}[\w\d-]+(\/.*)?$/;
     for (let i = 0; i < socialMedia.length; i++) {
@@ -294,7 +306,7 @@ const CreatePrimaryProfile = () => {
               { label: 'Bio/Description', value: bio, setter: setBio, multiline: true, style: { height: 100 } },
               { label: 'Personal Email', value: personalEmail, setter: setPersonalEmail },
               { label: 'Work Email', value: workEmail, setter: setWorkEmail },
-              { label: 'Personal Phone', value: personalPhone, setter: setPersonalPhone },
+              { label: 'Personal Phone*', value: personalPhone, setter: setPersonalPhone },
               { label: 'Work Phone', value: workPhone, setter: setWorkPhone },
             ].map((item, i) => (
               <FormInput
