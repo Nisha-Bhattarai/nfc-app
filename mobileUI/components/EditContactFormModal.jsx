@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard  } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import FormInput from './formInput';
 import Colors from '../constants/Colors';
@@ -32,6 +32,19 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose, reloa
       Alert.alert('Validation Error', 'Name, email, and phone are required.');
       return;
     }
+
+     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email && !emailPattern.test(email)) {
+      Alert.alert('Personal Email is invalid.');
+      return;
+    }
+    
+    const phonePattern = /^[0-9+()\s-]{5,20}$/;
+    if (!phonePattern.test(phone.trim())) {
+      Alert.alert('Personal Phone is invalid.');
+      return;
+    }
+
 
     setLoading(true);
     setError('');
@@ -103,57 +116,57 @@ const EditContactFormModal = ({ isEdit = false, contactData = {}, onClose, reloa
   };
 
   return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 
-    <View style={styles.bottomSheetContainer}>
-      <View style={styles.container}>
-        <Image style={styles.avatarImage} source={require('../assets/images/avatar.png')} />
-        <View style={styles.emailInput}>
-          <Ionicons name="person-outline" size={30} color="#555" />
+      <View style={styles.bottomSheetContainer}>
+        <View style={styles.container}>
+          <Image style={styles.avatarImage} source={require('../assets/images/avatar.png')} />
+          <View style={styles.emailInput}>
+            <Ionicons name="person-outline" size={30} color="#555" />
+            <FormInput
+              placeholder="Full Name"
+              value={name}
+              onChangeText={setName} />
+          </View>
+
+          <View style={styles.emailInput}>
+            <Ionicons name="mail-outline" size={30} color="#555" />
+            <FormInput
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail} />
+          </View>
+          <View style={styles.phoneInput}>
+            <AntDesign name="phone" size={30} color="black" />
+            <FormInput
+              placeholder="Phone"
+              value={phone}
+              onChangeText={setPhone} />
+          </View>
+        </View>
+        <View style={styles.note}>
+          <Text style={styles.noteTitle}>Note:</Text>
           <FormInput
-            placeholder="Full Name"
-            value={name}
-            onChangeText={setName} />
+            placeholder="Enter your notes here..."
+            multiline={true}
+            numberOfLines={5}
+            style={{ height: 120 }}
+            value={note}
+            onChangeText={setNote} />
         </View>
 
-        <View style={styles.emailInput}>
-          <Ionicons name="mail-outline" size={30} color="#555" />
-          <FormInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail} />
-        </View>
-        <View style={styles.phoneInput}>
-          <AntDesign name="phone" size={30} color="black" />
-          <FormInput
-            placeholder="Phone"
-            value={phone}
-            onChangeText={setPhone} />
-        </View>
+        <TouchableOpacity
+          style={[styles.updateButton, loading && { opacity: 0.5 }]}
+          onPress={handleSubmit}
+          disabled={loading}
+        >
+          <MaterialIcons name="update" size={22} color={Colors.accent} />
+          <Text style={styles.updateButtonText}>
+            {loading ? (isEdit ? 'Updating...' : 'Creating...') : (isEdit ? 'Update' : 'Create')}
+
+          </Text>
+        </TouchableOpacity>
       </View>
-      <View style={styles.note}>
-        <Text style={styles.noteTitle}>Note:</Text>
-        <FormInput
-          placeholder="Enter your notes here..."
-          multiline={true}
-          numberOfLines={5}
-          style={{ height: 120 }}
-          value={note}
-          onChangeText={setNote} />
-      </View>
-
-      <TouchableOpacity
-        style={[styles.updateButton, loading && { opacity: 0.5 }]}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
-        <MaterialIcons name="update" size={22} color={Colors.accent} />
-        <Text style={styles.updateButtonText}>
-          {loading ? (isEdit ? 'Updating...' : 'Creating...') : (isEdit ? 'Update' : 'Create')}
-
-        </Text>
-      </TouchableOpacity>
-    </View>
     </TouchableWithoutFeedback>
   )
 }
