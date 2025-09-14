@@ -9,6 +9,7 @@ import { useRouter } from 'expo-router';
 import { useMoreMenuState } from '../../../states/useMoreMenuState';
 import { disconnectHubspot, changePassword } from '../../../viewmodels/auth/MoreMenuViewModel';
 import { useFocusEffect } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 const More = () => {
   const router = useRouter();
@@ -125,13 +126,21 @@ const More = () => {
     );
   }
 
+  useEffect(() => {
+  if (error) {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: error,
+    });
+  }
+}, [error]);
+
   return (
     <View style={styles.container}>
       <View style={styles.background}>
         {loading ? (
           <ActivityIndicator size="large" color={Colors.accent} />
-        ) : error ? (
-          <Text style={styles.errorText}>{error}</Text>
         ) : (
           <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Personal Information</Text>
