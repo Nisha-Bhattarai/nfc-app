@@ -53,13 +53,13 @@ export interface User {
 export interface Analytics {
   profile: ComparingProfile;
   totalScans: number;
-  peakScanTime: string | null;
+  peakScanTime: any|null;
 }
 
 export interface ScanOverTime {
   title: string;
   data: {
-    hour: string;
+    hour: number;
     label: string;
     value: number;
   }[];

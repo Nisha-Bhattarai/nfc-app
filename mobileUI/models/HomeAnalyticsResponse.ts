@@ -4,6 +4,7 @@ export interface HomeAnalyticsResponse {
   totalScans: number;
   uniqueScanners: number;
   topLocation: string;
+  scanDates: string[];
   peakScanTime: string;
   scansOverTime: ScanOverTime[];
   dayWise: Record<string, number>;

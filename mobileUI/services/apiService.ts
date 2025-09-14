@@ -40,11 +40,11 @@ apiService.interceptors.request.use(
 
 // Response interceptor
 apiService.interceptors.response.use(
-  (response) => {
-    console.log('Response:', {
+ async (response) => {
+    console.log('\n\n\nResponse: ========> \n\n\n', {
       url: response.config.url,
       status: response.status,
-      data: response.data,
+      data: JSON.stringify(response.data),
     });
     return response;
   },

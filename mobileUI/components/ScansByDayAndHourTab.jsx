@@ -10,16 +10,6 @@ const initialLayout = { width: Dimensions.get('window').width - 40 };
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const shortDays = days.map(d => d.slice(0, 3));
 
-const utcDayIndexMap = {
-  Monday: 0,
-  Tuesday: 1,
-  Wednesday: 2,
-  Thursday: 3,
-  Friday: 4,
-  Saturday: 5,
-  Sunday: 6
-};
-
 const ScansByDayAndHourTab = ({ data }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -30,30 +20,18 @@ const ScansByDayAndHourTab = ({ data }) => {
 
   const hours = Array.from({ length: 24 }, (_, i) => i);
 
-  // --- Convert UTC to local time with correct offset ---
   const localData = React.useMemo(() => {
     const dayWiseLocal = {};
     const hourWiseLocal = {};
     const dayHourWiseLocal = {};
 
-    const timezoneOffsetMinutes = new Date().getTimezoneOffset(); // in minutes
-
     Object.entries(data?.dayHourWise || {}).forEach(([key, value]) => {
-      const [utcDay, utcHourStr] = key.split("-");
-      const utcHour = Number(utcHourStr);
+      const [day, hourStr] = key.split("-");
+      const hour = Number(hourStr);
 
-      // Reference date in UTC
-      const referenceDate = new Date(Date.UTC(1979, 0, 1 + utcDayIndexMap[utcDay], utcHour, 0, 0));
-
-      // Apply local timezone offset
-      referenceDate.setMinutes(referenceDate.getMinutes() - timezoneOffsetMinutes);
-
-      const localDay = days[referenceDate.getDay() === 0 ? 6 : referenceDate.getDay() - 1];
-      const localHour = referenceDate.getHours();
-
-      dayWiseLocal[localDay] = (dayWiseLocal[localDay] || 0) + value;
-      hourWiseLocal[localHour] = (hourWiseLocal[localHour] || 0) + value;
-      const localKey = `${localDay}-${localHour}`;
+      dayWiseLocal[day] = (dayWiseLocal[day] || 0) + value;
+      hourWiseLocal[hour] = (hourWiseLocal[hour] || 0) + value;
+      const localKey = `${day}-${hour}`;
       dayHourWiseLocal[localKey] = (dayHourWiseLocal[localKey] || 0) + value;
     });
 
@@ -100,7 +78,8 @@ const ScansByDayAndHourTab = ({ data }) => {
             backgroundGradientFrom: Colors.white,
             backgroundGradientTo: Colors.white,
             decimalPlaces: 0,
-            color: (opacity = 1, index) => dayData.datasets[0].data[index] > 0 ? Colors.accent : 'transparent',
+            color: (opacity = 1, index) =>
+              dayData.datasets[0].data[index] > 0 ? Colors.accent : 'transparent',
             labelColor: () => Colors.textPrimary,
             barPercentage: 0.6,
             useShadowColorFromDataset: false,
@@ -157,7 +136,8 @@ const ScansByDayAndHourTab = ({ data }) => {
             backgroundGradientFrom: Colors.white,
             backgroundGradientTo: Colors.white,
             decimalPlaces: 0,
-            color: (opacity = 1, index) => hourData.datasets[0].data[index] > 0 ? Colors.accent : 'transparent',
+            color: (opacity = 1, index) =>
+              hourData.datasets[0].data[index] > 0 ? Colors.accent : 'transparent',
             labelColor: () => Colors.textPrimary,
             barPercentage: 0.6,
             useShadowColorFromDataset: false,
@@ -217,7 +197,13 @@ const styles = StyleSheet.create({
   tabBar: { backgroundColor: Colors.white, elevation: 0, shadowOpacity: 0 },
   indicator: { backgroundColor: Colors.accent, height: 2 },
   label: { fontWeight: 'bold', textTransform: 'none' },
-  heatmapCell: { width: 30, height: 30, margin: 0.5, justifyContent: "center", alignItems: "center" },
+  heatmapCell: {
+    width: 30,
+    height: 30,
+    margin: 0.5,
+    justifyContent: "center",
+    alignItems: "center"
+  },
 });
 
 export default ScansByDayAndHourTab;
