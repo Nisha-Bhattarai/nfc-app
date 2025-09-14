@@ -388,7 +388,7 @@ const CreatePrimaryProfile = () => {
                     style={{ position: 'absolute', top: 4, right: 4 }}
                     onPress={() => setPhotos(photos.filter((_, idx) => idx !== i))}
                   >
-                    <AntDesign name="closecircle" size={20} color="red" />
+                  <FontAwesome6 name="circle-xmark" size={20} color="red" type="solid" />
                   </TouchableOpacity>
                 </View>
               ))}
